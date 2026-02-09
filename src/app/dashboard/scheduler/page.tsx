@@ -1,6 +1,6 @@
 'use client';
 
-import { useFlow } from '@genkit-ai/next/client';
+import { useStreamFlow } from '@genkit-ai/next/client';
 import {
   generateAutomatedChoreSchedule,
   type AutomatedChoreScheduleInput,
@@ -31,7 +31,7 @@ export default function SchedulerPage() {
     'We have 2 bathrooms that need cleaning weekly. The kids get home from school around 4pm.'
   );
 
-  const { run, output, running, error } = useFlow(generateAutomatedChoreSchedule);
+  const { run, output, running, error } = useStreamFlow(generateAutomatedChoreSchedule);
 
   if (error) {
     toast({
