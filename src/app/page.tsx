@@ -40,21 +40,13 @@ export default function LoginPage() {
                       <Input id="parent-email" type="email" placeholder="parent@example.com" required />
                     </div>
                     <div className="space-y-2">
-                      <div className="flex items-center">
-                        <Label htmlFor="parent-password">Password</Label>
-                        <Link href="#" className="ml-auto inline-block text-sm underline">
-                          Forgot your password?
-                        </Link>
-                      </div>
+                      <Label htmlFor="parent-password">Password</Label>
                       <Input id="parent-password" type="password" required />
                     </div>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2 pt-4">
                     <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                       <Link href="/dashboard">Login</Link>
-                    </Button>
-                    <Button variant="outline" className="w-full">
-                      Create an account
                     </Button>
                   </div>
                 </CardContent>
@@ -71,8 +63,8 @@ export default function LoginPage() {
                     <Label htmlFor="child-password">PIN Code</Label>
                     <Input id="child-password" type="password" placeholder="••••" required />
                   </div>
-                  <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                    <Link href="/dashboard">Login</Link>
+                  <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled>
+                    Login
                   </Button>
                 </CardContent>
               </Card>

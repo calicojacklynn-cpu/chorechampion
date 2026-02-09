@@ -20,33 +20,15 @@ import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
-const placeholderInput = {
-  championAvailability: [
-    { championName: 'Alex', availableDays: ['Monday', 'Wednesday', 'Friday', 'Sunday'] },
-    { championName: 'Bella', availableDays: ['Tuesday', 'Thursday', 'Saturday', 'Sunday'] },
-    { championName: 'Charlie', availableDays: ['Monday', 'Wednesday', 'Friday', 'Saturday'] },
-  ],
-  choreList: [
-    { choreName: 'Take out trash', frequencyPerWeek: 3, estimatedTimeMinutes: 5 },
-    { choreName: 'Wash dishes', frequencyPerWeek: 7, estimatedTimeMinutes: 15 },
-    { choreName: 'Feed the dog', frequencyPerWeek: 14, estimatedTimeMinutes: 5 },
-    { choreName: 'Clean room', frequencyPerWeek: 2, estimatedTimeMinutes: 30 },
-    { choreName: 'Walk the dog', frequencyPerWeek: 7, estimatedTimeMinutes: 20 },
-    { choreName: 'Water plants', frequencyPerWeek: 3, estimatedTimeMinutes: 10 },
-  ],
-  houseDetails:
-    'A 3-bedroom house with a dog. The family wants to ensure chores are distributed fairly and that the dog is fed twice a day and walked once a day. Chores can be done on any available day.',
-};
-
 export default function SchedulerPage() {
   const { toast } = useToast();
   const [championAvailability, setChampionAvailability] = useState(
-    JSON.stringify(placeholderInput.championAvailability, null, 2)
+    JSON.stringify([], null, 2)
   );
   const [choreList, setChoreList] = useState(
-    JSON.stringify(placeholderInput.choreList, null, 2)
+    JSON.stringify([], null, 2)
   );
-  const [houseDetails, setHouseDetails] = useState(placeholderInput.houseDetails);
+  const [houseDetails, setHouseDetails] = useState('');
 
   const { run, output, running, error } = useFlow(generateAutomatedChoreSchedule);
 

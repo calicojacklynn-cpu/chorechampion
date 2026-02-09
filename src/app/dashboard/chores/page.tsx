@@ -3,13 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle } from "lucide-react";
 
-const presetChores = [
-  { title: "Clean Room", points: 25, description: "Make bed, put away toys, and tidy up surfaces." },
-  { title: "Wash Dishes", points: 15, description: "Wash, dry, and put away the dishes from one meal." },
-  { title: "Take Out Trash", points: 10, description: "Empty all trash cans and take the bag outside." },
-  { title: "Feed Pet", points: 5, description: "Provide food and fresh water for a pet." },
-];
-
 export default function ChoresPage() {
   return (
     <div className="space-y-6">
@@ -37,21 +30,8 @@ export default function ChoresPage() {
               <CardTitle>Chore Presets</CardTitle>
               <CardDescription>Quickly add common chores to your list.</CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {presetChores.map((chore) => (
-                <Card key={chore.title} className="flex flex-col">
-                  <CardHeader>
-                    <CardTitle className="text-lg">{chore.title}</CardTitle>
-                    <CardDescription className="font-bold text-primary">{chore.points} Points</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    <p className="text-sm text-muted-foreground">{chore.description}</p>
-                  </CardContent>
-                  <CardFooter>
-                    <Button size="sm" className="w-full">Add Chore</Button>
-                  </CardFooter>
-                </Card>
-              ))}
+            <CardContent className="flex items-center justify-center h-48">
+              <p className="text-muted-foreground">No preset chores available.</p>
             </CardContent>
           </Card>
         </TabsContent>

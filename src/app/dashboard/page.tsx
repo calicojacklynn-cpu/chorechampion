@@ -17,8 +17,8 @@ export default function DashboardPage() {
             <ListTodo className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">5</div>
-            <p className="text-xs text-muted-foreground">2 completed</p>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">0 completed</p>
           </CardContent>
         </Card>
         <Card>
@@ -27,8 +27,8 @@ export default function DashboardPage() {
             <Star className="h-4 w-4 text-accent" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">850</div>
-            <p className="text-xs text-muted-foreground">+120 from last week</p>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">No points awarded yet</p>
           </CardContent>
         </Card>
         <Card>
@@ -37,8 +37,8 @@ export default function DashboardPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3</div>
-            <p className="text-xs text-muted-foreground">Alex, Bella, Charlie</p>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">No active champions</p>
           </CardContent>
         </Card>
         <Card>
@@ -47,8 +47,8 @@ export default function DashboardPage() {
             <CalendarCheck className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2</div>
-            <p className="text-xs text-muted-foreground">Clean garage, Wash windows</p>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">No upcoming tasks</p>
           </CardContent>
         </Card>
       </div>
@@ -59,21 +59,8 @@ export default function DashboardPage() {
             <CardTitle>Champion Leaderboard</CardTitle>
             <CardDescription>Who's earning the most points this week?</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <span>🥇 Alex</span>
-                <div className="ml-auto font-bold">400 pts</div>
-              </div>
-              <div className="flex items-center">
-                <span>🥈 Bella</span>
-                <div className="ml-auto font-bold">320 pts</div>
-              </div>
-              <div className="flex items-center">
-                <span>🥉 Charlie</span>
-                <div className="ml-auto font-bold">130 pts</div>
-              </div>
-            </div>
+          <CardContent className="flex items-center justify-center h-48">
+            <p className="text-muted-foreground">No champion data available.</p>
           </CardContent>
         </Card>
         <Card>
@@ -81,28 +68,8 @@ export default function DashboardPage() {
             <CardTitle>Today's Schedule</CardTitle>
             <CardDescription>Chores that need to be done today.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-              <div className="flex items-start gap-3">
-                <Checkbox id="chore-1" className="mt-1" />
-                <div className="grid gap-0.5">
-                  <label htmlFor="chore-1" className="font-medium">Feed the dog</label>
-                  <p className="text-muted-foreground text-sm">Assigned to Alex</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Checkbox id="chore-2" className="mt-1" defaultChecked />
-                <div className="grid gap-0.5">
-                  <label htmlFor="chore-2" className="font-medium line-through">Wash dishes</label>
-                  <p className="text-muted-foreground text-sm">Assigned to Bella</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Checkbox id="chore-3" className="mt-1" />
-                <div className="grid gap-0.5">
-                  <label htmlFor="chore-3" className="font-medium">Take out trash</label>
-                  <p className="text-muted-foreground text-sm">Assigned to Charlie</p>
-                </div>
-              </div>
+          <CardContent className="flex items-center justify-center h-48">
+              <p className="text-muted-foreground">No chores scheduled for today.</p>
           </CardContent>
         </Card>
       </div>
