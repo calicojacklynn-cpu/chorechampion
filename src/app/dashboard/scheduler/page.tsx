@@ -22,27 +22,11 @@ import { Textarea } from '@/components/ui/textarea';
 
 export default function SchedulerPage() {
   const { toast } = useToast();
-  const [championAvailability, setChampionAvailability] = useState(
-    JSON.stringify(
-      [
-        { championName: 'Alex', availableDays: ['Monday', 'Wednesday', 'Friday'] },
-        { championName: 'Bella', availableDays: ['Tuesday', 'Thursday', 'Saturday'] },
-      ],
-      null,
-      2
-    )
+  const [naturalLanguageInstructions, setNaturalLanguageInstructions] = useState(
+    'Billy takes out the trash every night at 8pm. The dog needs to be walked by either champion in the morning and evening.'
   );
-  const [choreList, setChoreList] = useState(
-    JSON.stringify(
-      [
-        { choreName: 'Wash dishes', frequency: 'daily' },
-        { choreName: 'Take out trash', frequency: 'twice a week' },
-        { choreName: 'Vacuum living room', frequency: 'weekly' },
-      ],
-      null,
-      2
-    )
-  );
+  const [championAvailability, setChampionAvailability] = useState('');
+  const [choreList, setChoreList] = useState('');
   const [houseDetails, setHouseDetails] = useState(
     'We have 2 bathrooms that need cleaning weekly. The kids get home from school around 4pm.'
   );
@@ -60,16 +44,21 @@ export default function SchedulerPage() {
   const handleGenerateSchedule = () => {
     let input: AutomatedChoreScheduleInput;
     try {
+      const championData = championAvailability ? JSON.parse(championAvailability) : [];
+      const choreData = choreList ? JSON.parse(choreList) : [];
+
       input = {
-        championAvailability: JSON.parse(championAvailability),
-        choreList: JSON.parse(choreList),
-        houseDetails: houseDetails,
+        naturalLanguageInstructions,
+        championAvailability: championData,
+        choreList: choreData,
+        houseDetails,
       };
     } catch (e: any) {
       toast({
         variant: 'destructive',
         title: 'Invalid JSON format.',
-        description: 'Please check the format of your Champion Availability and Chore List inputs.',
+        description:
+          'Please check the format of your Champion Availability and Chore List inputs if you are using them.',
       });
       return;
     }
@@ -85,7 +74,8 @@ export default function SchedulerPage() {
             AI Chore Scheduler
           </h1>
           <p className="text-muted-foreground">
-            Let AI optimize your family's chore schedule for you.
+            Let AI optimize your family's chore schedule for you. Use plain English or
+            structured JSON.
           </p>
         </div>
         <Button
@@ -111,32 +101,53 @@ export default function SchedulerPage() {
           <CardHeader>
             <CardTitle>Inputs</CardTitle>
             <CardDescription>
-              Provide the data to generate a schedule from. Use JSON format for availability and chores.
+              Provide instructions for the schedule. Specific instructions in English are
+              prioritized.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="champion-availability">Champion Availability</Label>
+              <Label htmlFor="natural-language-instructions">Specific Instructions</Label>
+              <Textarea
+                id="natural-language-instructions"
+                value={naturalLanguageInstructions}
+                onChange={(e) => setNaturalLanguageInstructions(e.target.value)}
+                rows={5}
+                placeholder="e.g., 'Billy takes out the trash every night at 8pm.'"
+              />
+              <p className="text-sm text-muted-foreground">
+                This is the primary input. Use plain English to give specific instructions.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="champion-availability">Champion Availability (JSON)</Label>
               <Textarea
                 id="champion-availability"
                 value={championAvailability}
                 onChange={(e) => setChampionAvailability(e.target.value)}
                 rows={10}
-                placeholder="Enter champion availability as JSON"
+                placeholder='e.g., [{ "championName": "Alex", "availableDays": ["Monday", "Friday"] }]'
               />
+              <p className="text-sm text-muted-foreground">
+                Optional: Provide general availability if not covered by specific instructions.
+              </p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="chore-list">Chore List</Label>
+              <Label htmlFor="chore-list">Chore List (JSON)</Label>
               <Textarea
                 id="chore-list"
                 value={choreList}
                 onChange={(e) => setChoreList(e.target.value)}
                 rows={10}
-                placeholder="Enter chore list as JSON"
+                placeholder='e.g., [{ "choreName": "Wash dishes", "frequency": "daily" }]'
               />
+              <p className="text-sm text-muted-foreground">
+                Optional: Provide a general list of chores if not covered by specific
+                instructions.
+              </p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="house-details">House Details</Label>
+              <Label htmlFor="house-details">General House Details</Label>
               <Textarea
                 id="house-details"
                 value={houseDetails}
