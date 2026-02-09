@@ -1,7 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusCircle } from "lucide-react";
+import { AddChoreDialog } from "./AddChoreDialog";
 
 export default function ChoresPage() {
   return (
@@ -11,17 +10,14 @@ export default function ChoresPage() {
           <h1 className="text-3xl font-bold tracking-tight font-headline">Chore Management</h1>
           <p className="text-muted-foreground">Organize and assign chores for your champions.</p>
         </div>
-        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add New Chore
-        </Button>
+        <AddChoreDialog />
       </div>
 
-      <Tabs defaultValue="custom">
+      <Tabs defaultValue="library">
         <TabsList className="grid w-full max-w-md grid-cols-3">
-          <TabsTrigger value="custom">My Chores</TabsTrigger>
-          <TabsTrigger value="assigned">Assigned</TabsTrigger>
           <TabsTrigger value="library">Chore Library</TabsTrigger>
+          <TabsTrigger value="assigned">Assigned</TabsTrigger>
+          <TabsTrigger value="custom">My Chores</TabsTrigger>
         </TabsList>
 
         <TabsContent value="custom" className="mt-4">
