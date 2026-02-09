@@ -12,7 +12,7 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {z} from 'zod';
 
 const ChampionAvailabilitySchema = z.object({
   championName: z.string().describe('The name of the champion (child).'),
@@ -28,7 +28,7 @@ const ChoreSchema = z.object({
     .describe('How often the chore should be done (e.g., "daily", "twice a week", "weekly").'),
 });
 
-export const AutomatedChoreScheduleInputSchema = z.object({
+const AutomatedChoreScheduleInputSchema = z.object({
   naturalLanguageInstructions: z
     .string()
     .optional()
@@ -54,7 +54,7 @@ const ChoreAssignmentSchema = z.object({
   choreName: z.string().describe('The name of the assigned chore.'),
 });
 
-export const AutomatedChoreScheduleOutputSchema = z.object({
+const AutomatedChoreScheduleOutputSchema = z.object({
   schedule: z.array(ChoreAssignmentSchema).describe('The generated weekly chore schedule.'),
 });
 export type AutomatedChoreScheduleOutput = z.infer<typeof AutomatedChoreScheduleOutputSchema>;
