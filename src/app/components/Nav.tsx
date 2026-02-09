@@ -9,6 +9,7 @@ import {
   Gift,
   Calendar,
   Sparkles,
+  Settings,
 } from "lucide-react";
 
 import {
@@ -27,6 +28,7 @@ const navItems = [
   { href: "/dashboard/rewards", icon: Gift, label: "Rewards" },
   { href: "/dashboard/calendar", icon: Calendar, label: "Calendar" },
   { href: "/dashboard/scheduler", icon: Sparkles, label: "AI Scheduler" },
+  { href: "/dashboard/settings", icon: Settings, label: "Settings" },
 ];
 
 export function Nav() {
