@@ -1,3 +1,58 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "login-hero",
+      "description": "A happy family doing chores together in a clean living room.",
+      "imageUrl": "https://images.unsplash.com/photo-1629042306548-afec37a5e46b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxmYW1pbHklMjBsaXZpbmdyb29tfGVufDB8fHx8MTc3MDY2NDYwNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "family livingroom"
+    },
+    {
+      "id": "user-avatar-parent",
+      "description": "Avatar for parent user.",
+      "imageUrl": "https://images.unsplash.com/photo-1626526804650-7118ac691b7a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxwZXJzb24lMjBmYWNlfGVufDB8fHx8MTc3MDY1MTEzMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person face"
+    },
+    {
+      "id": "champion-alex",
+      "description": "Avatar for champion Alex.",
+      "imageUrl": "https://images.unsplash.com/photo-1587743368367-67ec3e7377f2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjaGlsZCUyMGZhY2V8ZW58MHx8fHwxNzcwNTUzOTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "child face"
+    },
+    {
+      "id": "champion-bella",
+      "description": "Avatar for champion Bella.",
+      "imageUrl": "https://images.unsplash.com/photo-1690237604597-d170faa1e40f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjaGlsZCUyMGZhY2V8ZW58MHx8fHwxNzcwNTUzOTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "child face"
+    },
+    {
+      "id": "champion-charlie",
+      "description": "Avatar for champion Charlie.",
+      "imageUrl": "https://images.unsplash.com/photo-1625595234473-c00c86c73353?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjaGlsZCUyMGZhY2V8ZW58MHx8fHwxNzcwNTUzOTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "child face"
+    },
+    {
+      "id": "reward-movie",
+      "description": "Popcorn and a movie ticket.",
+      "imageUrl": "https://images.unsplash.com/photo-1620177088260-a9150572baf4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwb3Bjb3JuJTIwbW92aWV8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "popcorn movie"
+    },
+    {
+      "id": "reward-icecream",
+      "description": "Colorful scoops of ice cream in a cone.",
+      "imageUrl": "https://images.unsplash.com/photo-1560008581-09826d1de69e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxpY2UlMjBjcmVhbXxlbnwwfHx8fDE3NzA2MTU4Njl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ice cream"
+    },
+    {
+      "id": "reward-lego",
+      "description": "A colorful structure made of toy bricks.",
+      "imageUrl": "https://images.unsplash.com/photo-1636314229901-61b1c1da1675?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx0b3klMjBibG9ja3N8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "toy blocks"
+    },
+    {
+      "id": "reward-screentime",
+      "description": "A person using a tablet computer.",
+      "imageUrl": "https://images.unsplash.com/photo-1746289434176-40f821d31216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx0YWJsZXQlMjBzY3JlZW58ZW58MHx8fHwxNzcwNjMzNDAzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "tablet screen"
+    }
+  ]
 }
