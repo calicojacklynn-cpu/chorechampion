@@ -10,7 +10,7 @@ export default function DashboardPage() {
         <p className="text-muted-foreground">Here's a quick look at your family's chore progress.</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Chores for Today</CardTitle>
@@ -29,26 +29,6 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-bold">0</div>
             <p className="text-xs text-muted-foreground">No points awarded yet</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Champions</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground">No active champions</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Upcoming Big Tasks</CardTitle>
-            <CalendarCheck className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground">No upcoming tasks</p>
           </CardContent>
         </Card>
       </div>
