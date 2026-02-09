@@ -23,12 +23,29 @@ import { Textarea } from '@/components/ui/textarea';
 export default function SchedulerPage() {
   const { toast } = useToast();
   const [championAvailability, setChampionAvailability] = useState(
-    JSON.stringify([], null, 2)
+    JSON.stringify(
+      [
+        { championName: 'Alex', availableDays: ['Monday', 'Wednesday', 'Friday'] },
+        { championName: 'Bella', availableDays: ['Tuesday', 'Thursday', 'Saturday'] },
+      ],
+      null,
+      2
+    )
   );
   const [choreList, setChoreList] = useState(
-    JSON.stringify([], null, 2)
+    JSON.stringify(
+      [
+        { choreName: 'Wash dishes', frequency: 'daily' },
+        { choreName: 'Take out trash', frequency: 'twice a week' },
+        { choreName: 'Vacuum living room', frequency: 'weekly' },
+      ],
+      null,
+      2
+    )
   );
-  const [houseDetails, setHouseDetails] = useState('');
+  const [houseDetails, setHouseDetails] = useState(
+    'We have 2 bathrooms that need cleaning weekly. The kids get home from school around 4pm.'
+  );
 
   const { run, output, running, error } = useFlow(generateAutomatedChoreSchedule);
 
