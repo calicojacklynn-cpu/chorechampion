@@ -17,21 +17,21 @@ export default function ChoresPage() {
         </Button>
       </div>
 
-      <Tabs defaultValue="library">
+      <Tabs defaultValue="custom">
         <TabsList className="grid w-full max-w-md grid-cols-3">
-          <TabsTrigger value="library">Chore Library</TabsTrigger>
-          <TabsTrigger value="assigned">Assigned</TabsTrigger>
           <TabsTrigger value="custom">My Chores</TabsTrigger>
+          <TabsTrigger value="assigned">Assigned</TabsTrigger>
+          <TabsTrigger value="library">Chore Library</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="library" className="mt-4">
-          <Card>
+        <TabsContent value="custom" className="mt-4">
+           <Card>
             <CardHeader>
-              <CardTitle>Chore Presets</CardTitle>
-              <CardDescription>Quickly add common chores to your list.</CardDescription>
+              <CardTitle>Your Custom Chores</CardTitle>
+              <CardDescription>Chores you've created.</CardDescription>
             </CardHeader>
             <CardContent className="flex items-center justify-center h-48">
-              <p className="text-muted-foreground">No preset chores available.</p>
+              <p className="text-muted-foreground">Your custom-created chores will be listed here.</p>
             </CardContent>
           </Card>
         </TabsContent>
@@ -48,14 +48,14 @@ export default function ChoresPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="custom" className="mt-4">
-           <Card>
+        <TabsContent value="library" className="mt-4">
+          <Card>
             <CardHeader>
-              <CardTitle>Your Custom Chores</CardTitle>
-              <CardDescription>Chores you've created.</CardDescription>
+              <CardTitle>Chore Presets</CardTitle>
+              <CardDescription>Quickly add common chores to your list.</CardDescription>
             </CardHeader>
             <CardContent className="flex items-center justify-center h-48">
-              <p className="text-muted-foreground">Your custom-created chores will be listed here.</p>
+              <p className="text-muted-foreground">No preset chores available.</p>
             </CardContent>
           </Card>
         </TabsContent>
