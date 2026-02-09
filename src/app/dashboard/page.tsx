@@ -32,27 +32,6 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Champion Leaderboard</CardTitle>
-            <CardDescription>Who's earning the most points this week?</CardDescription>
-          </CardHeader>
-          <CardContent className="flex items-center justify-center h-48">
-            <p className="text-muted-foreground">No champion data available.</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Today's Schedule</CardTitle>
-            <CardDescription>Chores that need to be done today.</CardDescription>
-          </CardHeader>
-          <CardContent className="flex items-center justify-center h-48">
-              <p className="text-muted-foreground">No chores scheduled for today.</p>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }
