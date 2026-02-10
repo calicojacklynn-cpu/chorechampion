@@ -14,11 +14,12 @@ import {
   CardTitle,
   CardFooter,
 } from '@/components/ui/card';
-import { Sparkles, Loader2, CheckCircle, Mic, MicOff } from 'lucide-react';
+import { Sparkles, Loader2, CheckCircle, Mic } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect, useRef } from 'react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 
 // This is a browser-only API, so we declare the type here.
 declare global {
@@ -151,22 +152,30 @@ export default function SchedulerPage() {
                 className="text-base pr-12"
               />
               {isSpeechSupported && (
-                <Button
-                  type="button"
-                  size="icon"
-                  variant="ghost"
-                  onClick={toggleListening}
-                  className="absolute bottom-2 right-2 text-muted-foreground hover:text-foreground"
-                >
-                  {isListening ? (
-                    <MicOff className="h-5 w-5 text-destructive" />
-                  ) : (
-                    <Mic className="h-5 w-5" />
-                  )}
-                  <span className="sr-only">
-                    {isListening ? 'Stop Listening' : 'Use Voice'}
-                  </span>
-                </Button>
+                <div className="absolute bottom-2 right-2">
+                  <div className="relative flex h-10 w-10 items-center justify-center">
+                    {isListening && (
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-destructive opacity-75"></span>
+                    )}
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      onClick={toggleListening}
+                      className="relative rounded-full text-muted-foreground hover:text-foreground"
+                    >
+                      <Mic
+                        className={cn(
+                          'h-5 w-5 transition-colors',
+                          isListening && 'text-destructive'
+                        )}
+                      />
+                      <span className="sr-only">
+                        {isListening ? 'Stop Listening' : 'Use Voice'}
+                      </span>
+                    </Button>
+                  </div>
+                </div>
               )}
             </div>
           </div>
