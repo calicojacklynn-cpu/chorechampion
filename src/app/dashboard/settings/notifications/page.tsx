@@ -43,7 +43,16 @@ export default function NotificationSettingsPage() {
                   </div>
                   <Switch id="reward-milestones" defaultChecked />
               </div>
-                <div className="flex items-center justify-between space-x-2 p-4 rounded-lg border">
+              <div className="flex items-center justify-between space-x-2 p-4 rounded-lg border">
+                  <div className="space-y-0.5">
+                      <Label htmlFor="reward-claimed" className="text-base">Reward Claimed</Label>
+                      <p className="text-sm text-muted-foreground">
+                          Get an alert when a champion claims a reward.
+                      </p>
+                  </div>
+                  <Switch id="reward-claimed" defaultChecked />
+              </div>
+              <div className="flex items-center justify-between space-x-2 p-4 rounded-lg border">
                   <div className="space-y-0.5">
                       <Label htmlFor="family-broadcasts" className="text-base">Family Broadcasts</Label>
                         <p className="text-sm text-muted-foreground">
