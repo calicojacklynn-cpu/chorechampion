@@ -180,7 +180,7 @@ export default function ChoresPage() {
                     <Table>
                           <TableHeader>
                               <TableRow>
-                                  <TableHead>Chore</TableHead>
+                                  <TableHead className="w-[300px]">Chore</TableHead>
                                   <TableHead className="hidden sm:table-cell">Description</TableHead>
                                   <TableHead className="text-center">Points</TableHead>
                                   <TableHead className="text-right">Actions</TableHead>
