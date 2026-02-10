@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { useSchedule } from '@/app/context/ScheduleContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
-import { ListTodo, User } from 'lucide-react';
+import { ListTodo, User, Calendar as CalendarIcon } from 'lucide-react';
 
 export default function CalendarPage() {
     const [date, setDate] = useState<Date | undefined>(new Date());
@@ -18,47 +18,57 @@ export default function CalendarPage() {
 
     return (
         <div className="space-y-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle className="font-headline text-2xl">Chore Calendar</CardTitle>
-                    <CardDescription>View scheduled chores from the AI Scheduler.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex justify-center">
-                    <Calendar
-                        mode="single"
-                        selected={date}
-                        onSelect={setDate}
-                    />
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Chores for {date ? format(date, 'PPP') : 'Today'}</CardTitle>
-                    <CardDescription>What's on the list for the selected day.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col space-y-4 min-h-96">
-                    {choresForSelectedDay.length > 0 ? (
-                        choresForSelectedDay.map((chore, index) => (
-                            <div key={index} className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg">
-                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                                    <ListTodo className="h-5 w-5 text-primary" />
-                                </div>
-                                <div className="flex-grow">
-                                    <p className="font-semibold">{chore.choreName}</p>
-                                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                      <User className="h-3 w-3" />
-                                      <span>{chore.championName}</span>
+            <div>
+                <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
+                    <CalendarIcon className="h-8 w-8 text-muted-foreground" />
+                    Chore Calendar
+                </h1>
+                <p className="text-muted-foreground">View your AI-generated chore schedule at a glance.</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <Card className="lg:col-span-2">
+                    <CardContent className="p-0">
+                      <div className="flex justify-center p-4">
+                        <Calendar
+                            mode="single"
+                            selected={date}
+                            onSelect={setDate}
+                            className="rounded-md"
+                        />
+                      </div>
+                    </CardContent>
+                </Card>
+
+                <Card className="lg:col-span-1">
+                    <CardHeader>
+                        <CardTitle>Chores for {date ? format(date, 'PPP') : 'Today'}</CardTitle>
+                        <CardDescription>A list of what needs to get done.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex flex-col space-y-4 min-h-[300px] lg:min-h-[400px]">
+                        {choresForSelectedDay.length > 0 ? (
+                            choresForSelectedDay.map((chore, index) => (
+                                <div key={index} className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                                        <ListTodo className="h-5 w-5 text-primary" />
+                                    </div>
+                                    <div className="flex-grow">
+                                        <p className="font-semibold">{chore.choreName}</p>
+                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                          <User className="h-3 w-3" />
+                                          <span>{chore.championName}</span>
+                                        </div>
                                     </div>
                                 </div>
+                            ))
+                        ) : (
+                            <div className="flex h-full items-center justify-center">
+                                <p className="text-muted-foreground">No chores scheduled for this day.</p>
                             </div>
-                        ))
-                    ) : (
-                        <div className="flex items-center justify-center grow">
-                            <p className="text-muted-foreground">No chores scheduled for this day.</p>
-                        </div>
-                    )}
-                </CardContent>
-            </Card>
+                        )}
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 }
