@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Plus, Star, MoreHorizontal } from "lucide-react";
+import { Plus, Star, Edit, Trash2, Wand2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -19,13 +19,6 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -190,9 +183,7 @@ export default function ChoresPage() {
                                   <TableHead>Chore</TableHead>
                                   <TableHead className="hidden sm:table-cell">Description</TableHead>
                                   <TableHead className="text-center">Points</TableHead>
-                                  <TableHead>
-                                  <span className="sr-only">Actions</span>
-                                  </TableHead>
+                                  <TableHead className="text-right">Actions</TableHead>
                               </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -210,20 +201,20 @@ export default function ChoresPage() {
                                               </Badge>
                                           </TableCell>
                                           <TableCell className="text-right">
-                                              <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button aria-haspopup="true" size="icon" variant="ghost">
-                                                        <MoreHorizontal className="h-4 w-4" />
-                                                        <span className="sr-only">Toggle menu</span>
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                    <DropdownMenuItem onSelect={() => openAssignDialog(chore)}>Assign</DropdownMenuItem>
-                                                    <DropdownMenuItem onSelect={() => openEditDialog(chore)}>Edit</DropdownMenuItem>
-                                                    <DropdownMenuItem onSelect={() => openDeleteDialog(chore)} className="text-destructive focus:text-destructive focus:bg-destructive/10">Delete</DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                              </DropdownMenu>
+                                              <div className="flex items-center justify-end gap-2">
+                                                  <Button variant="outline" size="icon-sm" onClick={() => openAssignDialog(chore)} title="AI Schedule Chore">
+                                                      <Wand2 className="h-4 w-4" />
+                                                      <span className="sr-only">AI Schedule Chore</span>
+                                                  </Button>
+                                                  <Button variant="outline" size="icon-sm" onClick={() => openEditDialog(chore)} title="Edit Chore">
+                                                      <Edit className="h-4 w-4" />
+                                                      <span className="sr-only">Edit Chore</span>
+                                                  </Button>
+                                                  <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(chore)} title="Delete Chore">
+                                                      <Trash2 className="h-4 w-4" />
+                                                      <span className="sr-only">Delete Chore</span>
+                                                  </Button>
+                                              </div>
                                           </TableCell>
                                       </TableRow>
                                   ))
