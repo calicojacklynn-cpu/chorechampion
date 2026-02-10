@@ -252,12 +252,12 @@ export default function RewardsPage() {
                             </Badge>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <Button variant="outline" size="icon-sm" onClick={() => openEditDialog(reward)}>
-                                <Edit className="h-3.5 w-3.5" />
+                            <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => openEditDialog(reward)}>
+                                <Edit className="h-3 w-3" />
                                 <span className="sr-only">Edit</span>
                             </Button>
-                            <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(reward)}>
-                                <Trash2 className="h-3.5 w-3.5" />
+                            <Button variant="destructive" size="icon" className="h-7 w-7" onClick={() => openDeleteDialog(reward)}>
+                                <Trash2 className="h-3 w-3" />
                                 <span className="sr-only">Delete</span>
                             </Button>
                         </div>
