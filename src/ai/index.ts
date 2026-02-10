@@ -161,3 +161,73 @@ export async function aiScheduleChore(
 ): Promise<AiScheduleChoreOutput> {
   return aiScheduleChoreFlow(input);
 }
+
+
+// New Schemas and Flow for AI Event Creation
+
+const AiCalendarEventSchema = z.object({
+  title: z.string().describe('The title of the event.'),
+  date: z.string().describe('The date of the event in YYYY-MM-DD format.'),
+  startTime: z.string().optional().describe('The start time of the event in HH:mm 24-hour format.'),
+  endTime: z.string().optional().describe('The end time of the event in HH:mm 24-hour format.'),
+  type: z.enum(['appointment', 'task', 'other']).describe('The type of event.'),
+  description: z.string().optional().describe("A description of the event.")
+});
+
+const AiCreateEventsInputSchema = z.object({
+  instructions: z.string().describe('The natural language instructions for the event(s) to create.'),
+  currentDate: z.string().describe('The current date in YYYY-MM-DD format, to be used as a reference point for creating events for the current week.'),
+});
+export type AiCreateEventsInput = z.infer<typeof AiCreateEventsInputSchema>;
+
+const AiCreateEventsOutputSchema = z.object({
+  events: z.array(AiCalendarEventSchema).describe('The array of generated calendar events.'),
+});
+export type AiCreateEventsOutput = z.infer<typeof AiCreateEventsOutputSchema>;
+
+
+const aiCreateEventsPrompt = ai.definePrompt({
+  name: 'aiCreateEventsPrompt',
+  input: { schema: AiCreateEventsInputSchema },
+  output: { schema: AiCreateEventsOutputSchema },
+  prompt: `You are an intelligent calendar assistant. Your task is to create a list of calendar events based on a user's natural language instructions.
+
+**Goal:** Parse the user's request and generate all occurrences for the upcoming week (Monday to Sunday).
+
+**Reference Date:** Today's date is {{{currentDate}}}. Use this to determine the dates for the current week.
+
+**Instructions:**
+1.  Read the user's instructions carefully.
+2.  Identify the event title, days of the week, and times.
+3.  For recurring events like "every weekday", create a separate event object for each day from Monday to Sunday of the current week that matches.
+4.  Assume a default event type of 'other' if not specified.
+5.  **CRITICAL:** Ensure all dates in the output are in the 'YYYY-MM-DD' format.
+6.  **CRITICAL:** Ensure all times are in the 'HH:mm' 24-hour format.
+7.  Return the generated events in the 'events' array.
+
+**User's Instructions:**
+{{{instructions}}}
+`,
+});
+
+const aiCreateEventsFlow = ai.defineFlow(
+  {
+    name: 'aiCreateEventsFlow',
+    inputSchema: AiCreateEventsInputSchema,
+    outputSchema: AiCreateEventsOutputSchema,
+  },
+  async (input) => {
+    const { output } = await aiCreateEventsPrompt(input);
+    if (!output) {
+      throw new Error('Failed to generate events from the instructions.');
+    }
+    return output;
+  }
+);
+
+// Export a client-callable wrapper function
+export async function aiCreateEvents(
+  input: AiCreateEventsInput
+): Promise<AiCreateEventsOutput> {
+  return aiCreateEventsFlow(input);
+}

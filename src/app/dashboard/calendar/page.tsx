@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AddEventDialog } from "./AddEventDialog";
+import { AiAddEventDialog } from "./AiAddEventDialog";
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -77,7 +78,10 @@ export default function CalendarPage() {
             A monthly view of your family's schedule and chores.
           </p>
         </div>
-        <AddEventDialog />
+        <div className="flex items-center gap-2">
+          <AiAddEventDialog />
+          <AddEventDialog />
+        </div>
       </div>
 
       <Card>
