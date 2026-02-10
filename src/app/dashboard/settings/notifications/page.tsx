@@ -9,13 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
@@ -58,22 +51,6 @@ export default function NotificationSettingsPage() {
                       </p>
                   </div>
                   <Switch id="family-broadcasts" />
-              </div>
-              <div className="space-y-2 p-4 rounded-lg border">
-                  <Label htmlFor="chore-reminders" className="text-base">Chore Reminders</Label>
-                  <p className="text-sm text-muted-foreground pb-2">
-                      Customize the "Nudge" frequency for pending chores.
-                  </p>
-                  <Select defaultValue="standard">
-                      <SelectTrigger className="w-full md:w-1/2">
-                          <SelectValue placeholder="Select frequency" />
-                      </SelectTrigger>
-                      <SelectContent>
-                          <SelectItem value="gentle">Gentle Pings (Once a day)</SelectItem>
-                          <SelectItem value="standard">Standard (Morning and Evening)</SelectItem>
-                          <SelectItem value="urgent">High-Priority (As deadline approaches)</SelectItem>
-                      </SelectContent>
-                  </Select>
               </div>
           </CardContent>
             <CardFooter className="border-t px-6 py-4">
