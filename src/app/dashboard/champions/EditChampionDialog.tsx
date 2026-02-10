@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,10 +51,6 @@ export function EditChampionDialog({
 }: EditChampionDialogProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // The form is initialized with default values from the champion prop.
-  // Because the parent component uses a `key` on this dialog, the dialog
-  // component is re-mounted (and this hook is re-run) every time a new
-  // champion is selected, ensuring the form has the correct data.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -63,6 +59,19 @@ export function EditChampionDialog({
       avatarUrl: champion.avatarUrl || "",
     },
   });
+
+  // This effect hook will reset the form whenever a new champion is selected.
+  // This is the correct way to handle this when not re-mounting the component with a key.
+  useEffect(() => {
+    if (champion) {
+      form.reset({
+        name: champion.name,
+        username: champion.username,
+        avatarUrl: champion.avatarUrl || "",
+      });
+    }
+  }, [champion, form]);
+
 
   const avatarUrl = form.watch("avatarUrl");
 

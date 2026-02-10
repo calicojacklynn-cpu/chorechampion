@@ -75,10 +75,12 @@ const initialChampions: Champion[] = [
 export default function ChampionsPage() {
   const { toast } = useToast();
   const [champions, setChampions] = useState<Champion[]>(initialChampions);
-
-  // State to manage which champion is being edited or deleted
+  
   const [editingChampion, setEditingChampion] = useState<Champion | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
   const [deletingChampion, setDeletingChampion] = useState<Champion | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const handleAddChampion = useCallback((newChampionData: NewChampionData) => {
     setChampions((prev) => {
@@ -101,7 +103,7 @@ export default function ChampionsPage() {
       title: "Champion Updated!",
       description: `${updatedChampion.name}'s details have been updated.`,
     });
-    setEditingChampion(null); // Close dialog on save
+    setIsEditDialogOpen(false);
   }, [toast]);
 
   const handleConfirmDelete = useCallback(() => {
@@ -111,21 +113,17 @@ export default function ChampionsPage() {
       title: "Champion Deleted",
       description: `${deletingChampion.name} has been removed.`,
     });
-    setDeletingChampion(null); // Close dialog on delete
+    setIsDeleteDialogOpen(false);
   }, [deletingChampion, toast]);
 
-
-  // --- Callbacks for Dialog State Management ---
-  const handleEditOpenChange = useCallback((isOpen: boolean) => {
-    if (!isOpen) {
-        setEditingChampion(null);
-    }
+  const handleOpenEditDialog = useCallback((champion: Champion) => {
+    setEditingChampion(champion);
+    setIsEditDialogOpen(true);
   }, []);
 
-  const handleDeleteOpenChange = useCallback((isOpen: boolean) => {
-    if (!isOpen) {
-      setDeletingChampion(null);
-    }
+  const handleOpenDeleteDialog = useCallback((champion: Champion) => {
+    setDeletingChampion(champion);
+    setIsDeleteDialogOpen(true);
   }, []);
 
   return (
@@ -205,13 +203,13 @@ export default function ChampionsPage() {
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem
-                              onSelect={() => setEditingChampion(champion)}
+                              onSelect={() => handleOpenEditDialog(champion)}
                             >
                               Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-                              onSelect={() => setDeletingChampion(champion)}
+                              onSelect={() => handleOpenDeleteDialog(champion)}
                             >
                               Delete
                             </DropdownMenuItem>
@@ -232,21 +230,18 @@ export default function ChampionsPage() {
         </CardContent>
       </Card>
       
-      {/* Edit Champion Dialog */}
       {editingChampion && (
         <EditChampionDialog
-          key={editingChampion.id}
           champion={editingChampion}
-          isOpen={!!editingChampion}
-          onOpenChange={handleEditOpenChange}
+          isOpen={isEditDialogOpen}
+          onOpenChange={setIsEditDialogOpen}
           onSave={handleUpdateChampion}
         />
       )}
       
-      {/* Delete Confirmation Dialog */}
       <AlertDialog
-        open={!!deletingChampion}
-        onOpenChange={handleDeleteOpenChange}
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
       >
         {deletingChampion && (
             <AlertDialogContent>
