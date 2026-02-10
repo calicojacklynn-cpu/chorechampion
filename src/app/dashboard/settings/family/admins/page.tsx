@@ -49,12 +49,6 @@ const initialAdmins: Admin[] = [
     email: "parent@example.com",
     avatarId: "user-avatar-parent",
   },
-  {
-    id: "admin-adam",
-    name: "Adam",
-    email: "adam@example.com",
-    avatarId: "user-avatar-admin-adam",
-  },
 ];
 
 export default function AdminsPage() {

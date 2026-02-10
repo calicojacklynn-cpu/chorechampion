@@ -78,7 +78,7 @@ export function AddAdminDialog({ onAdd, isOpen, onOpenChange }: AddAdminDialogPr
                 <FormItem>
                   <FormLabel>Display Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Adam" {...field} />
+                    <Input placeholder="e.g. Co-Parent" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -91,7 +91,7 @@ export function AddAdminDialog({ onAdd, isOpen, onOpenChange }: AddAdminDialogPr
                 <FormItem>
                   <FormLabel>Email Address</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. adam@example.com" {...field} />
+                    <Input placeholder="e.g. co-parent@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
