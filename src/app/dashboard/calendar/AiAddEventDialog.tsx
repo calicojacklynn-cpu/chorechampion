@@ -81,9 +81,9 @@ export function AiAddEventDialog() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>AI Add Recurring Event</DialogTitle>
+          <DialogTitle>AI Add Events</DialogTitle>
           <DialogDescription>
-            Use natural language to add recurring events like "School every weekday from 9am to 3pm."
+            Use natural language to add single or recurring events. The AI understands end dates, like "School weekdays 8am-3pm until June 1st."
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">

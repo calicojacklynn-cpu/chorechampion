@@ -197,18 +197,20 @@ const aiCreateEventsPrompt = ai.definePrompt({
   output: { schema: AiCreateEventsOutputSchema },
   prompt: `You are an intelligent calendar assistant. Your task is to create a list of calendar events based on a user's natural language instructions.
 
-**Goal:** Parse the user's request and generate all occurrences for the upcoming week (Monday to Sunday).
+**Goal:** Parse the user's request and generate all occurrences of the described events. You should handle complex recurring events and stopping conditions.
 
-**Reference Date:** Today's date is {{{currentDate}}}. Use this to determine the dates for the current week.
+**Reference Date:** Today's date is {{{currentDate}}}. Use this to determine the start date for recurring events unless otherwise specified.
 
 **Instructions:**
 1.  Read the user's instructions carefully.
-2.  Identify the event title, days of the week, and times.
-3.  For recurring events like "every weekday", create a separate event object for each day from Monday to Sunday of the current week that matches.
-4.  Assume a default event type of 'other' if not specified.
-5.  **CRITICAL:** Ensure all dates in the output are in the 'YYYY-MM-DD' format.
-6.  **CRITICAL:** Ensure all times are in the 'HH:mm' 24-hour format.
-7.  Return the generated events in the 'events' array.
+2.  Identify the event title, who it's for, days of the week, times, and recurrence pattern (e.g., "every weekday", "daily").
+3.  Look for any stopping conditions or end dates, such as "until August 1st" or "for 3 weeks" or "summer break starts...". You must accurately calculate all occurrences up to this stop date.
+4.  Generate a separate event object for EACH occurrence of the event. For example, "School every weekday from 8am to 3pm until June 15th" must create an event for every single weekday between the reference date and June 15th. Do not summarize or group them.
+5.  If no end date is specified for a recurring event, generate events for the next 4 weeks by default.
+6.  Assume a default event type of 'other' if not specified.
+7.  **CRITICAL:** Ensure all dates in the output are in the 'YYYY-MM-DD' format.
+8.  **CRITICAL:** Ensure all times are in the 'HH:mm' 24-hour format.
+9.  Return all generated events in the 'events' array.
 
 **User's Instructions:**
 {{{instructions}}}
