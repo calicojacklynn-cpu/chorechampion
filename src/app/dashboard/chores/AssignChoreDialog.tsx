@@ -25,7 +25,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Textarea } from '@/components/ui/textarea';
+import { SpeechToTextInput } from '@/app/components/SpeechToTextInput';
 import { useToast } from '@/hooks/use-toast';
 import { useSchedule, type CalendarEvent } from '@/app/context/ScheduleContext';
 import type { Chore } from './page';
@@ -183,10 +183,11 @@ export function AssignChoreDialog({
                 <FormItem>
                   <FormLabel>Constraints (Optional)</FormLabel>
                   <FormControl>
-                    <Textarea
+                    <SpeechToTextInput
                       placeholder="e.g., 'after 4pm', 'on a weekday', 'not on Tuesday'"
                       disabled={isAiRunning}
-                      {...field}
+                      value={field.value || ''}
+                      onChange={field.onChange}
                     />
                   </FormControl>
                   <FormDescription>

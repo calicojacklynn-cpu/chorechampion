@@ -15,7 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { SpeechToTextInput } from "@/app/components/SpeechToTextInput";
 import { useToast } from "@/hooks/use-toast";
 import { useSchedule } from "@/app/context/ScheduleContext";
 import { aiCreateEvents, type AiCreateEventsInput } from "@/ai";
@@ -89,12 +89,12 @@ export function AiAddEventDialog() {
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="ai-instructions">Instructions</Label>
-            <Textarea
+            <SpeechToTextInput
               id="ai-instructions"
               placeholder="e.g., School for Alex and Bella every weekday from 8:30am to 3:00pm"
               rows={4}
               value={instructions}
-              onChange={(e) => setInstructions(e.target.value)}
+              onChange={setInstructions}
               disabled={isAiRunning}
             />
           </div>
