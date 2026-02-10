@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,12 +26,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { Reward } from "./page";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Upload } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   description: z.string().optional(),
   points: z.coerce.number().min(1, "Points must be at least 1."),
-  imageUrl: z.string().url({ message: "Please enter a valid image URL." }).optional().or(z.literal('')),
+  imageUrl: z.string().optional(),
 });
 
 type EditRewardDialogProps = {
@@ -42,6 +43,7 @@ type EditRewardDialogProps = {
 };
 
 export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditRewardDialogProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,7 +55,7 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
   });
   
   const imageUrl = form.watch("imageUrl");
-  const isUrlValid = z.string().url().safeParse(imageUrl).success;
+  const isUrlValid = imageUrl && (imageUrl.startsWith('http') || imageUrl.startsWith('data:image'));
 
 
   useEffect(() => {
@@ -66,6 +68,17 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
       });
     }
   }, [isOpen, reward, form]);
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        form.setValue('imageUrl', reader.result as string, { shouldValidate: true });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -134,10 +147,27 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
                   name="imageUrl"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Image URL (Optional)</FormLabel>
+                      <FormLabel>Image (Optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder="https://example.com/image.png" {...field} />
+                        <Input placeholder="Paste an image URL..." {...field} />
                       </FormControl>
+                      <div className="text-center text-xs text-muted-foreground my-2">OR</div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <Upload className="mr-2 h-4 w-4" />
+                        Upload from Device
+                      </Button>
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
+                        accept="image/png, image/jpeg, image/gif, image/webp"
+                      />
                       <FormMessage />
                     </FormItem>
                   )}

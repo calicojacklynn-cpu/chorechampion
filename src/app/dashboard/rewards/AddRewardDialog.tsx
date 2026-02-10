@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { Reward } from "./page";
 
@@ -32,7 +32,7 @@ const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   description: z.string().optional(),
   points: z.coerce.number().min(1, "Points must be at least 1."),
-  imageUrl: z.string().url({ message: "Please enter a valid image URL." }).optional().or(z.literal('')),
+  imageUrl: z.string().optional(),
 });
 
 type AddRewardDialogProps = {
@@ -42,6 +42,7 @@ type AddRewardDialogProps = {
 export function AddRewardDialog({ onAdd }: AddRewardDialogProps) {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,6 +52,17 @@ export function AddRewardDialog({ onAdd }: AddRewardDialogProps) {
       imageUrl: "",
     },
   });
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        form.setValue('imageUrl', reader.result as string, { shouldValidate: true });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     onAdd(values);
@@ -123,10 +135,27 @@ export function AddRewardDialog({ onAdd }: AddRewardDialogProps) {
               name="imageUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Image URL (Optional)</FormLabel>
+                  <FormLabel>Image (Optional)</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://example.com/image.png" {...field} />
+                    <Input placeholder="Paste an image URL..." {...field} />
                   </FormControl>
+                  <div className="text-center text-xs text-muted-foreground my-2">OR</div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload className="mr-2 h-4 w-4" />
+                    Upload from Device
+                  </Button>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    className="hidden"
+                    accept="image/png, image/jpeg, image/gif, image/webp"
+                  />
                   <FormMessage />
                 </FormItem>
               )}
