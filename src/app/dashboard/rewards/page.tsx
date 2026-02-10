@@ -226,7 +226,7 @@ export default function RewardsPage() {
         <section>
           <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-semibold tracking-tight font-headline">Reward Catalog</h2>
-              <AddRewardDialog onAdd={handleAddReward} isOpen={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}/>
+              <AddRewardDialog onAdd={handleAddReward} />
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {rewards.length > 0 ? (
