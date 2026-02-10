@@ -14,17 +14,85 @@ import {
   CardTitle,
   CardFooter,
 } from '@/components/ui/card';
-import { Sparkles, Loader2, CheckCircle } from 'lucide-react';
+import { Sparkles, Loader2, CheckCircle, Mic, MicOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+
+// This is a browser-only API, so we declare the type here.
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
 
 export default function SchedulerPage() {
   const { toast } = useToast();
   const [instructions, setInstructions] = useState(
     'Create a weekly chore schedule for my two kids, Alex and Bella. Alex is available Monday and Wednesday. Bella is available Tuesday and Thursday. Chores are: take out trash (daily), wash dishes (daily), and clean room (weekly).'
   );
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeechSupported, setIsSpeechSupported] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      setIsSpeechSupported(true);
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognition.onerror = (event: any) => {
+        toast({
+          variant: 'destructive',
+          title: 'Voice Recognition Error',
+          description: event.error,
+        });
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInstructions((prev) =>
+          (prev ? `${prev.trim()} ${transcript}` : transcript).trim()
+        );
+      };
+
+      recognitionRef.current = recognition;
+    } else {
+      setIsSpeechSupported(false);
+    }
+  }, [toast]);
+
+  const toggleListening = () => {
+    if (!isSpeechSupported) {
+      toast({
+        variant: 'destructive',
+        title: 'Unsupported Feature',
+        description: 'Voice recognition is not supported in your browser.',
+      });
+      return;
+    }
+    if (isListening) {
+      recognitionRef.current?.stop();
+    } else {
+      recognitionRef.current?.start();
+    }
+  };
 
   const { run, output, running, error } = streamFlow(generateChoreSchedule);
 
@@ -37,7 +105,7 @@ export default function SchedulerPage() {
   }
 
   const handleGenerateSchedule = () => {
-     if (!instructions) {
+    if (!instructions) {
       toast({
         variant: 'destructive',
         title: 'Input required.',
@@ -45,7 +113,8 @@ export default function SchedulerPage() {
       });
       return;
     }
-    run({ instructions });
+    const input: ChoreScheduleInput = { instructions };
+    run(input);
   };
 
   return (
@@ -65,7 +134,8 @@ export default function SchedulerPage() {
         <CardHeader>
           <CardTitle>Instructions</CardTitle>
           <CardDescription>
-            Use plain English to tell the AI what you need. It will handle the rest.
+            Use plain English to tell the AI what you need. You can type or use
+            your voice.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -73,14 +143,34 @@ export default function SchedulerPage() {
             <Label htmlFor="instructions-input" className="font-bold text-lg">
               What can I do for you today?
             </Label>
-            <Textarea
-              id="instructions-input"
-              value={instructions}
-              onChange={(e) => setInstructions(e.target.value)}
-              rows={8}
-              placeholder="e.g., 'Create a weekly chore schedule for my two kids, Alex and Bella...'"
-              className="text-base"
-            />
+            <div className="relative">
+              <Textarea
+                id="instructions-input"
+                value={instructions}
+                onChange={(e) => setInstructions(e.target.value)}
+                rows={8}
+                placeholder="e.g., 'Create a weekly chore schedule for my two kids, Alex and Bella...'"
+                className="text-base pr-12"
+              />
+              {isSpeechSupported && (
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="ghost"
+                  onClick={toggleListening}
+                  className="absolute bottom-2 right-2 text-muted-foreground hover:text-foreground"
+                >
+                  {isListening ? (
+                    <MicOff className="h-5 w-5 text-destructive" />
+                  ) : (
+                    <Mic className="h-5 w-5" />
+                  )}
+                  <span className="sr-only">
+                    {isListening ? 'Stop Listening' : 'Use Voice'}
+                  </span>
+                </Button>
+              )}
+            </div>
           </div>
         </CardContent>
         <CardFooter>
@@ -110,7 +200,8 @@ export default function SchedulerPage() {
           <CardHeader>
             <CardTitle>Generated Schedule</CardTitle>
             <CardDescription>
-              Here is an optimized chore schedule. You can review and apply it to your calendar.
+              Here is an optimized chore schedule. You can review and apply it to
+              your calendar.
             </CardDescription>
           </CardHeader>
           <CardContent>
