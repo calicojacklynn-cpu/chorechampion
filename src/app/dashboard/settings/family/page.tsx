@@ -29,7 +29,9 @@ export default function FamilySettingsPage() {
             <div className="p-4 rounded-lg border">
                 <h3 className="font-semibold mb-2">Admin Profiles</h3>
                 <p className="text-sm text-muted-foreground mb-4">Manage parent or guardian accounts with admin privileges.</p>
-                <Button variant="outline">Manage Admins</Button>
+                <Button asChild variant="outline">
+                    <Link href="/dashboard/settings/family/admins">Manage Admins</Link>
+                </Button>
             </div>
             <div className="p-4 rounded-lg border">
                 <h3 className="font-semibold mb-2">Child Profiles & Champion Identity</h3>
