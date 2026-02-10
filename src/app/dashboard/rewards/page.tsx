@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -114,37 +114,57 @@ const initialRewards: Reward[] = [
 export default function RewardsPage() {
   const { toast } = useToast();
   const [rewards, setRewards] = useState<Reward[]>(initialRewards);
-  const [rewardToEdit, setRewardToEdit] = useState<Reward | null>(null);
-  const [rewardToDelete, setRewardToDelete] = useState<Reward | null>(null);
-  const [viewingChampion, setViewingChampion] = useState<Champion | null>(null);
 
-  const handleAddReward = (newRewardData: Omit<Reward, "id">) => {
+  const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
+  const [selectedChampion, setSelectedChampion] = useState<Champion | null>(null);
+
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isClaimedDialogOpen, setIsClaimedDialogOpen] = useState(false);
+
+  const handleAddReward = useCallback((newRewardData: Omit<Reward, "id">) => {
     const newReward: Reward = {
       ...newRewardData,
       id: `new-reward-${Date.now()}`,
       description: newRewardData.description || ""
     };
-    setRewards([newReward, ...rewards]);
-  };
+    setRewards(prev => [newReward, ...prev]);
+  }, []);
 
-  const handleUpdateReward = (updatedReward: Reward) => {
-    setRewards(rewards.map(r => r.id === updatedReward.id ? updatedReward : r));
+  const handleUpdateReward = useCallback((updatedReward: Reward) => {
+    setRewards(prev => prev.map(r => r.id === updatedReward.id ? updatedReward : r));
     toast({
       title: "Reward Updated!",
       description: `${updatedReward.name} has been updated.`,
     });
-    setRewardToEdit(null);
-  };
+    setIsEditDialogOpen(false);
+  }, [toast]);
 
-  const handleDeleteReward = (rewardId: string) => {
-    const rewardName = rewards.find(r => r.id === rewardId)?.name;
-    setRewards(rewards.filter(r => r.id !== rewardId));
+  const handleConfirmDelete = useCallback(() => {
+    if (!selectedReward) return;
+    const rewardName = selectedReward.name;
+    setRewards(prev => prev.filter(r => r.id !== selectedReward.id));
     toast({
       title: "Reward Deleted",
       description: `${rewardName} has been removed from the catalog.`,
     });
-    setRewardToDelete(null);
-  };
+    setIsDeleteDialogOpen(false);
+  }, [selectedReward, toast]);
+
+  const openEditDialog = useCallback((reward: Reward) => {
+    setSelectedReward(reward);
+    setIsEditDialogOpen(true);
+  }, []);
+
+  const openDeleteDialog = useCallback((reward: Reward) => {
+    setSelectedReward(reward);
+    setIsDeleteDialogOpen(true);
+  }, []);
+  
+  const openClaimedDialog = useCallback((champion: Champion) => {
+    setSelectedChampion(champion);
+    setIsClaimedDialogOpen(true);
+  }, []);
 
   return (
     <>
@@ -191,7 +211,7 @@ export default function RewardsPage() {
                       <p className="text-xs text-right mt-1 text-muted-foreground">{champion.points} / {champion.pointsToNextReward} pts</p>
                     </CardContent>
                     <CardFooter>
-                      <Button variant="outline" className="w-full" onClick={() => setViewingChampion(champion)}>View Claimed Rewards</Button>
+                      <Button variant="outline" className="w-full" onClick={() => openClaimedDialog(champion)}>View Claimed Rewards</Button>
                     </CardFooter>
                   </Card>
                 );
@@ -250,10 +270,10 @@ export default function RewardsPage() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem onSelect={() => setRewardToEdit(reward)}>Edit</DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => openEditDialog(reward)}>Edit</DropdownMenuItem>
                             <DropdownMenuItem
                               className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-                              onSelect={() => setRewardToDelete(reward)}
+                              onSelect={() => openDeleteDialog(reward)}
                             >
                               Delete
                             </DropdownMenuItem>
@@ -275,32 +295,32 @@ export default function RewardsPage() {
         </section>
       </div>
 
-      {!!rewardToEdit && (
+      {selectedReward && (
         <EditRewardDialog
-          reward={rewardToEdit}
-          isOpen={!!rewardToEdit}
-          onOpenChange={(isOpen) => !isOpen && setRewardToEdit(null)}
+          reward={selectedReward}
+          isOpen={isEditDialogOpen}
+          onOpenChange={setIsEditDialogOpen}
           onSave={handleUpdateReward}
         />
       )}
 
-      {!!rewardToDelete && (
+      {selectedReward && (
         <AlertDialog
-          open={!!rewardToDelete}
-          onOpenChange={(isOpen) => !isOpen && setRewardToDelete(null)}
+          open={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
         >
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the reward "{rewardToDelete.name}".
+                This action cannot be undone. This will permanently delete the reward "{selectedReward.name}".
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-destructive hover:bg-destructive/90"
-                onClick={() => handleDeleteReward(rewardToDelete.id)}
+                onClick={handleConfirmDelete}
               >
                 Delete
               </AlertDialogAction>
@@ -310,9 +330,9 @@ export default function RewardsPage() {
       )}
 
       <ClaimedRewardsDialog
-        champion={viewingChampion}
-        isOpen={!!viewingChampion}
-        onOpenChange={(isOpen) => !isOpen && setViewingChampion(null)}
+        champion={selectedChampion}
+        isOpen={isClaimedDialogOpen}
+        onOpenChange={setIsClaimedDialogOpen}
       />
     </>
   );

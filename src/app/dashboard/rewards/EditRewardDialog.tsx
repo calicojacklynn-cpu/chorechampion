@@ -59,7 +59,8 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
 
 
   useEffect(() => {
-    if (isOpen) {
+    // Reset the form with the new reward's data whenever the reward prop changes.
+    if (reward) {
       form.reset({
         name: reward.name,
         description: reward.description,
@@ -67,7 +68,7 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
         imageUrl: reward.imageUrl || "",
       });
     }
-  }, [isOpen, reward, form]);
+  }, [reward, form]);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
