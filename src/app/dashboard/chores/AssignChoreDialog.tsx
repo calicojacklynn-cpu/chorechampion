@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { format } from 'date-fns';
 import { Loader2, Wand2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -93,6 +94,7 @@ export function AssignChoreDialog({
         existingSchedule: schedule,
         calendarEvents: aiEvents,
         constraints: data.constraints,
+        currentDate: format(new Date(), 'yyyy-MM-dd'),
       };
 
       const result = await aiScheduleChore(input);

@@ -47,7 +47,17 @@ export default function CalendarPage() {
     const dateString = format(day, "yyyy-MM-dd");
 
     const choresForDay = schedule
-      .filter((chore) => chore.day.toLowerCase() === dayString.toLowerCase())
+      .filter((chore) => {
+        // Match single-instance chores by specific date
+        if (chore.date) {
+            return chore.date === dateString;
+        }
+        // Match recurring chores by day of the week
+        if (chore.day) {
+            return chore.day.toLowerCase() === dayString.toLowerCase();
+        }
+        return false;
+      })
       .map((chore) => ({ ...chore, eventType: "chore" }));
 
     const otherEvents = events
