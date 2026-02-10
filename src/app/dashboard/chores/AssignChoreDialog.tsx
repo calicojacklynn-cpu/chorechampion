@@ -27,7 +27,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { useSchedule } from '@/app/context/ScheduleContext';
+import { useSchedule, type CalendarEvent } from '@/app/context/ScheduleContext';
 import type { Chore } from './page';
 import type { ChoreAssignment } from '@/ai';
 import { aiScheduleChore, type AiScheduleChoreInput } from '@/ai';
@@ -59,7 +59,7 @@ export function AssignChoreDialog({
   onAssign,
 }: AssignChoreDialogProps) {
   const { toast } = useToast();
-  const { schedule } = useSchedule();
+  const { schedule, events } = useSchedule();
   const [isAiRunning, setIsAiRunning] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -83,10 +83,15 @@ export function AssignChoreDialog({
     setIsAiRunning(true);
     try {
       const selectedChampions = champions.filter(c => data.championIds.includes(c.id));
+      const clientEvents = events || [];
+      // Prepare events for the AI, removing client-side 'id'
+      const aiEvents = clientEvents.map(({ id, ...rest }) => rest);
+
       const input: AiScheduleChoreInput = {
         choreName: chore.name,
         championNames: selectedChampions.map(c => c.name),
         existingSchedule: schedule,
+        calendarEvents: aiEvents,
         constraints: data.constraints,
       };
 

@@ -91,10 +91,21 @@ export async function generateChoreSchedule(
 
 // New Schemas and Flow for AI Scheduling a single chore
 
+// New Schema for user-created calendar events
+const CalendarEventSchema = z.object({
+  title: z.string().describe('The title of the event.'),
+  date: z.string().describe('The date of the event in YYYY-MM-DD format.'),
+  startTime: z.string().optional().describe('The start time of the event in HH:mm 24-hour format.'),
+  endTime: z.string().optional().describe('The end time of the event in HH:mm 24-hour format.'),
+  type: z.enum(['appointment', 'task', 'other']).describe('The type of event.'),
+  description: z.string().optional().describe("A description of the event.")
+});
+
 const AiScheduleChoreInputSchema = z.object({
   choreName: z.string().describe('The name of the chore to be scheduled.'),
   championNames: z.array(z.string()).describe('The names of the champions assigned to the chore.'),
   existingSchedule: z.array(ChoreAssignmentSchema).describe('The list of chores already scheduled for the week.'),
+  calendarEvents: z.array(CalendarEventSchema).describe('A list of existing appointments, tasks, or other scheduled events that block out time.'),
   constraints: z.string().optional().describe('Any additional constraints for scheduling, like time of day or availability.'),
 });
 export type AiScheduleChoreInput = z.infer<typeof AiScheduleChoreInputSchema>;
@@ -115,15 +126,17 @@ const aiScheduleChorePrompt = ai.definePrompt({
 **Inputs:**
 - New Chore: {{{choreName}}}
 - Champions to assign it to: {{{json championNames}}}
-- Existing Weekly Schedule: {{{json existingSchedule}}}
+- Existing Weekly Chore Schedule: {{{json existingSchedule}}}
+- Existing Calendar Events (Appointments, etc.): {{{json calendarEvents}}}
 - Additional Constraints: {{{constraints}}}
 
 **Instructions:**
-1. Analyze the existing schedule to see which days each champion is already busy.
-2. Consider the additional constraints. For example, if the constraint says "after 4pm", this implies a weekday and you should avoid scheduling it during typical school hours. If no constraint is given, simply find the day with the least number of existing chores for the assigned champions.
-3. Choose the most suitable day of the week (e.g., "Monday", "Tuesday", etc.) for the new chore.
-4. Create assignment objects for the new chore for each specified champion on the chosen day.
-5. Return ONLY the new assignment(s) in the 'assignments' array. Do not return the existing schedule.
+1.  **IMPORTANT**: First, review the 'Existing Calendar Events' to identify any days or times that are already blocked for the champions. These events take precedence. Avoid scheduling chores that conflict with these events. Note that these events have specific dates.
+2. Analyze the 'Existing Weekly Chore Schedule' to see which days each champion is already busy with other chores.
+3. Consider the 'Additional Constraints'. For example, if the constraint says "after 4pm", this implies a weekday and you should avoid scheduling it during typical school hours. If no constraint is given, simply find the day with the least number of existing chores/events for the assigned champions.
+4. Based on all of the above, choose the most suitable day of the week (e.g., "Monday", "Tuesday", etc.) for the new chore.
+5. Create assignment objects for the new chore for each specified champion on the chosen day.
+6. Return ONLY the new assignment(s) in the 'assignments' array. Do not return the existing schedule.
 `,
 });
 

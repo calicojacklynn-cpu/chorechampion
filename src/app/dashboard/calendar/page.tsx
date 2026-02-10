@@ -16,12 +16,19 @@ import {
 import { useSchedule } from "@/app/context/ScheduleContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Calendar as CalendarIcon,
+  Clock,
+  Users,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AddEventDialog } from "./AddEventDialog";
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const { schedule } = useSchedule();
+  const { schedule, events } = useSchedule();
 
   const firstDayOfMonth = startOfMonth(currentDate);
   const lastDayOfMonth = endOfMonth(currentDate);
@@ -34,23 +41,43 @@ export default function CalendarPage() {
 
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  const choresByDay = (day: Date) => {
+  const getEventsForDay = (day: Date) => {
     const dayString = format(day, "EEEE");
-    return schedule.filter(
-      (chore) => chore.day.toLowerCase() === dayString.toLowerCase()
-    );
+    const dateString = format(day, "yyyy-MM-dd");
+
+    const choresForDay = schedule
+      .filter((chore) => chore.day.toLowerCase() === dayString.toLowerCase())
+      .map((chore) => ({ ...chore, eventType: "chore" }));
+
+    const otherEvents = events
+      .filter((event) => event.date === dateString)
+      .map((event) => ({ ...event, eventType: event.type }));
+
+    // Combine and sort by start time if available
+    const allEvents = [...choresForDay, ...otherEvents].sort((a: any, b: any) => {
+        if (a.startTime && b.startTime) {
+            return a.startTime.localeCompare(b.startTime);
+        }
+        if (a.startTime) return -1;
+        if (b.startTime) return 1;
+        return 0;
+    });
+    return allEvents;
   };
 
   return (
     <div className="space-y-6">
-       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
-          <CalendarIcon className="h-8 w-8 text-muted-foreground" />
-          Chore Calendar
-        </h1>
-        <p className="text-muted-foreground">
-          A monthly view of your AI-generated chore schedule.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
+            <CalendarIcon className="h-8 w-8 text-muted-foreground" />
+            Family Calendar
+          </h1>
+          <p className="text-muted-foreground">
+            A monthly view of your family's schedule and chores.
+          </p>
+        </div>
+        <AddEventDialog />
       </div>
 
       <Card>
@@ -70,7 +97,10 @@ export default function CalendarPage() {
         <CardContent className="p-0">
           <div className="grid grid-cols-7 border-b">
             {weekDays.map((day) => (
-              <div key={day} className="p-2 text-center text-sm font-medium text-muted-foreground">
+              <div
+                key={day}
+                className="p-2 text-center text-sm font-medium text-muted-foreground"
+              >
                 {day}
               </div>
             ))}
@@ -80,8 +110,9 @@ export default function CalendarPage() {
               <div
                 key={day.toString()}
                 className={cn(
-                  "h-36 p-2 border-r border-b flex flex-col overflow-hidden",
-                  !isSameMonth(day, currentDate) && "bg-muted/50 text-muted-foreground"
+                  "h-44 p-2 border-r border-b flex flex-col overflow-hidden",
+                  !isSameMonth(day, currentDate) &&
+                    "bg-muted/50 text-muted-foreground"
                 )}
               >
                 <time
@@ -94,12 +125,41 @@ export default function CalendarPage() {
                   {format(day, "d")}
                 </time>
                 <div className="flex-grow overflow-y-auto text-xs space-y-1 mt-1 -mx-1 px-1">
-                  {choresByDay(day).map((chore, index) => (
-                     <div key={index} className="bg-primary/20 p-1 rounded-sm text-[10px] leading-tight">
-                        <p className="font-semibold truncate text-primary">{chore.choreName}</p>
-                        <p className="text-primary/90 truncate">{chore.championName}</p>
-                     </div>
-                  ))}
+                  {getEventsForDay(day).map((event: any, index) => {
+                    if (event.eventType === "chore") {
+                      return (
+                        <div
+                          key={index}
+                          className="bg-primary/20 p-1 rounded-sm text-[10px] leading-tight"
+                        >
+                          <p className="font-semibold truncate text-primary">
+                            {event.choreName}
+                          </p>
+                          <p className="text-primary/90 truncate flex items-center gap-1">
+                            <Users className="h-3 w-3" /> {event.championName}
+                          </p>
+                        </div>
+                      );
+                    }
+                    // Render user-added events
+                    return (
+                      <div
+                        key={index}
+                        className="bg-accent/30 p-1 rounded-sm text-[10px] leading-tight"
+                      >
+                        <p className="font-semibold truncate text-accent-foreground">
+                          {event.title}
+                        </p>
+                        {event.startTime && (
+                          <p className="text-accent-foreground/90 truncate flex items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            {event.startTime}{" "}
+                            {event.endTime && `- ${event.endTime}`}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ))}
