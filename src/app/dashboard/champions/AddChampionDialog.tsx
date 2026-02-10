@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,7 +12,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -23,8 +22,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PlusCircle } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -39,15 +36,15 @@ const formSchema = z.object({
 });
 
 // The shape of the data for a new champion
-type NewChampionData = z.infer<typeof formSchema>;
+export type NewChampionData = z.infer<typeof formSchema>;
 
 type AddChampionDialogProps = {
   onAdd: (champion: NewChampionData) => void;
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
 };
 
-export function AddChampionDialog({ onAdd }: AddChampionDialogProps) {
-  const { toast } = useToast();
-  const [open, setOpen] = useState(false);
+export function AddChampionDialog({ onAdd, isOpen, onOpenChange }: AddChampionDialogProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,29 +54,19 @@ export function AddChampionDialog({ onAdd }: AddChampionDialogProps) {
     },
   });
 
+  // Reset form when dialog is closed
+  useEffect(() => {
+    if (!isOpen) {
+      form.reset();
+    }
+  }, [isOpen, form]);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     onAdd(values);
-    toast({
-      title: "Champion Added!",
-      description: `${values.name} has been added to your list of champions.`,
-    });
-    setOpen(false);
-    form.reset();
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          size="sm"
-          className="ml-auto gap-1 bg-accent hover:bg-accent/90 text-accent-foreground"
-        >
-          <PlusCircle className="h-3.5 w-3.5" />
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            Add Champion
-          </span>
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add New Champion</DialogTitle>
@@ -138,6 +125,9 @@ export function AddChampionDialog({ onAdd }: AddChampionDialogProps) {
               )}
             />
             <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                Cancel
+              </Button>
               <Button type="submit">Create Champion</Button>
             </DialogFooter>
           </form>

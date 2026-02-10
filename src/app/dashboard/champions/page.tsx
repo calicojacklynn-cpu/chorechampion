@@ -18,16 +18,9 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MoreHorizontal } from "lucide-react";
+import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { AddChampionDialog } from "./AddChampionDialog";
+import { AddChampionDialog, type NewChampionData } from "./AddChampionDialog";
 import { useToast } from "@/hooks/use-toast";
 import { EditChampionDialog } from "./EditChampionDialog";
 import {
@@ -49,8 +42,6 @@ export type Champion = {
   points: number;
   choresCompleted: number;
 };
-
-type NewChampionData = { name: string; username: string; pin: string };
 
 // Mock data for champions
 const initialChampions: Champion[] = [
@@ -76,24 +67,27 @@ export default function ChampionsPage() {
   const { toast } = useToast();
   const [champions, setChampions] = useState<Champion[]>(initialChampions);
   
-  const [editingChampion, setEditingChampion] = useState<Champion | null>(null);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-
-  const [deletingChampion, setDeletingChampion] = useState<Champion | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
+  const [selectedChampion, setSelectedChampion] = useState<Champion | null>(null);
+
   const handleAddChampion = useCallback((newChampionData: NewChampionData) => {
-    setChampions((prev) => {
-      const newChampion: Champion = {
-        ...newChampionData,
-        id: newChampionData.username.toLowerCase(),
-        avatarUrl: "",
-        points: 0,
-        choresCompleted: 0,
-      };
-      return [newChampion, ...prev];
+    const newChampion: Champion = {
+      ...newChampionData,
+      id: newChampionData.username.toLowerCase(),
+      avatarUrl: "",
+      points: 0,
+      choresCompleted: 0,
+    };
+    setChampions((prev) => [newChampion, ...prev]);
+    toast({
+      title: "Champion Added!",
+      description: `${newChampion.name} has been added to your list of champions.`,
     });
-  }, []);
+    setIsAddDialogOpen(false);
+  }, [toast]);
 
   const handleUpdateChampion = useCallback((updatedChampion: Champion) => {
     setChampions((prev) =>
@@ -107,22 +101,23 @@ export default function ChampionsPage() {
   }, [toast]);
 
   const handleConfirmDelete = useCallback(() => {
-    if (!deletingChampion) return;
-    setChampions((prev) => prev.filter((c) => c.id !== deletingChampion.id));
+    if (!selectedChampion) return;
+    setChampions((prev) => prev.filter((c) => c.id !== selectedChampion.id));
     toast({
       title: "Champion Deleted",
-      description: `${deletingChampion.name} has been removed.`,
+      description: `${selectedChampion.name} has been removed.`,
+      variant: 'destructive'
     });
     setIsDeleteDialogOpen(false);
-  }, [deletingChampion, toast]);
+  }, [selectedChampion, toast]);
 
-  const handleOpenEditDialog = useCallback((champion: Champion) => {
-    setEditingChampion(champion);
+  const openEditDialog = useCallback((champion: Champion) => {
+    setSelectedChampion(champion);
     setIsEditDialogOpen(true);
   }, []);
 
-  const handleOpenDeleteDialog = useCallback((champion: Champion) => {
-    setDeletingChampion(champion);
+  const openDeleteDialog = useCallback((champion: Champion) => {
+    setSelectedChampion(champion);
     setIsDeleteDialogOpen(true);
   }, []);
 
@@ -136,7 +131,16 @@ export default function ChampionsPage() {
               Manage your champions and view their progress.
             </CardDescription>
           </div>
-          <AddChampionDialog onAdd={handleAddChampion} />
+          <Button
+            size="sm"
+            className="ml-auto gap-1 bg-accent hover:bg-accent/90 text-accent-foreground"
+            onClick={() => setIsAddDialogOpen(true)}
+          >
+            <PlusCircle className="h-3.5 w-3.5" />
+            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+              Add Champion
+            </span>
+          </Button>
         </CardHeader>
         <CardContent>
           <Table>
@@ -151,9 +155,7 @@ export default function ChampionsPage() {
                 <TableHead className="hidden md:table-cell">
                   Chores Completed
                 </TableHead>
-                <TableHead>
-                  <span className="sr-only">Actions</span>
-                </TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -188,33 +190,15 @@ export default function ChampionsPage() {
                       <TableCell className="hidden md:table-cell">
                         {champion.choresCompleted}
                       </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              aria-haspopup="true"
-                              size="icon"
-                              variant="ghost"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem
-                              onSelect={() => handleOpenEditDialog(champion)}
-                            >
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-                              onSelect={() => handleOpenDeleteDialog(champion)}
-                            >
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                           <Button variant="outline" size="sm" onClick={() => openEditDialog(champion)}>
+                             <Edit className="h-3.5 w-3.5" />
+                           </Button>
+                           <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(champion)}>
+                              <Trash2 className="h-3.5 w-3.5" />
+                           </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))
@@ -230,9 +214,15 @@ export default function ChampionsPage() {
         </CardContent>
       </Card>
       
-      {editingChampion && (
+      <AddChampionDialog 
+        isOpen={isAddDialogOpen}
+        onOpenChange={setIsAddDialogOpen}
+        onAdd={handleAddChampion}
+      />
+
+      {selectedChampion && (
         <EditChampionDialog
-          champion={editingChampion}
+          champion={selectedChampion}
           isOpen={isEditDialogOpen}
           onOpenChange={setIsEditDialogOpen}
           onSave={handleUpdateChampion}
@@ -243,13 +233,13 @@ export default function ChampionsPage() {
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
       >
-        {deletingChampion && (
+        {selectedChampion && (
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action cannot be undone. This will permanently delete{" "}
-                  {deletingChampion.name}.
+                  {selectedChampion.name}.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
