@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -29,6 +30,7 @@ const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   description: z.string().optional(),
   points: z.coerce.number().min(1, "Points must be at least 1."),
+  imageUrl: z.string().url({ message: "Please enter a valid image URL." }).optional().or(z.literal('')),
 });
 
 type EditRewardDialogProps = {
@@ -45,8 +47,13 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
       name: reward.name,
       description: reward.description,
       points: reward.points,
+      imageUrl: reward.imageUrl || "",
     },
   });
+  
+  const imageUrl = form.watch("imageUrl");
+  const isUrlValid = z.string().url().safeParse(imageUrl).success;
+
 
   useEffect(() => {
     if (isOpen) {
@@ -54,6 +61,7 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
         name: reward.name,
         description: reward.description,
         points: reward.points,
+        imageUrl: reward.imageUrl || "",
       });
     }
   }, [isOpen, reward, form]);
@@ -63,7 +71,8 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
     onSave({
       ...reward,
       ...values,
-      description: values.description || ""
+      description: values.description || "",
+      imageUrl: values.imageUrl || ""
     });
   }
 
@@ -117,6 +126,29 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="imageUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image URL (Optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://example.com/image.png" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {imageUrl && isUrlValid && (
+              <div>
+                <FormLabel>Image Preview</FormLabel>
+                <div className="relative aspect-video w-full mt-2 rounded-md overflow-hidden border">
+                    <Image src={imageUrl} alt="Reward image preview" fill className="object-cover" />
+                </div>
+              </div>
+            )}
+
             <DialogFooter>
               <Button type="submit">Save Changes</Button>
             </DialogFooter>

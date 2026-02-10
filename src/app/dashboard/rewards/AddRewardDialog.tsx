@@ -32,6 +32,7 @@ const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   description: z.string().optional(),
   points: z.coerce.number().min(1, "Points must be at least 1."),
+  imageUrl: z.string().url({ message: "Please enter a valid image URL." }).optional().or(z.literal('')),
 });
 
 type AddRewardDialogProps = {
@@ -47,6 +48,7 @@ export function AddRewardDialog({ onAdd }: AddRewardDialogProps) {
       name: "",
       description: "",
       points: 10,
+      imageUrl: "",
     },
   });
 
@@ -111,6 +113,19 @@ export function AddRewardDialog({ onAdd }: AddRewardDialogProps) {
                   <FormLabel>Point Cost</FormLabel>
                   <FormControl>
                     <Input type="number" inputMode="numeric" min={1} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="imageUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image URL (Optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://example.com/image.png" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
