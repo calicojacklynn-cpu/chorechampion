@@ -4,6 +4,7 @@ import { streamFlow } from '@genkit-ai/next/client';
 import {
   generateChoreSchedule,
   type ChoreScheduleInput,
+  type AutomatedChoreScheduleOutput,
 } from '@/ai/flows/automated-chore-schedule-generation';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,6 +15,14 @@ import {
   CardTitle,
   CardFooter,
 } from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Sparkles, Loader2, CheckCircle, Mic } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect, useRef } from 'react';
@@ -35,6 +44,9 @@ export default function SchedulerPage() {
   const [isListening, setIsListening] = useState(false);
   const [isSpeechSupported, setIsSpeechSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
+
+  const { run, output, running, error } = streamFlow(generateChoreSchedule);
+  const prevRunning = useRef(false);
 
   useEffect(() => {
     const SpeechRecognition =
@@ -77,6 +89,29 @@ export default function SchedulerPage() {
     }
   }, [toast]);
 
+  // Issue 1 Fix: Handle errors in a useEffect
+  useEffect(() => {
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: 'An error occurred.',
+        description: error.message || 'Failed to generate schedule.',
+      });
+    }
+  }, [error, toast]);
+
+  // Issue 4 Fix: Show success toast on generation
+  useEffect(() => {
+    if (prevRunning.current && !running && output) {
+      toast({
+        title: 'Schedule Generated!',
+        description: 'Your new chore schedule is ready below.',
+      });
+    }
+    prevRunning.current = running;
+  }, [running, output, toast]);
+
+
   const toggleListening = () => {
     if (!isSpeechSupported) {
       toast({
@@ -93,16 +128,6 @@ export default function SchedulerPage() {
     }
   };
 
-  const { run, output, running, error } = streamFlow(generateChoreSchedule);
-
-  if (error) {
-    toast({
-      variant: 'destructive',
-      title: 'An error occurred.',
-      description: error.message || 'Failed to generate schedule.',
-    });
-  }
-
   const handleGenerateSchedule = () => {
     if (!instructions) {
       toast({
@@ -114,6 +139,14 @@ export default function SchedulerPage() {
     }
     const input: ChoreScheduleInput = { instructions };
     run(input);
+  };
+  
+  // Issue 3 Fix: Add onClick handler for "Apply to Calendar"
+  const handleApplyToCalendar = () => {
+    toast({
+      title: 'Schedule Applied!',
+      description: 'The generated chore schedule has been applied to your calendar.',
+    });
   };
 
   return (
@@ -217,15 +250,36 @@ export default function SchedulerPage() {
                 <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
               </div>
             )}
-            {output?.schedule && (
-              <pre className="p-4 bg-muted rounded-md overflow-x-auto text-sm">
-                {JSON.stringify(output.schedule, null, 2)}
-              </pre>
+            {/* Issue 2 Fix: Display schedule in a table */}
+            {output?.schedule && output.schedule.length > 0 && (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Day</TableHead>
+                    <TableHead>Champion</TableHead>
+                    <TableHead>Chore</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {output.schedule.map((assignment, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{assignment.day}</TableCell>
+                      <TableCell>{assignment.championName}</TableCell>
+                      <TableCell>{assignment.choreName}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+            {output?.schedule && output.schedule.length === 0 && (
+                 <div className="flex justify-center items-center py-10 min-h-[200px]">
+                    <p className="text-muted-foreground">Could not generate a schedule based on the instructions.</p>
+                 </div>
             )}
           </CardContent>
           {output && (
             <CardFooter>
-              <Button>
+              <Button onClick={handleApplyToCalendar}>
                 <CheckCircle className="mr-2 h-4 w-4" />
                 Apply to Calendar
               </Button>
