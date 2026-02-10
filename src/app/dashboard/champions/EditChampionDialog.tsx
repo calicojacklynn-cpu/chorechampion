@@ -153,15 +153,12 @@ export function EditChampionDialog({
                   <FormLabel>Avatar</FormLabel>
                   <div className="flex justify-center py-2">
                     <Avatar className="h-24 w-24 border-2 border-primary">
-                      <AvatarImage asChild key={avatarUrl}>
-                        <Image
-                          src={avatarUrl || '/placeholder.svg'}
-                          width={96}
-                          height={96}
-                          alt="Avatar preview"
-                          className="object-cover"
-                        />
-                      </AvatarImage>
+                      <AvatarImage
+                        key={avatarUrl}
+                        src={avatarUrl || '/placeholder.svg'}
+                        alt="Avatar preview"
+                        className="object-cover"
+                      />
                       <AvatarFallback>
                         {champion?.name.charAt(0)}
                       </AvatarFallback>
@@ -217,16 +214,12 @@ export function EditChampionDialog({
                                 "border-primary ring-2 ring-primary ring-offset-2"
                             )}
                           >
-                            <AvatarImage asChild>
-                              <Image
-                                src={avatar.imageUrl}
-                                width={80}
-                                height={80}
-                                alt={avatar.description}
-                                data-ai-hint={avatar.imageHint}
-                                className="object-cover"
-                              />
-                            </AvatarImage>
+                            <AvatarImage
+                              src={avatar.imageUrl}
+                              alt={avatar.description}
+                              data-ai-hint={avatar.imageHint}
+                              className="object-cover"
+                            />
                           </Avatar>
                         </div>
                       ))}

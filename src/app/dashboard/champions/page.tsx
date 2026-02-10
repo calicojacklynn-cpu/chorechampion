@@ -33,6 +33,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export type Champion = {
   id: string;
@@ -49,7 +50,7 @@ const initialChampions: Champion[] = [
     id: "alex",
     name: "Alex",
     username: "alex-the-great",
-    avatarUrl: "https://images.unsplash.com/photo-1529306436573-30b146d1e433?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTcyMTg0NjQzNnww&ixlib=rb-4.1.0&q=80&w=1080",
+    avatarUrl: PlaceHolderImages.find(p => p.id === 'champion-avatar-1')?.imageUrl,
     points: 125,
     choresCompleted: 12,
   },
@@ -57,7 +58,7 @@ const initialChampions: Champion[] = [
     id: "bella",
     name: "Bella",
     username: "bella-the-brave",
-    avatarUrl: "https://images.unsplash.com/photo-1610212570082-9a715694c922?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBjYXBlfGVufDB8fHx8MTcyMTg0NjQ4Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+    avatarUrl: PlaceHolderImages.find(p => p.id === 'champion-avatar-2')?.imageUrl,
     points: 85,
     choresCompleted: 8,
   },
@@ -165,15 +166,11 @@ export default function ChampionsPage() {
                       <TableCell className="hidden sm:table-cell">
                         <Avatar className="h-12 w-12 border">
                           {champion.avatarUrl ? (
-                            <AvatarImage asChild>
-                              <Image
-                                src={champion.avatarUrl}
-                                width={48}
-                                height={48}
-                                alt={champion.name}
-                                className="object-cover"
-                              />
-                            </AvatarImage>
+                            <AvatarImage
+                              src={champion.avatarUrl}
+                              alt={champion.name}
+                              className="object-cover"
+                            />
                           ) : null}
                           <AvatarFallback>
                             {champion.name.charAt(0)}

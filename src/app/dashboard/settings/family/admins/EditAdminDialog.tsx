@@ -146,9 +146,7 @@ export function EditAdminDialog({
                   {avatarUrl && (
                     <div className="flex justify-center py-2">
                       <Avatar className="h-24 w-24 border-2 border-primary">
-                        <AvatarImage asChild>
-                            <Image src={avatarUrl} width={96} height={96} alt="Avatar preview" className="object-cover" />
-                        </AvatarImage>
+                        <AvatarImage src={avatarUrl} alt="Avatar preview" className="object-cover" />
                         <AvatarFallback>{admin.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                     </div>

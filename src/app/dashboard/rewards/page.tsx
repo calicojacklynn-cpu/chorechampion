@@ -28,6 +28,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { EditRewardDialog } from "./EditRewardDialog";
 import { ClaimedRewardsDialog } from "./ClaimedRewardsDialog";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 // Champion type
 export type Champion = {
@@ -43,14 +44,14 @@ const champions: Champion[] = [
   {
     id: "alex",
     name: "Alex",
-    avatarUrl: "https://images.unsplash.com/photo-1529306436573-30b146d1e433?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTcyMTg0NjQzNnww&ixlib=rb-4.1.0&q=80&w=1080",
+    avatarUrl: PlaceHolderImages.find(p => p.id === 'champion-avatar-1')?.imageUrl,
     points: 125,
     pointsToNextReward: 200,
   },
   {
     id: "bella",
     name: "Bella",
-    avatarUrl: "https://images.unsplash.com/photo-1610212570082-9a715694c922?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBjYXBlfGVufDB8fHx8MTcyMTg0NjQ4Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+    avatarUrl: PlaceHolderImages.find(p => p.id === 'champion-avatar-2')?.imageUrl,
     points: 85,
     pointsToNextReward: 150,
   },
@@ -186,7 +187,7 @@ export default function RewardsPage() {
                   <Card key={champion.id} className="flex flex-col">
                     <CardHeader className="flex flex-row items-center gap-4">
                       <Avatar className="h-16 w-16 border-2 border-primary">
-                        {champion.avatarUrl && <AvatarImage asChild><Image src={champion.avatarUrl} width={64} height={64} alt={champion.name} data-ai-hint="child portrait" /></AvatarImage>}
+                        {champion.avatarUrl && <AvatarImage src={champion.avatarUrl} alt={champion.name} data-ai-hint="child portrait" className="object-cover" />}
                         <AvatarFallback className="text-xl">{champion.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div>

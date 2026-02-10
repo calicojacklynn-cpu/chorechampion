@@ -149,16 +149,12 @@ export default function AdminsPage() {
                       <TableCell className="hidden sm:table-cell">
                         <Avatar className="h-12 w-12 border">
                           {adminAvatar && (
-                            <AvatarImage asChild>
-                              <Image
-                                src={adminAvatar.imageUrl}
-                                width={48}
-                                height={48}
-                                alt={admin.name}
-                                className="object-cover"
-                                data-ai-hint="person face"
-                              />
-                            </AvatarImage>
+                            <AvatarImage
+                              src={adminAvatar.imageUrl}
+                              alt={admin.name}
+                              className="object-cover"
+                              data-ai-hint="person face"
+                            />
                           )}
                           <AvatarFallback>
                             {admin.name.charAt(0)}
