@@ -17,8 +17,8 @@ export default function CalendarPage() {
     );
 
     return (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <div className="lg:col-span-2">
+        <div className="space-y-6">
+            <div>
                  <Card>
                     <CardHeader>
                         <CardTitle className="font-headline text-2xl">Chore Calendar</CardTitle>
