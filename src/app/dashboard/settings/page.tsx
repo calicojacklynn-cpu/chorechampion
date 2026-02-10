@@ -74,20 +74,10 @@ export default function SettingsPage() {
             </Card>
 
             <Card className="border-destructive">
-              <CardHeader>
-                <CardTitle className="text-destructive">Delete Account</CardTitle>
-                <CardDescription>
-                  Permanently delete your account and all associated data. This action cannot be undone.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Make sure you have saved any information you want to keep before deleting your account.
-                </p>
+              <CardContent className="p-4 flex items-center justify-between">
+                <p className="text-sm font-semibold text-destructive">Delete Account</p>
+                <Button variant="destructive" size="sm">Delete</Button>
               </CardContent>
-              <CardFooter className="border-t border-destructive bg-destructive/5 p-6">
-                <Button variant="destructive">Delete My Account</Button>
-              </CardFooter>
             </Card>
           </div>
         </TabsContent>
