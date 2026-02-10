@@ -1,7 +1,11 @@
 /**
  * @fileoverview This file serves as a central registry for all Genkit flows.
- * By importing a flow here, it becomes available to the Genkit system
- * and can be discovered by the Next.js API route.
+ * It initializes the Genkit instance and then imports all flow files,
+ * ensuring they are registered correctly.
  */
 
+// This ensures the genkit instance is created and configured.
+import '@/ai/genkit';
+
+// Import flows to register them.
 import './automated-chore-schedule-generation';
