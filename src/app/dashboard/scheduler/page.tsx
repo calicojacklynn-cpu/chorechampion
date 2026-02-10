@@ -26,7 +26,7 @@ import {
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useSchedule } from '@/app/context/ScheduleContext';
 import { Sparkles, Loader2, CheckCircle } from 'lucide-react';
 
@@ -39,11 +39,19 @@ export default function SchedulerPage() {
   const { run, output, running, error } = streamFlow(generateChoreSchedule);
   const prevRunning = useRef(false);
 
+  // By stringifying the output, we create a stable dependency for the useEffect hook.
+  // This prevents an infinite render loop caused by the `output` object being a new
+  // reference on every render.
+  const stringifiedOutput = useMemo(() => JSON.stringify(output), [output]);
+
   useEffect(() => {
-    if (output) {
-      setTempSchedule(output);
+    if (stringifiedOutput) {
+      const parsedOutput = JSON.parse(stringifiedOutput);
+      if (parsedOutput) {
+        setTempSchedule(parsedOutput);
+      }
     }
-  }, [output]);
+  }, [stringifiedOutput]);
 
   // Effect to show toast on error
   useEffect(() => {
