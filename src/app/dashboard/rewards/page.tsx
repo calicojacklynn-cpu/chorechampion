@@ -186,7 +186,7 @@ export default function RewardsPage() {
                   <Card key={champion.id} className="flex flex-col">
                     <CardHeader className="flex flex-row items-center gap-4">
                       <Avatar className="h-16 w-16 border-2 border-primary">
-                        {champion.avatarUrl && <AvatarImage asChild src={champion.avatarUrl}><Image src={champion.avatarUrl} width={64} height={64} alt={champion.name} data-ai-hint="child portrait" /></AvatarImage>}
+                        {champion.avatarUrl && <AvatarImage asChild><Image src={champion.avatarUrl} width={64} height={64} alt={champion.name} data-ai-hint="child portrait" /></AvatarImage>}
                         <AvatarFallback className="text-xl">{champion.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div>

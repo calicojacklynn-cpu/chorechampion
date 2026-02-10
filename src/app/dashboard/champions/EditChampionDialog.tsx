@@ -160,7 +160,7 @@ export function EditChampionDialog({
                       {avatarUrl && (
                         <div className="flex justify-center py-2">
                           <Avatar className="h-24 w-24 border-2 border-primary">
-                            <AvatarImage asChild src={avatarUrl}>
+                            <AvatarImage asChild>
                               <Image
                                 src={avatarUrl}
                                 width={96}
@@ -228,7 +228,7 @@ export function EditChampionDialog({
                                   <Avatar
                                     className={cn("h-20 w-20 border-2", avatarUrl === avatar.imageUrl && "border-primary" )}
                                   >
-                                    <AvatarImage asChild src={avatar.imageUrl}>
+                                    <AvatarImage asChild>
                                       <Image
                                         src={avatar.imageUrl}
                                         width={80}

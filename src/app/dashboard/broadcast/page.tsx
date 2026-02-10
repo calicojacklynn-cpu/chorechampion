@@ -98,7 +98,7 @@ export default function BroadcastPage() {
               >
                 {isParent && (
                   <Avatar className="h-10 w-10 border">
-                    {avatar && <AvatarImage asChild src={avatar.imageUrl} alt={avatar.description}><Image src={avatar.imageUrl} width={40} height={40} data-ai-hint={avatar.imageHint} alt={avatar.description} /></AvatarImage>}
+                    {avatar && <AvatarImage asChild><Image src={avatar.imageUrl} width={40} height={40} data-ai-hint={avatar.imageHint} alt={avatar.description} /></AvatarImage>}
                     <AvatarFallback>{message.senderName.charAt(0)}</AvatarFallback>
                   </Avatar>
                 )}
@@ -117,7 +117,7 @@ export default function BroadcastPage() {
                 </div>
                  {!isParent && (
                   <Avatar className="h-10 w-10 border">
-                    {avatar && <AvatarImage asChild src={avatar.imageUrl} alt={avatar.description}><Image src={avatar.imageUrl} width={40} height={40} data-ai-hint={avatar.imageHint} alt={avatar.description} /></AvatarImage>}
+                    {avatar && <AvatarImage asChild><Image src={avatar.imageUrl} width={40} height={40} data-ai-hint={avatar.imageHint} alt={avatar.description} /></AvatarImage>}
                     <AvatarFallback>{message.senderName.charAt(0)}</AvatarFallback>
                   </Avatar>
                 )}

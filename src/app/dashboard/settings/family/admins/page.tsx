@@ -149,7 +149,7 @@ export default function AdminsPage() {
                       <TableCell className="hidden sm:table-cell">
                         <Avatar className="h-12 w-12 border">
                           {adminAvatar && (
-                            <AvatarImage asChild src={adminAvatar.imageUrl}>
+                            <AvatarImage asChild>
                               <Image
                                 src={adminAvatar.imageUrl}
                                 width={48}

@@ -165,7 +165,7 @@ export default function ChampionsPage() {
                       <TableCell className="hidden sm:table-cell">
                         <Avatar className="h-12 w-12 border">
                           {champion.avatarUrl ? (
-                            <AvatarImage asChild src={champion.avatarUrl}>
+                            <AvatarImage asChild>
                               <Image
                                 src={champion.avatarUrl}
                                 width={48}
