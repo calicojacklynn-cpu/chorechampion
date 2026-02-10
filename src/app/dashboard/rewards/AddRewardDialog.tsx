@@ -30,10 +30,10 @@ import { useToast } from "@/hooks/use-toast";
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   description: z.string().optional(),
-  points: z.coerce.number().min(1, "Points must be at least 1.").max(15, "Points cannot be more than 15."),
+  points: z.coerce.number().min(1, "Points must be at least 1."),
 });
 
-export function AddChoreDialog() {
+export function AddRewardDialog() {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -41,7 +41,7 @@ export function AddChoreDialog() {
     defaultValues: {
       name: "",
       description: "",
-      points: 1,
+      points: 10,
     },
   });
 
@@ -49,8 +49,8 @@ export function AddChoreDialog() {
     // For now, we'll just log the values and show a toast.
     console.log(values);
     toast({
-      title: "Chore Added!",
-      description: `${values.name} has been added to your list of chores.`,
+      title: "Reward Added!",
+      description: `${values.name} has been added to the reward catalog.`,
     });
     setOpen(false);
     form.reset();
@@ -60,15 +60,15 @@ export function AddChoreDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add New Chore
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add New Reward
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Chore</DialogTitle>
+          <DialogTitle>Add New Reward</DialogTitle>
           <DialogDescription>
-            Fill out the details below to add a new chore.
+            Fill out the details for the new reward you want to offer.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -78,22 +78,22 @@ export function AddChoreDialog() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Chore Name</FormLabel>
+                  <FormLabel>Reward Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Wash the dishes" {...field} />
+                    <Input placeholder="e.g. Movie Night" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
+             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description (Optional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Describe the chore..." {...field} />
+                    <Textarea placeholder="Describe the reward..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -104,16 +104,16 @@ export function AddChoreDialog() {
               name="points"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Points (1-15)</FormLabel>
+                  <FormLabel>Point Cost</FormLabel>
                   <FormControl>
-                    <Input type="number" inputMode="numeric" min={1} max={15} {...field} />
+                    <Input type="number" inputMode="numeric" min={1} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter>
-              <Button type="submit">Create Chore</Button>
+              <Button type="submit">Create Reward</Button>
             </DialogFooter>
           </form>
         </Form>
