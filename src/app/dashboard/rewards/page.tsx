@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -112,6 +111,7 @@ export default function RewardsPage() {
   const [rewardToDelete, setRewardToDelete] = useState<Reward | null>(null);
   const [championForHistory, setChampionForHistory] = useState<Champion | null>(null);
   
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isClaimedDialogOpen, setIsClaimedDialogOpen] = useState(false);
@@ -123,6 +123,7 @@ export default function RewardsPage() {
       description: newRewardData.description || ""
     };
     setRewards(prev => [newReward, ...prev]);
+    setIsAddDialogOpen(false);
   }, []);
 
   const handleUpdateReward = useCallback((updatedReward: Reward) => {
@@ -134,16 +135,6 @@ export default function RewardsPage() {
     setIsEditDialogOpen(false);
   }, [toast]);
 
-  const openEditDialog = useCallback((reward: Reward) => {
-    setRewardToEdit(reward);
-    setIsEditDialogOpen(true);
-  }, []);
-
-  const openDeleteDialog = useCallback((reward: Reward) => {
-    setRewardToDelete(reward);
-    setIsDeleteDialogOpen(true);
-  }, []);
-  
   const handleConfirmDelete = useCallback(() => {
     if (!rewardToDelete) return;
     const rewardName = rewardToDelete.name;
@@ -155,6 +146,16 @@ export default function RewardsPage() {
     setRewardToDelete(null);
     setIsDeleteDialogOpen(false);
   }, [rewardToDelete, toast]);
+
+  const openEditDialog = useCallback((reward: Reward) => {
+    setRewardToEdit(reward);
+    setIsEditDialogOpen(true);
+  }, []);
+
+  const openDeleteDialog = useCallback((reward: Reward) => {
+    setRewardToDelete(reward);
+    setIsDeleteDialogOpen(true);
+  }, []);
 
   const openClaimedDialog = useCallback((champion: Champion) => {
     setChampionForHistory(champion);
@@ -205,9 +206,9 @@ export default function RewardsPage() {
                       <Progress value={progress} className="h-2" />
                       <p className="text-xs text-right mt-1 text-muted-foreground">{champion.points} / {champion.pointsToNextReward} pts</p>
                     </CardContent>
-                    <CardFooter>
+                    <div className="p-6 pt-0">
                       <Button variant="outline" className="w-full" onClick={() => openClaimedDialog(champion)}>View Claimed Rewards</Button>
-                    </CardFooter>
+                    </div>
                   </Card>
                 );
               })
@@ -225,7 +226,7 @@ export default function RewardsPage() {
         <section>
           <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-semibold tracking-tight font-headline">Reward Catalog</h2>
-              <AddRewardDialog onAdd={handleAddReward} />
+              <AddRewardDialog onAdd={handleAddReward} isOpen={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}/>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {rewards.length > 0 ? (
@@ -242,25 +243,25 @@ export default function RewardsPage() {
                           )}
                       </div>
                     </CardContent>
-                    <CardHeader className="flex-grow">
+                    <div className="p-6 flex-grow flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-lg leading-tight">{reward.name}</CardTitle>
-                           <Badge variant="secondary" className="w-fit mt-2">
-                              <Star className="w-3 h-3 mr-1 text-accent fill-accent" />
-                              {reward.points} Points
-                          </Badge>
+                            <CardTitle className="text-lg leading-tight">{reward.name}</CardTitle>
+                            <Badge variant="secondary" className="w-fit mt-2">
+                                <Star className="w-3 h-3 mr-1 text-accent fill-accent" />
+                                {reward.points} Points
+                            </Badge>
                         </div>
-                    </CardHeader>
-                    <CardFooter className="flex flex-col items-end gap-2 pt-0">
-                        <Button variant="outline" size="icon-sm" onClick={() => openEditDialog(reward)}>
-                            <Edit className="h-3.5 w-3.5" />
-                            <span className="sr-only">Edit</span>
-                        </Button>
-                        <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(reward)}>
-                            <Trash2 className="h-3.5 w-3.5" />
-                            <span className="sr-only">Delete</span>
-                        </Button>
-                    </CardFooter>
+                        <div className="flex flex-col gap-2">
+                            <Button variant="outline" size="icon-sm" onClick={() => openEditDialog(reward)}>
+                                <Edit className="h-3.5 w-3.5" />
+                                <span className="sr-only">Edit</span>
+                            </Button>
+                            <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(reward)}>
+                                <Trash2 className="h-3.5 w-3.5" />
+                                <span className="sr-only">Delete</span>
+                            </Button>
+                        </div>
+                    </div>
                   </Card>
                 )
               )
@@ -279,12 +280,7 @@ export default function RewardsPage() {
         <EditRewardDialog
           reward={rewardToEdit}
           isOpen={isEditDialogOpen}
-          onOpenChange={(isOpen) => {
-            setIsEditDialogOpen(isOpen);
-            if (!isOpen) {
-              setRewardToEdit(null);
-            }
-          }}
+          onOpenChange={setIsEditDialogOpen}
           onSave={handleUpdateReward}
         />
       )}
@@ -318,12 +314,7 @@ export default function RewardsPage() {
         <ClaimedRewardsDialog
             champion={championForHistory}
             isOpen={isClaimedDialogOpen}
-            onOpenChange={(isOpen) => {
-                setIsClaimedDialogOpen(isOpen);
-                if (!isOpen) {
-                    setChampionForHistory(null);
-                }
-            }}
+            onOpenChange={setIsClaimedDialogOpen}
         />
       )}
     </>
