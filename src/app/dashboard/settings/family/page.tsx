@@ -40,15 +40,6 @@ export default function FamilySettingsPage() {
                     <Link href="/dashboard/champions">Manage Champions</Link>
                 </Button>
             </div>
-            <div className="flex items-center justify-between space-x-2 p-4 rounded-lg border">
-                <div className="space-y-0.5">
-                    <Label htmlFor="age-filters" className="text-base">Age-Appropriate Filters</Label>
-                    <p className="text-sm text-muted-foreground">
-                        Categorize chores by difficulty (e.g., "Level 1" vs. "Master Class").
-                    </p>
-                </div>
-                <Switch id="age-filters" />
-            </div>
         </CardContent>
             <CardFooter className="border-t px-6 py-4">
             <Button>Save Family Settings</Button>
