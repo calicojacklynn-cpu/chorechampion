@@ -33,7 +33,15 @@ const formSchema = z.object({
   points: z.coerce.number().min(1, "Points must be at least 1.").max(15, "Points cannot be more than 15."),
 });
 
-export function AddChoreDialog() {
+// The shape of the data for a new chore
+type NewChoreData = z.infer<typeof formSchema>;
+
+type AddChoreDialogProps = {
+  onAdd: (chore: NewChoreData) => void;
+};
+
+
+export function AddChoreDialog({ onAdd }: AddChoreDialogProps) {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -46,8 +54,7 @@ export function AddChoreDialog() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // For now, we'll just log the values and show a toast.
-    console.log(values);
+    onAdd(values);
     toast({
       title: "Chore Added!",
       description: `${values.name} has been added to your list of chores.`,
