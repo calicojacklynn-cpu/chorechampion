@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,7 +12,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -23,68 +22,62 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PlusCircle } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import type { Champion } from "./page";
 
+// Don't allow editing PIN for now, just name and username.
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   username: z
     .string()
     .min(2, "Username must be at least 2 characters.")
     .refine((s) => !s.includes(" "), "Username cannot contain spaces."),
-  pin: z
-    .string()
-    .length(4, "PIN must be 4 digits.")
-    .regex(/^\d{4}$/, "PIN must be 4 digits."),
 });
 
-// The shape of the data for a new champion
-type NewChampionData = z.infer<typeof formSchema>;
-
-type AddChampionDialogProps = {
-  onAdd: (champion: NewChampionData) => void;
+type EditChampionDialogProps = {
+  champion: Champion;
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+  onSave: (champion: Champion) => void;
 };
 
-export function AddChampionDialog({ onAdd }: AddChampionDialogProps) {
-  const { toast } = useToast();
-  const [open, setOpen] = useState(false);
+export function EditChampionDialog({
+  champion,
+  isOpen,
+  onOpenChange,
+  onSave,
+}: EditChampionDialogProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      username: "",
-      pin: "",
+      name: champion.name,
+      username: champion.username,
     },
   });
 
+  // Reset form when the champion prop changes
+  useEffect(() => {
+    if (isOpen) {
+      form.reset({
+        name: champion.name,
+        username: champion.username,
+      });
+    }
+  }, [isOpen, champion, form]);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onAdd(values);
-    toast({
-      title: "Champion Added!",
-      description: `${values.name} has been added to your list of champions.`,
+    onSave({
+      ...champion, // keep original id, points, etc.
+      ...values, // overwrite name and username
     });
-    setOpen(false);
-    form.reset();
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          size="sm"
-          className="ml-auto gap-1 bg-accent hover:bg-accent/90 text-accent-foreground"
-        >
-          <PlusCircle className="h-3.5 w-3.5" />
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            Add Champion
-          </span>
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Champion</DialogTitle>
+          <DialogTitle>Edit Champion</DialogTitle>
           <DialogDescription>
-            Fill out the details below to add a new champion to your roster.
+            Update the details for {champion.name}.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -118,27 +111,8 @@ export function AddChampionDialog({ onAdd }: AddChampionDialogProps) {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="pin"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>4-Digit PIN</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      inputMode="numeric"
-                      maxLength={4}
-                      placeholder="••••"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <DialogFooter>
-              <Button type="submit">Create Champion</Button>
+              <Button type="submit">Save Changes</Button>
             </DialogFooter>
           </form>
         </Form>
