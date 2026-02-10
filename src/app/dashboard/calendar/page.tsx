@@ -34,9 +34,9 @@ export default function CalendarPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
-        <Card>
-          <CardContent className="p-4 flex justify-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="md:col-span-1">
+          <CardContent className="p-4">
             <Calendar
               mode="single"
               selected={date}
@@ -46,13 +46,13 @@ export default function CalendarPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="md:col-span-1">
           <CardHeader>
             <CardTitle>
               Chores for {date ? format(date, "PPP") : "Today"}
             </CardTitle>
             <CardDescription>
-              A list of what needs to get done.
+              A list of what needs to get done on the selected day.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col space-y-4">
