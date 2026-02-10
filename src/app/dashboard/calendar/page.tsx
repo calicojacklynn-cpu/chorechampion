@@ -1,89 +1,111 @@
 "use client";
 
 import { useState } from "react";
-import { format } from "date-fns";
-import { useSchedule } from "@/app/context/ScheduleContext";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Calendar } from "@/components/ui/calendar";
-import { ListTodo, User, Calendar as CalendarIcon } from "lucide-react";
+  format,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  eachDayOfInterval,
+  isSameMonth,
+  isToday,
+  add,
+  sub,
+} from "date-fns";
+import { useSchedule } from "@/app/context/ScheduleContext";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function CalendarPage() {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [currentDate, setCurrentDate] = useState(new Date());
   const { schedule } = useSchedule();
 
-  const selectedDayString = date ? format(date, "EEEE") : "";
-  const choresForSelectedDay = schedule.filter(
-    (chore) => chore.day.toLowerCase() === selectedDayString.toLowerCase()
-  );
+  const firstDayOfMonth = startOfMonth(currentDate);
+  const lastDayOfMonth = endOfMonth(currentDate);
+  const startDate = startOfWeek(firstDayOfMonth);
+  const endDate = endOfWeek(lastDayOfMonth);
+  const days = eachDayOfInterval({ start: startDate, end: endDate });
+
+  const nextMonth = () => setCurrentDate(add(currentDate, { months: 1 }));
+  const prevMonth = () => setCurrentDate(sub(currentDate, { months: 1 }));
+
+  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  const choresByDay = (day: Date) => {
+    const dayString = format(day, "EEEE");
+    return schedule.filter(
+      (chore) => chore.day.toLowerCase() === dayString.toLowerCase()
+    );
+  };
 
   return (
     <div className="space-y-6">
-      <div>
+       <div>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
           <CalendarIcon className="h-8 w-8 text-muted-foreground" />
           Chore Calendar
         </h1>
         <p className="text-muted-foreground">
-          View your AI-generated chore schedule at a glance.
+          A monthly view of your AI-generated chore schedule.
         </p>
       </div>
 
-      <div className="flex flex-col gap-6">
-        <Card>
-          <CardContent className="p-0 flex justify-center">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              className="rounded-md"
-            />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              Chores for {date ? format(date, "PPP") : "Today"}
-            </CardTitle>
-            <CardDescription>
-              A list of what needs to get done on the selected day.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col space-y-4">
-            {choresForSelectedDay.length > 0 ? (
-              choresForSelectedDay.map((chore, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg"
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                    <ListTodo className="h-5 w-5 text-primary" />
-                  </div>
-                  <div className="flex-grow">
-                    <p className="font-semibold">{chore.choreName}</p>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <User className="h-3 w-3" />
-                      <span>{chore.championName}</span>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="flex h-full min-h-[150px] items-center justify-center">
-                <p className="text-muted-foreground">
-                  No chores scheduled for this day.
-                </p>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between p-4 border-b">
+          <CardTitle className="text-xl font-semibold">
+            {format(currentDate, "MMMM yyyy")}
+          </CardTitle>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="icon" onClick={prevMonth}>
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="icon" onClick={nextMonth}>
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="grid grid-cols-7 border-b">
+            {weekDays.map((day) => (
+              <div key={day} className="p-2 text-center text-sm font-medium text-muted-foreground">
+                {day}
               </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-7">
+            {days.map((day) => (
+              <div
+                key={day.toString()}
+                className={cn(
+                  "h-36 p-2 border-r border-b flex flex-col overflow-hidden",
+                  !isSameMonth(day, currentDate) && "bg-muted/50 text-muted-foreground"
+                )}
+              >
+                <time
+                  dateTime={format(day, "yyyy-MM-dd")}
+                  className={cn(
+                    "flex items-center justify-center h-6 w-6 rounded-full text-sm",
+                    isToday(day) && "bg-primary text-primary-foreground font-bold"
+                  )}
+                >
+                  {format(day, "d")}
+                </time>
+                <div className="flex-grow overflow-y-auto text-xs space-y-1 mt-1 -mx-1 px-1">
+                  {choresByDay(day).map((chore, index) => (
+                     <div key={index} className="bg-primary/20 p-1 rounded-sm text-[10px] leading-tight">
+                        <p className="font-semibold truncate text-primary">{chore.choreName}</p>
+                        <p className="text-primary/90 truncate">{chore.championName}</p>
+                     </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
