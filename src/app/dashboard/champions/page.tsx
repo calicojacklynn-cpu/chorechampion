@@ -101,6 +101,12 @@ export default function ChampionsPage() {
     });
     setChampionToEdit(null);
   }, [toast]);
+  
+  const handleEditOpenChange = useCallback((isOpen: boolean) => {
+    if (!isOpen) {
+        setChampionToEdit(null);
+    }
+  }, []);
 
   const handleDeleteChampion = useCallback(() => {
     if (!championToDelete) return;
@@ -221,7 +227,7 @@ export default function ChampionsPage() {
         <EditChampionDialog
           champion={championToEdit}
           isOpen={!!championToEdit}
-          onOpenChange={(isOpen) => !isOpen && setChampionToEdit(null)}
+          onOpenChange={handleEditOpenChange}
           onSave={handleUpdateChampion}
         />
       )}
