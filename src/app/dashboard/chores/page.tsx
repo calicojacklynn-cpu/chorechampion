@@ -154,6 +154,7 @@ export default function ChoresPage() {
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                                <DropdownMenuItem>Assign</DropdownMenuItem>
                                                 <DropdownMenuItem>Edit</DropdownMenuItem>
                                                 <DropdownMenuItem>Delete</DropdownMenuItem>
                                             </DropdownMenuContent>
