@@ -36,7 +36,7 @@ export type AutomatedChoreScheduleOutput = z.infer<typeof AutomatedChoreSchedule
 export async function generateChoreSchedule(
   input: ChoreScheduleInput
 ): Promise<AutomatedChoreScheduleOutput> {
-  return generateAutomatedChoreScheduleFlow(input);
+  return generateChoreScheduleFlow(input);
 }
 
 const scheduleGenerationPrompt = ai.definePrompt({
@@ -61,9 +61,9 @@ Based on the instructions above, generate the weekly chore schedule.
 `,
 });
 
-const generateAutomatedChoreScheduleFlow = ai.defineFlow(
+const generateChoreScheduleFlow = ai.defineFlow(
   {
-    name: 'generateAutomatedChoreScheduleFlow',
+    name: 'generateChoreSchedule',
     inputSchema: ChoreScheduleInputSchema,
     outputSchema: AutomatedChoreScheduleOutputSchema,
   },
