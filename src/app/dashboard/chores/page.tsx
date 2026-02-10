@@ -180,8 +180,7 @@ export default function ChoresPage() {
                     <Table>
                           <TableHeader>
                               <TableRow>
-                                  <TableHead className="w-[300px]">Chore</TableHead>
-                                  <TableHead className="hidden sm:table-cell">Description</TableHead>
+                                  <TableHead>Chore</TableHead>
                                   <TableHead className="text-center">Points</TableHead>
                                   <TableHead className="text-right">Actions</TableHead>
                               </TableRow>
@@ -190,17 +189,17 @@ export default function ChoresPage() {
                               {chores.length > 0 ? (
                                   chores.map((chore) => (
                                       <TableRow key={chore.id}>
-                                          <TableCell className="font-medium">{chore.name}</TableCell>
-                                          <TableCell className="hidden sm:table-cell text-muted-foreground truncate max-w-xs">
-                                              {chore.description || "No description"}
+                                          <TableCell className="align-top">
+                                              <div className="font-medium">{chore.name}</div>
+                                              {chore.description && <div className="text-sm text-muted-foreground">{chore.description}</div>}
                                           </TableCell>
-                                          <TableCell className="text-center">
+                                          <TableCell className="text-center align-top">
                                               <Badge variant="secondary" className="w-fit">
                                                   <Star className="w-3 h-3 mr-1 text-accent fill-accent" />
                                                   {chore.points}
                                               </Badge>
                                           </TableCell>
-                                          <TableCell className="text-right">
+                                          <TableCell className="text-right align-top">
                                               <div className="flex flex-col items-end gap-1">
                                                   <Button variant="outline" size="icon-sm" onClick={() => openAssignDialog(chore)} title="AI Schedule Chore">
                                                       <Wand2 className="h-4 w-4" />
@@ -220,7 +219,7 @@ export default function ChoresPage() {
                                   ))
                               ) : (
                                   <TableRow>
-                                      <TableCell colSpan={4} className="h-24 text-center">
+                                      <TableCell colSpan={3} className="h-24 text-center">
                                           No chores yet. Add a chore or pick from the presets.
                                       </TableCell>
                                   </TableRow>
