@@ -30,9 +30,7 @@ declare global {
 
 export default function SchedulerPage() {
   const { toast } = useToast();
-  const [instructions, setInstructions] = useState(
-    'Create a weekly chore schedule for my two kids, Alex and Bella. Alex is available Monday and Wednesday. Bella is available Tuesday and Thursday. Chores are: take out trash (daily), wash dishes (daily), and clean room (weekly).'
-  );
+  const [instructions, setInstructions] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isSpeechSupported, setIsSpeechSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
