@@ -27,13 +27,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
 import type { Champion } from "./page";
@@ -56,10 +49,10 @@ type EditChampionDialogProps = {
   onSave: (champion: Champion) => void;
 };
 
-// Filter placeholder images to get only default champion avatars
+// Filter placeholder images to get the first 9 champion avatars
 const defaultAvatars = PlaceHolderImages.filter((p) =>
   p.id.startsWith("champion-avatar-")
-);
+).slice(0, 9);
 
 export function EditChampionDialog({
   champion,
@@ -206,46 +199,38 @@ export function EditChampionDialog({
                     <p className="text-sm text-muted-foreground">
                       Choose a default avatar
                     </p>
-                    <Carousel
-                      opts={{ align: 'start' }}
-                      className="w-full"
-                    >
-                      <CarouselContent>
-                        {defaultAvatars.map((avatar) => (
-                          <CarouselItem key={avatar.id} className="basis-1/3">
-                            <div
-                              className="p-1 cursor-pointer"
-                              onClick={() =>
-                                form.setValue('avatarUrl', avatar.imageUrl, {
-                                  shouldValidate: true,
-                                })
-                              }
-                            >
-                              <Avatar
-                                className={cn(
-                                  'h-20 w-20 border-2',
-                                  avatarUrl === avatar.imageUrl &&
-                                    'border-primary ring-2 ring-primary ring-offset-2'
-                                )}
-                              >
-                                <AvatarImage asChild>
-                                  <Image
-                                    src={avatar.imageUrl}
-                                    width={80}
-                                    height={80}
-                                    alt={avatar.description}
-                                    data-ai-hint={avatar.imageHint}
-                                    className="object-cover"
-                                  />
-                                </AvatarImage>
-                              </Avatar>
-                            </div>
-                          </CarouselItem>
-                        ))}
-                      </CarouselContent>
-                      <CarouselPrevious />
-                      <CarouselNext />
-                    </Carousel>
+                    <div className="grid grid-cols-3 gap-4">
+                      {defaultAvatars.map((avatar) => (
+                        <div
+                          key={avatar.id}
+                          className="p-1 cursor-pointer flex justify-center"
+                          onClick={() =>
+                            form.setValue("avatarUrl", avatar.imageUrl, {
+                              shouldValidate: true,
+                            })
+                          }
+                        >
+                          <Avatar
+                            className={cn(
+                              "h-20 w-20 border-2",
+                              avatarUrl === avatar.imageUrl &&
+                                "border-primary ring-2 ring-primary ring-offset-2"
+                            )}
+                          >
+                            <AvatarImage asChild>
+                              <Image
+                                src={avatar.imageUrl}
+                                width={80}
+                                height={80}
+                                alt={avatar.description}
+                                data-ai-hint={avatar.imageHint}
+                                className="object-cover"
+                              />
+                            </AvatarImage>
+                          </Avatar>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                    <FormField
                     control={form.control}
