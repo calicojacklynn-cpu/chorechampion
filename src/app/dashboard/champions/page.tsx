@@ -81,14 +81,16 @@ export default function ChampionsPage() {
   type NewChampionData = { name: string; username: string; pin: string };
 
   const handleAddChampion = useCallback((newChampionData: NewChampionData) => {
-    const newChampion: Champion = {
-      ...newChampionData,
-      id: newChampionData.username.toLowerCase(),
-      avatarUrl: "",
-      points: 0,
-      choresCompleted: 0,
-    };
-    setChampions((prev) => [newChampion, ...prev]);
+    setChampions((prev) => {
+      const newChampion: Champion = {
+        ...newChampionData,
+        id: newChampionData.username.toLowerCase(),
+        avatarUrl: "",
+        points: 0,
+        choresCompleted: 0,
+      };
+      return [newChampion, ...prev];
+    });
   }, []);
 
   const handleUpdateChampion = useCallback((updatedChampion: Champion) => {
@@ -117,6 +119,12 @@ export default function ChampionsPage() {
     });
     setChampionToDelete(null);
   }, [championToDelete, toast]);
+
+  const handleDeleteDialogChange = useCallback((isOpen: boolean) => {
+    if (!isOpen) {
+      setChampionToDelete(null);
+    }
+  }, []);
 
   return (
     <>
@@ -234,7 +242,7 @@ export default function ChampionsPage() {
       {!!championToDelete && (
         <AlertDialog
           open={!!championToDelete}
-          onOpenChange={(isOpen) => !isOpen && setChampionToDelete(null)}
+          onOpenChange={handleDeleteDialogChange}
         >
           <AlertDialogContent>
             <AlertDialogHeader>
