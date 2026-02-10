@@ -70,7 +70,13 @@ export function EditChampionDialog({
         avatarUrl: champion.avatarUrl || "",
       });
     }
-  }, [isOpen, champion, reset]);
+  }, [
+    isOpen,
+    champion.name,
+    champion.username,
+    champion.avatarUrl,
+    reset,
+  ]);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
