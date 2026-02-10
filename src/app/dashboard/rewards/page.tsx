@@ -43,14 +43,14 @@ const champions: Champion[] = [
   {
     id: "alex",
     name: "Alex",
-    avatarUrl: "https://images.unsplash.com/photo-1503454455800-ded2d453b632?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjaGlsZCUyMHBvcnRyYWl0fGVufDB8fHx8MTcyMTE0NjYxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+    avatarUrl: "https://images.unsplash.com/photo-1529306436573-30b146d1e433?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTcyMTg0NjQzNnww&ixlib=rb-4.1.0&q=80&w=1080",
     points: 125,
     pointsToNextReward: 200,
   },
   {
     id: "bella",
     name: "Bella",
-    avatarUrl: "https://images.unsplash.com/photo-1519345258320-f0c9b0a8a645?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjaGlsZCUyMHBvcnRyYWl0fGVufDB8fHx8MTcyMTE0NjYxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+    avatarUrl: "https://images.unsplash.com/photo-1610212570082-9a715694c922?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBjYXBlfGVufDB8fHx8MTcyMTg0NjQ4Nnww&ixlib=rb-4.1.0&q=80&w=1080",
     points: 85,
     pointsToNextReward: 150,
   },
