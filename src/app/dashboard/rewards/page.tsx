@@ -11,7 +11,14 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Star, Trophy } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontal, Star, Trophy } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AddRewardDialog } from "./AddRewardDialog";
 
@@ -129,11 +136,35 @@ export default function RewardsPage() {
                     </div>
                   </CardContent>
                   <CardHeader>
-                    <CardTitle className="text-lg">{reward.name}</CardTitle>
-                    <Badge variant="secondary" className="w-fit">
-                        <Star className="w-3 h-3 mr-1 text-accent fill-accent" />
-                        {reward.points} Points
-                    </Badge>
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <CardTitle className="text-lg leading-tight">{reward.name}</CardTitle>
+                        <Badge variant="secondary" className="w-fit mt-2">
+                            <Star className="w-3 h-3 mr-1 text-accent fill-accent" />
+                            {reward.points} Points
+                        </Badge>
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            aria-haspopup="true"
+                            size="icon"
+                            variant="ghost"
+                            className="-mt-1 -mr-3 h-8 w-8"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Toggle menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem>Edit</DropdownMenuItem>
+                          <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive">
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </CardHeader>
                 </Card>
               );
