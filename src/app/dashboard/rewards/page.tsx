@@ -14,14 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Star, Trophy } from "lucide-react";
+import { Edit, Star, Trophy, Trash2 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AddRewardDialog } from "./AddRewardDialog";
 import {
@@ -114,10 +107,11 @@ const initialRewards: Reward[] = [
 export default function RewardsPage() {
   const { toast } = useToast();
   const [rewards, setRewards] = useState<Reward[]>(initialRewards);
-
-  const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
-  const [selectedChampion, setSelectedChampion] = useState<Champion | null>(null);
-
+  
+  const [rewardToEdit, setRewardToEdit] = useState<Reward | null>(null);
+  const [rewardToDelete, setRewardToDelete] = useState<Reward | null>(null);
+  const [championForHistory, setChampionForHistory] = useState<Champion | null>(null);
+  
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isClaimedDialogOpen, setIsClaimedDialogOpen] = useState(false);
@@ -141,28 +135,28 @@ export default function RewardsPage() {
   }, [toast]);
 
   const handleConfirmDelete = useCallback(() => {
-    if (!selectedReward) return;
-    const rewardName = selectedReward.name;
-    setRewards(prev => prev.filter(r => r.id !== selectedReward.id));
+    if (!rewardToDelete) return;
+    const rewardName = rewardToDelete.name;
+    setRewards(prev => prev.filter(r => r.id !== rewardToDelete.id));
     toast({
       title: "Reward Deleted",
       description: `${rewardName} has been removed from the catalog.`,
     });
     setIsDeleteDialogOpen(false);
-  }, [selectedReward, toast]);
+  }, [rewardToDelete, toast]);
 
   const openEditDialog = useCallback((reward: Reward) => {
-    setSelectedReward(reward);
+    setRewardToEdit(reward);
     setIsEditDialogOpen(true);
   }, []);
 
   const openDeleteDialog = useCallback((reward: Reward) => {
-    setSelectedReward(reward);
+    setRewardToDelete(reward);
     setIsDeleteDialogOpen(true);
   }, []);
   
   const openClaimedDialog = useCallback((champion: Champion) => {
-    setSelectedChampion(champion);
+    setChampionForHistory(champion);
     setIsClaimedDialogOpen(true);
   }, []);
 
@@ -235,7 +229,7 @@ export default function RewardsPage() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {rewards.length > 0 ? (
               rewards.map((reward) => (
-                  <Card key={reward.id} className="overflow-hidden">
+                  <Card key={reward.id} className="overflow-hidden flex flex-col">
                     <CardContent className="p-0">
                       <div className="relative aspect-[4/3] bg-muted">
                           {reward.imageUrl ? (
@@ -247,40 +241,25 @@ export default function RewardsPage() {
                           )}
                       </div>
                     </CardContent>
-                    <CardHeader>
-                      <div className="flex items-start justify-between gap-4">
+                    <CardHeader className="flex-grow">
                         <div>
                           <CardTitle className="text-lg leading-tight">{reward.name}</CardTitle>
-                          <Badge variant="secondary" className="w-fit mt-2">
+                           <Badge variant="secondary" className="w-fit mt-2">
                               <Star className="w-3 h-3 mr-1 text-accent fill-accent" />
                               {reward.points} Points
                           </Badge>
                         </div>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              aria-haspopup="true"
-                              size="icon"
-                              variant="ghost"
-                              className="-mt-1 -mr-3 h-8 w-8"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem onSelect={() => openEditDialog(reward)}>Edit</DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-                              onSelect={() => openDeleteDialog(reward)}
-                            >
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
                     </CardHeader>
+                    <CardFooter className="flex justify-end gap-2 pt-0">
+                        <Button variant="outline" size="icon-sm" onClick={() => openEditDialog(reward)}>
+                            <Edit className="h-3.5 w-3.5" />
+                            <span className="sr-only">Edit</span>
+                        </Button>
+                        <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(reward)}>
+                            <Trash2 className="h-3.5 w-3.5" />
+                            <span className="sr-only">Delete</span>
+                        </Button>
+                    </CardFooter>
                   </Card>
                 )
               )
@@ -295,16 +274,16 @@ export default function RewardsPage() {
         </section>
       </div>
 
-      {selectedReward && (
+      {rewardToEdit && (
         <EditRewardDialog
-          reward={selectedReward}
+          reward={rewardToEdit}
           isOpen={isEditDialogOpen}
           onOpenChange={setIsEditDialogOpen}
           onSave={handleUpdateReward}
         />
       )}
 
-      {selectedReward && (
+      {rewardToDelete && (
         <AlertDialog
           open={isDeleteDialogOpen}
           onOpenChange={setIsDeleteDialogOpen}
@@ -313,7 +292,7 @@ export default function RewardsPage() {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the reward "{selectedReward.name}".
+                This action cannot be undone. This will permanently delete the reward "{rewardToDelete.name}".
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -329,11 +308,13 @@ export default function RewardsPage() {
         </AlertDialog>
       )}
 
-      <ClaimedRewardsDialog
-        champion={selectedChampion}
-        isOpen={isClaimedDialogOpen}
-        onOpenChange={setIsClaimedDialogOpen}
-      />
+      {championForHistory && (
+        <ClaimedRewardsDialog
+            champion={championForHistory}
+            isOpen={isClaimedDialogOpen}
+            onOpenChange={setIsClaimedDialogOpen}
+        />
+      )}
     </>
   );
 }
