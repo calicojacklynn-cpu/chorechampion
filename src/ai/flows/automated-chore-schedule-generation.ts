@@ -3,50 +3,24 @@
 /**
  * @fileOverview This file defines a Genkit flow for automated chore schedule generation.
  *
- * It allows parents to automatically generate a chore schedule based on natural language instructions,
- * champion availability, chore frequency, and house requirements.
+ * It allows parents to automatically generate a chore schedule based on natural language instructions.
  *
- * @interface AutomatedChoreScheduleInput - Defines the input schema for the automated chore schedule generation.
- * @interface AutomatedChoreScheduleOutput - Defines the output schema for the automated chore schedule generation.
- * @function generateAutomatedChoreSchedule - The main function to trigger the chore schedule generation flow.
+ * @interface ChoreScheduleInput - Defines the input schema for the chore schedule generation.
+ * @interface AutomatedChoreScheduleOutput - Defines the output schema for the chore schedule generation.
+ * @function generateChoreSchedule - The main function to trigger the chore schedule generation flow.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'zod';
 
-const ChampionAvailabilitySchema = z.object({
-  championName: z.string().describe('The name of the champion (child).'),
-  availableDays: z
-    .array(z.string())
-    .describe("Days of the week the champion is available (e.g., ['Monday', 'Friday'])"),
-});
-
-const ChoreSchema = z.object({
-  choreName: z.string().describe('The name of the chore.'),
-  frequency: z
+const ChoreScheduleInputSchema = z.object({
+  instructions: z
     .string()
-    .describe('How often the chore should be done (e.g., "daily", "twice a week", "weekly").'),
-});
-
-const AutomatedChoreScheduleInputSchema = z.object({
-  naturalLanguageInstructions: z
-    .string()
-    .optional()
     .describe(
-      'Specific scheduling instructions in plain English (e.g., "Billy needs to take the trash out every night at 8pm", "The dog needs to be walked in the morning and evening").'
-    ),
-  championAvailability: z
-    .array(ChampionAvailabilitySchema)
-    .describe('A list of champions and their available days. This can be used in conjunction with or instead of natural language instructions.'),
-  choreList: z.array(ChoreSchema).describe('A list of chores to be scheduled. This can be used in conjunction with or instead of natural language instructions.'),
-  houseDetails: z
-    .string()
-    .optional()
-    .describe(
-      'Any general details about the house or family that might affect scheduling (e.g., "We have two bathrooms", "The kids are in school from 8am to 3pm on weekdays").'
+      'The user\'s request in plain English. This can include champion names, chores, availability, and any other relevant details for creating a chore schedule.'
     ),
 });
-export type AutomatedChoreScheduleInput = z.infer<typeof AutomatedChoreScheduleInputSchema>;
+export type ChoreScheduleInput = z.infer<typeof ChoreScheduleInputSchema>;
 
 const ChoreAssignmentSchema = z.object({
   day: z.string().describe('The day the chore is assigned for.'),
@@ -59,61 +33,38 @@ const AutomatedChoreScheduleOutputSchema = z.object({
 });
 export type AutomatedChoreScheduleOutput = z.infer<typeof AutomatedChoreScheduleOutputSchema>;
 
-export async function generateAutomatedChoreSchedule(
-  input: AutomatedChoreScheduleInput
+export async function generateChoreSchedule(
+  input: ChoreScheduleInput
 ): Promise<AutomatedChoreScheduleOutput> {
   return generateAutomatedChoreScheduleFlow(input);
 }
 
 const scheduleGenerationPrompt = ai.definePrompt({
   name: 'choreScheduleGenerationPrompt',
-  input: {schema: AutomatedChoreScheduleInputSchema},
+  input: {schema: ChoreScheduleInputSchema},
   output: {schema: AutomatedChoreScheduleOutputSchema},
-  prompt: `You are an expert family organizer. Your task is to create a fair and balanced weekly chore schedule for a family based on the provided instructions.
+  prompt: `You are an expert family organizer. Your task is to create a fair and balanced weekly chore schedule for a family based on the user's instructions.
 
-Your primary goal is to interpret the "Specific Instructions" first. If provided, these natural language instructions take precedence over the structured availability and chore lists. Use the structured lists as supplementary information or as the primary source if no specific instructions are given.
+The user will provide all the necessary information in a single block of text. This may include the names of the children (champions), the chores that need to be done, their frequency, champion availability, and any other rules or constraints.
 
-**Specific Instructions (Priority):**
-{{#if naturalLanguageInstructions}}
-{{{naturalLanguageInstructions}}}
-{{else}}
-No specific natural language instructions provided. Use the lists below.
-{{/if}}
+Your goal is to parse all this information and generate a complete, fair, and balanced chore schedule for one full week (Monday to Sunday).
 
-**Champions (the kids) and their general availability:**
-{{#if championAvailability}}
-{{#each championAvailability}}
-- {{championName}} is available on: {{#each availableDays}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}.
-{{/each}}
-{{else}}
-No champion availability list provided.
-{{/if}}
+**User's Instructions:**
+{{{instructions}}}
 
-**Chores that need to be done:**
-{{#if choreList}}
-{{#each choreList}}
-- {{choreName}} (Frequency: {{frequency}})
-{{/each}}
-{{else}}
-No chore list provided.
-{{/if}}
-
-**General House Details & Constraints:**
-{{{houseDetails}}}
-
-Based on all this information, generate a weekly chore schedule.
-- **Prioritize the "Specific Instructions".** If it says "Billy takes out the trash every night", schedule that, even if the chore list has a different frequency.
-- Be fair and distribute the workload evenly among the champions for any remaining/unspecified chores.
-- Respect each champion's availability.
-- Ensure all chores are scheduled according to their required frequency, unless overridden by specific instructions.
-- The output should be a schedule for one full week (Monday to Sunday).
+Based on the instructions above, generate the weekly chore schedule.
+- Interpret all instructions, including names, chores, schedules, and rules.
+- Distribute the workload as evenly and fairly as possible.
+- Adhere strictly to any specified availabilities or constraints.
+- If information is missing, make reasonable assumptions (e.g., if a chore frequency isn't specified, assume weekly).
+- The output must be a structured schedule for one full week.
 `,
 });
 
 const generateAutomatedChoreScheduleFlow = ai.defineFlow(
   {
     name: 'generateAutomatedChoreScheduleFlow',
-    inputSchema: AutomatedChoreScheduleInputSchema,
+    inputSchema: ChoreScheduleInputSchema,
     outputSchema: AutomatedChoreScheduleOutputSchema,
   },
   async (input) => {
