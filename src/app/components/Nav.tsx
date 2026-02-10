@@ -8,7 +8,6 @@ import {
   ListTodo,
   Gift,
   Calendar,
-  Sparkles,
   Settings,
 } from "lucide-react";
 
@@ -27,7 +26,6 @@ const navItems = [
   { href: "/dashboard/chores", icon: ListTodo, label: "Chores" },
   { href: "/dashboard/rewards", icon: Gift, label: "Rewards" },
   { href: "/dashboard/calendar", icon: Calendar, label: "Calendar" },
-  { href: "/dashboard/scheduler", icon: Sparkles, label: "AI Scheduler" },
   { href: "/dashboard/settings", icon: Settings, label: "Settings" },
 ];
 
