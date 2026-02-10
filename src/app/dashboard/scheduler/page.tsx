@@ -22,74 +22,22 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Sparkles, Loader2, CheckCircle, Mic } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { useState, useEffect, useRef } from 'react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+import { useState, useEffect, useRef } from 'react';
 import { useSchedule } from '@/app/context/ScheduleContext';
-
-// This is a browser-only API, so we declare the type here.
-declare global {
-  interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
-  }
-}
+import { Sparkles, Loader2, CheckCircle } from 'lucide-react';
 
 export default function SchedulerPage() {
   const { toast } = useToast();
   const { setSchedule } = useSchedule();
   const [instructions, setInstructions] = useState('');
-  const [isListening, setIsListening] = useState(false);
-  const [isSpeechSupported, setIsSpeechSupported] = useState(false);
-  const recognitionRef = useRef<any>(null);
 
   const { run, output, running, error } = streamFlow(generateChoreSchedule);
   const prevRunning = useRef(false);
 
-  useEffect(() => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      setIsSpeechSupported(true);
-      const recognition = new SpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.lang = 'en-US';
-
-      recognition.onstart = () => {
-        setIsListening(true);
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-
-      recognition.onerror = (event: any) => {
-        toast({
-          variant: 'destructive',
-          title: 'Voice Recognition Error',
-          description: event.error,
-        });
-        console.error('Speech recognition error:', event.error);
-        setIsListening(false);
-      };
-
-      recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setInstructions((prev) =>
-          (prev ? `${prev.trim()} ${transcript}` : transcript).trim()
-        );
-      };
-
-      recognitionRef.current = recognition;
-    } else {
-      setIsSpeechSupported(false);
-    }
-  }, [toast]);
-
+  // Effect to show toast on error
   useEffect(() => {
     if (error) {
       toast({
@@ -100,35 +48,21 @@ export default function SchedulerPage() {
     }
   }, [error, toast]);
 
+  // Effect to show toast on success
   useEffect(() => {
+    // Only show toast when the run is finished.
     if (prevRunning.current && !running && output) {
       toast({
         title: 'Schedule Generated!',
-        description: 'Your new chore schedule is ready below.',
+        description: 'Your new chore schedule is ready to be reviewed and applied.',
       });
     }
+    // Keep track of the previous running state.
     prevRunning.current = running;
   }, [running, output, toast]);
 
-
-  const toggleListening = () => {
-    if (!isSpeechSupported) {
-      toast({
-        variant: 'destructive',
-        title: 'Unsupported Feature',
-        description: 'Voice recognition is not supported in your browser.',
-      });
-      return;
-    }
-    if (isListening) {
-      recognitionRef.current?.stop();
-    } else {
-      recognitionRef.current?.start();
-    }
-  };
-
   const handleGenerateSchedule = () => {
-    if (!instructions) {
+    if (!instructions.trim()) {
       toast({
         variant: 'destructive',
         title: 'Input required.',
@@ -139,19 +73,19 @@ export default function SchedulerPage() {
     const input: ChoreScheduleInput = { instructions };
     run(input);
   };
-  
+
   const handleApplyToCalendar = () => {
     if (output?.schedule) {
       setSchedule(output.schedule);
       toast({
         title: 'Schedule Applied!',
-        description: 'The generated chore schedule has been applied to the in-app calendar.',
+        description: 'The generated schedule has been applied to the in-app calendar.',
       });
     } else {
-       toast({
+      toast({
         variant: 'destructive',
         title: 'Nothing to Apply',
-        description: 'Generate a schedule before applying it to the calendar.',
+        description: 'Please generate a schedule first.',
       });
     }
   };
@@ -173,51 +107,23 @@ export default function SchedulerPage() {
         <CardHeader>
           <CardTitle>Instructions</CardTitle>
           <CardDescription>
-            Use plain English to tell the AI what you need. You can type or use
-            your voice.
+            Use plain English to tell the AI what you need. Be as descriptive as possible.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            <Label htmlFor="instructions-input" className="font-bold text-lg">
-              What can I do for you today?
+            <Label htmlFor="instructions-input" className="sr-only">
+              Chore instructions
             </Label>
-            <div className="relative">
-              <Textarea
-                id="instructions-input"
-                value={instructions}
-                onChange={(e) => setInstructions(e.target.value)}
-                rows={8}
-                placeholder="e.g., 'Create a weekly chore schedule for my two kids, Alex and Bella...'"
-                className="text-base pr-12"
-              />
-              {isSpeechSupported && (
-                <div className="absolute bottom-2 right-2">
-                  <div className="relative flex h-10 w-10 items-center justify-center">
-                    {isListening && (
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-destructive opacity-75"></span>
-                    )}
-                    <Button
-                      type="button"
-                      size="icon"
-                      variant="ghost"
-                      onClick={toggleListening}
-                      className="relative rounded-full text-muted-foreground hover:text-foreground"
-                    >
-                      <Mic
-                        className={cn(
-                          'h-5 w-5 transition-colors',
-                          isListening && 'text-destructive'
-                        )}
-                      />
-                      <span className="sr-only">
-                        {isListening ? 'Stop Listening' : 'Use Voice'}
-                      </span>
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
+            <Textarea
+              id="instructions-input"
+              value={instructions}
+              onChange={(e) => setInstructions(e.target.value)}
+              rows={8}
+              placeholder="e.g., 'Create a weekly chore schedule for my two kids, Alex and Bella. Chores are: wash dishes, take out trash, and walk the dog. Alex is busy on Tuesdays and Bella is busy on Thursdays. Rotate chores daily.'"
+              className="text-base"
+              disabled={running}
+            />
           </div>
         </CardContent>
         <CardFooter>
@@ -247,7 +153,7 @@ export default function SchedulerPage() {
           <CardHeader>
             <CardTitle>Generated Schedule</CardTitle>
             <CardDescription>
-              Here is an optimized chore schedule. You can review and apply it to
+              Here is the optimized chore schedule. You can review and apply it to
               your calendar.
             </CardDescription>
           </CardHeader>
@@ -255,37 +161,40 @@ export default function SchedulerPage() {
             {running && !output && (
               <div className="flex justify-center items-center py-10 min-h-[200px]">
                 <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                <p className="ml-4 text-muted-foreground">The AI is thinking...</p>
               </div>
             )}
             {output?.schedule && output.schedule.length > 0 && (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Day</TableHead>
-                    <TableHead>Champion</TableHead>
-                    <TableHead>Chore</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {output.schedule.map((assignment, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{assignment.day}</TableCell>
-                      <TableCell>{assignment.championName}</TableCell>
-                      <TableCell>{assignment.choreName}</TableCell>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Day</TableHead>
+                      <TableHead>Champion</TableHead>
+                      <TableHead>Chore</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {output.schedule.map((assignment, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">{assignment.day}</TableCell>
+                        <TableCell>{assignment.championName}</TableCell>
+                        <TableCell>{assignment.choreName}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             )}
-            {output?.schedule && output.schedule.length === 0 && (
+            {output && (!output.schedule || output.schedule.length === 0) && (
                  <div className="flex justify-center items-center py-10 min-h-[200px]">
-                    <p className="text-muted-foreground">Could not generate a schedule based on the instructions.</p>
+                    <p className="text-muted-foreground">The AI couldn't generate a schedule from the instructions. Please try again with more details.</p>
                  </div>
             )}
           </CardContent>
-          {output && (
+          {output && output.schedule && output.schedule.length > 0 && (
             <CardFooter>
-              <Button onClick={handleApplyToCalendar}>
+              <Button onClick={handleApplyToCalendar} disabled={running}>
                 <CheckCircle className="mr-2 h-4 w-4" />
                 Apply to Calendar
               </Button>
