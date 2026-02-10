@@ -9,14 +9,23 @@ import {
   Gift,
   Calendar,
   Settings,
+  ChevronDown,
 } from "lucide-react";
 
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarContent
+  SidebarContent,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
 import { ChoreChampionLogo } from "./ChoreChampionLogo";
 
@@ -26,7 +35,19 @@ const navItems = [
   { href: "/dashboard/chores", icon: ListTodo, label: "Chores" },
   { href: "/dashboard/rewards", icon: Gift, label: "Rewards" },
   { href: "/dashboard/calendar", icon: Calendar, label: "Calendar" },
-  { href: "/dashboard/settings", icon: Settings, label: "Settings" },
+  {
+    href: "/dashboard/settings",
+    icon: Settings,
+    label: "Settings",
+    children: [
+      { href: "/dashboard/settings", label: "Account" },
+      { href: "/dashboard/settings/notifications", label: "Notifications" },
+      { href: "/dashboard/settings/family", label: "Family" },
+      { href: "/dashboard/settings/subscription", label: "Subscription" },
+      { href: "/dashboard/settings/localization", label: "Localization" },
+      { href: "/dashboard/settings/themes", label: "Themes" },
+    ],
+  },
 ];
 
 export function Nav() {
@@ -36,17 +57,58 @@ export function Nav() {
     <>
       <SidebarHeader className="group-data-[collapsible=icon]:justify-center">
         <Link href="/dashboard" className="flex items-center gap-2">
-            <ChoreChampionLogo className="h-8 w-8" />
-            <span className="font-bold font-headline text-lg group-data-[collapsible=icon]:hidden">Chore Champion</span>
+          <ChoreChampionLogo className="h-8 w-8" />
+          <span className="font-bold font-headline text-lg group-data-[collapsible=icon]:hidden">
+            Chore Champion
+          </span>
         </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
-          {navItems.map((item) => (
-            <SidebarMenuItem key={item.href}>
+          {navItems.map((item) =>
+            item.children ? (
+              <Collapsible
+                key={item.href}
+                asChild
+                defaultOpen={pathname.startsWith(item.href)}
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      isActive={pathname.startsWith(item.href) && !item.children.some(c => c.href === pathname)}
+                      tooltip={{ children: item.label }}
+                      className="w-full justify-start group"
+                    >
+                      <div className="flex w-full items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <item.icon />
+                          <span>{item.label}</span>
+                        </div>
+                        <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                      </div>
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {item.children.map((child) => (
+                        <SidebarMenuSubItem key={child.href}>
+                          <SidebarMenuSubButton
+                            asChild
+                            isActive={pathname === child.href}
+                          >
+                            <Link href={child.href}>{child.label}</Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+            ) : (
+              <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
-                  isActive={pathname.startsWith(item.href) && (item.href.length > 10 ? true : pathname === item.href)}
-                  tooltip={{children: item.label}}
+                  isActive={pathname === item.href}
+                  tooltip={{ children: item.label }}
                   asChild
                 >
                   <Link href={item.href}>
@@ -54,8 +116,9 @@ export function Nav() {
                     <span>{item.label}</span>
                   </Link>
                 </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+              </SidebarMenuItem>
+            )
+          )}
         </SidebarMenu>
       </SidebarContent>
     </>
