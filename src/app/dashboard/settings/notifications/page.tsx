@@ -17,12 +17,12 @@ export default function NotificationSettingsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight font-headline">Notification Settings</h1>
-        <p className="text-muted-foreground">The "Nag" Filter. Manage how and when you receive alerts.</p>
+        <p className="text-muted-foreground">Manage alerts for chore approvals and reward notifications.</p>
       </div>
       <Card>
           <CardHeader>
               <CardTitle>Notification Preferences</CardTitle>
-              <CardDescription>The "Nag" Filter. Manage how and when you receive alerts.</CardDescription>
+              <CardDescription>Manage alerts for chore approvals and reward notifications.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
               <div className="flex items-center justify-between space-x-2 p-4 rounded-lg border">
