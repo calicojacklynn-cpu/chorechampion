@@ -135,7 +135,6 @@ export default function ChampionsPage() {
                 </TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead className="hidden md:table-cell">Username</TableHead>
-                <TableHead>Status</TableHead>
                 <TableHead className="hidden md:table-cell">Points</TableHead>
                 <TableHead className="hidden md:table-cell">
                   Chores Completed
@@ -175,9 +174,6 @@ export default function ChampionsPage() {
                         {champion.name}
                       </TableCell>
                       <TableCell className="hidden md:table-cell">{champion.username}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">Active</Badge>
-                      </TableCell>
                       <TableCell className="hidden md:table-cell">
                         {champion.points}
                       </TableCell>
