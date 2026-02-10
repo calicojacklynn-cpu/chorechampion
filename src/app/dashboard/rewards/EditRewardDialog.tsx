@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,7 +12,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -24,8 +23,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { PlusCircle } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import type { Reward } from "./page";
 
 const formSchema = z.object({
@@ -34,45 +31,49 @@ const formSchema = z.object({
   points: z.coerce.number().min(1, "Points must be at least 1."),
 });
 
-type AddRewardDialogProps = {
-    onAdd: (reward: Omit<Reward, 'id'>) => void;
+type EditRewardDialogProps = {
+  reward: Reward;
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+  onSave: (reward: Reward) => void;
 };
 
-export function AddRewardDialog({ onAdd }: AddRewardDialogProps) {
-  const { toast } = useToast();
-  const [open, setOpen] = useState(false);
+export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditRewardDialogProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      points: 10,
+      name: reward.name,
+      description: reward.description,
+      points: reward.points,
     },
   });
 
+  useEffect(() => {
+    if (isOpen) {
+      form.reset({
+        name: reward.name,
+        description: reward.description,
+        points: reward.points,
+      });
+    }
+  }, [isOpen, reward, form]);
+
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onAdd(values);
-    toast({
-      title: "Reward Added!",
-      description: `${values.name} has been added to the reward catalog.`,
+    onSave({
+      ...reward,
+      ...values,
+      description: values.description || ""
     });
-    setOpen(false);
-    form.reset();
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add New Reward
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Reward</DialogTitle>
+          <DialogTitle>Edit Reward</DialogTitle>
           <DialogDescription>
-            Fill out the details for the new reward you want to offer.
+            Update the details for this reward.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -117,7 +118,7 @@ export function AddRewardDialog({ onAdd }: AddRewardDialogProps) {
               )}
             />
             <DialogFooter>
-              <Button type="submit">Create Reward</Button>
+              <Button type="submit">Save Changes</Button>
             </DialogFooter>
           </form>
         </Form>
