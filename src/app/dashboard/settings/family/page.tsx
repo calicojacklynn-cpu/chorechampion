@@ -28,7 +28,7 @@ export default function FamilySettingsPage() {
         <CardContent className="space-y-4">
             <div className="p-4 rounded-lg border">
                 <h3 className="font-semibold mb-2">Admin Profiles</h3>
-                <p className="text-sm text-muted-foreground mb-4">Management for Parent and Adam. Admins can approve chores and manage points.</p>
+                <p className="text-sm text-muted-foreground mb-4">Manage parent or guardian accounts with admin privileges.</p>
                 <Button variant="outline">Manage Admins</Button>
             </div>
             <div className="p-4 rounded-lg border">

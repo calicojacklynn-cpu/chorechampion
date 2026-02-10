@@ -25,12 +25,12 @@ export default function LocalizationSettingsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight font-headline">Localization Settings</h1>
-        <p className="text-muted-foreground">The Culture Setting. Sync the app with your life in Houma.</p>
+        <p className="text-muted-foreground">The Culture Setting. Sync the app with your life.</p>
       </div>
       <Card>
           <CardHeader>
               <CardTitle>Language & Region</CardTitle>
-              <CardDescription>The Culture Setting. Sync the app with your life in Houma.</CardDescription>
+              <CardDescription>The Culture Setting. Sync the app with your life.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
               <div className="space-y-2">
@@ -61,7 +61,7 @@ export default function LocalizationSettingsPage() {
               <div className="space-y-2">
                   <Label htmlFor="phonetic-dictionary">Phonetic Dictionary</Label>
                   <p className="text-sm text-muted-foreground">Help voice-to-text recognize local names and places.</p>
-                  <Textarea id="phonetic-dictionary" placeholder="e.g., Thibodaux = tib-i-doe" defaultValue="Thibodaux = tib-i-doe" />
+                  <Textarea id="phonetic-dictionary" placeholder="e.g., Siobhan = shiv-awn" defaultValue="Siobhan = shiv-awn" />
               </div>
           </CardContent>
           <CardFooter className="border-t px-6 py-4">
