@@ -15,7 +15,7 @@ import { config } from 'dotenv';
 config();
 
 // Initialize the Genkit AI instance
-export const ai = genkit({
+const ai = genkit({
   plugins: [googleAI()],
   model: 'googleai/gemini-2.5-flash',
 });
