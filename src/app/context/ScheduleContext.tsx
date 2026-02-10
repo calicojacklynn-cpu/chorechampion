@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode } from 'react';
-import type { ChoreAssignment } from '@/ai/flows/automated-chore-schedule-generation';
+import type { ChoreAssignment } from '@/ai';
 
 type ScheduleContextType = {
   schedule: ChoreAssignment[];
