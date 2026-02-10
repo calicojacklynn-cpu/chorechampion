@@ -13,22 +13,64 @@
       "imageHint": "person face"
     },
     {
-      "id": "champion-alex",
-      "description": "Avatar for champion Alex.",
-      "imageUrl": "https://images.unsplash.com/photo-1587743368367-67ec3e7377f2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjaGlsZCUyMGZhY2V8ZW58MHx8fHwxNzcwNTUzOTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "child face"
+      "id": "champion-avatar-1",
+      "description": "Avatar for a champion.",
+      "imageUrl": "https://images.unsplash.com/photo-1503454455800-ded2d453b632?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjaGlsZCUyMHBvcnRyYWl0fGVufDB8fHx8MTcyMTE0NjYxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "child portrait"
     },
     {
-      "id": "champion-bella",
-      "description": "Avatar for champion Bella.",
-      "imageUrl": "https://images.unsplash.com/photo-1690237604597-d170faa1e40f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjaGlsZCUyMGZhY2V8ZW58MHx8fHwxNzcwNTUzOTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "child face"
+      "id": "champion-avatar-2",
+      "description": "Avatar for a champion.",
+      "imageUrl": "https://images.unsplash.com/photo-1519345258320-f0c9b0a8a645?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjaGlsZCUyMHBvcnRyYWl0fGVufDB8fHx8MTcyMTE0NjYxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "child portrait"
     },
     {
-      "id": "champion-charlie",
-      "description": "Avatar for champion Charlie.",
-      "imageUrl": "https://images.unsplash.com/photo-1625595234473-c00c86c73353?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjaGlsZCUyMGZhY2V8ZW58MHx8fHwxNzcwNTUzOTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "child face"
+      "id": "champion-avatar-3",
+      "description": "Avatar for a champion.",
+      "imageUrl": "https://images.unsplash.com/photo-1596422846543-3d0225133e8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjaGlsZCUyMHBvcnRyYWl0fGVufDB8fHx8MTcyMTE0NjYxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "child portrait"
+    },
+    {
+      "id": "champion-avatar-4",
+      "description": "Avatar for a champion.",
+      "imageUrl": "https://images.unsplash.com/photo-1511556333249-096a6d073907?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjaGlsZCUyMHBvcnRyYWl0fGVufDB8fHx8MTcyMTE0NjYxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "child portrait"
+    },
+    {
+      "id": "champion-avatar-5",
+      "description": "Avatar for a champion.",
+      "imageUrl": "https://images.unsplash.com/photo-1529688499469-14e2a4862f16?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjaGlsZCUyMHBvcnRyYWl0fGVufDB8fHx8MTcyMTE0NjYxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "child portrait"
+    },
+    {
+      "id": "champion-avatar-6",
+      "description": "Avatar for a champion.",
+      "imageUrl": "https://images.unsplash.com/photo-1605101479861-1a7f35252a13?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2hpbGQlMjBwb3J0cmFpdHxlbnwwfHx8fDE3MjExNDY2MTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "child portrait"
+    },
+    {
+      "id": "champion-avatar-7",
+      "description": "Avatar for a champion.",
+      "imageUrl": "https://images.unsplash.com/photo-1574281358313-a5f1b537ee37?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMnx8Y2hpbGQlMjBwb3J0cmFpdHxlbnwwfHx8fDE3MjExNDY2MTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "child portrait"
+    },
+    {
+      "id": "champion-avatar-8",
+      "description": "Avatar for a champion.",
+      "imageUrl": "https://images.unsplash.com/photo-1594266187299-e680073523ea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxNHx8Y2hpbGQlMjBwb3J0cmFpdHxlbnwwfHx8fDE3MjExNDY2MTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "child portrait"
+    },
+    {
+      "id": "champion-avatar-9",
+      "description": "Avatar for a champion.",
+      "imageUrl": "https://images.unsplash.com/photo-1610664921897-495b54ce454a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyMHx8Y2hpbGQlMjBwb3J0cmFpdHxlbnwwfHx8fDE3MjExNDY2MTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "child portrait"
+    },
+    {
+      "id": "champion-avatar-10",
+      "description": "Avatar for a champion.",
+      "imageUrl": "https://images.unsplash.com/photo-1614926034403-91c1370255c2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyMXx8Y2hpbGQlMjBwb3J0cmFpdHxlbnwwfHx8fDE3MjExNDY2MTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "child portrait"
     },
     {
       "id": "reward-movie",

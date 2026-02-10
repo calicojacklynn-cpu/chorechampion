@@ -14,7 +14,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Edit, Star, Trophy, Trash2 } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AddRewardDialog } from "./AddRewardDialog";
 import {
   AlertDialog,
@@ -34,7 +33,7 @@ import { ClaimedRewardsDialog } from "./ClaimedRewardsDialog";
 export type Champion = {
   id: string;
   name: string;
-  avatarId: string;
+  avatarUrl?: string;
   points: number;
   pointsToNextReward: number;
 };
@@ -44,14 +43,14 @@ const champions: Champion[] = [
   {
     id: "alex",
     name: "Alex",
-    avatarId: "champion-alex",
+    avatarUrl: "https://images.unsplash.com/photo-1503454455800-ded2d453b632?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjaGlsZCUyMHBvcnRyYWl0fGVufDB8fHx8MTcyMTE0NjYxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
     points: 125,
     pointsToNextReward: 200,
   },
   {
     id: "bella",
     name: "Bella",
-    avatarId: "champion-bella",
+    avatarUrl: "https://images.unsplash.com/photo-1519345258320-f0c9b0a8a645?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjaGlsZCUyMHBvcnRyYWl0fGVufDB8fHx8MTcyMTE0NjYxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
     points: 85,
     pointsToNextReward: 150,
   },
@@ -182,13 +181,12 @@ export default function RewardsPage() {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {champions.length > 0 ? (
               champions.map((champion) => {
-                const championAvatar = PlaceHolderImages.find(p => p.id === champion.avatarId);
                 const progress = (champion.points / champion.pointsToNextReward) * 100;
                 return (
                   <Card key={champion.id} className="flex flex-col">
                     <CardHeader className="flex flex-row items-center gap-4">
                       <Avatar className="h-16 w-16 border-2 border-primary">
-                        {championAvatar && <AvatarImage asChild src={championAvatar.imageUrl}><Image src={championAvatar.imageUrl} width={64} height={64} alt={champion.name} data-ai-hint={championAvatar.imageHint} /></AvatarImage>}
+                        {champion.avatarUrl && <AvatarImage asChild src={champion.avatarUrl}><Image src={champion.avatarUrl} width={64} height={64} alt={champion.name} data-ai-hint="child portrait" /></AvatarImage>}
                         <AvatarFallback className="text-xl">{champion.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div>
