@@ -1,4 +1,5 @@
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/automated-chore-schedule-generation.ts';
+// This ensures the genkit instance is created and configured, and all flows are registered.
+import '@/ai/genkit';
