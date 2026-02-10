@@ -36,9 +36,19 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { EditRewardDialog } from "./EditRewardDialog";
+import { ClaimedRewardsDialog } from "./ClaimedRewardsDialog";
+
+// Champion type
+export type Champion = {
+  id: string;
+  name: string;
+  avatarId: string;
+  points: number;
+  pointsToNextReward: number;
+};
 
 // Mock data for champions
-const champions = [
+const champions: Champion[] = [
   {
     id: "alex",
     name: "Alex",
@@ -46,7 +56,13 @@ const champions = [
     points: 125,
     pointsToNextReward: 200,
   },
-  // Add more champions here as needed
+  {
+    id: "bella",
+    name: "Bella",
+    avatarId: "champion-bella",
+    points: 85,
+    pointsToNextReward: 150,
+  },
 ];
 
 export type Reward = {
@@ -100,6 +116,7 @@ export default function RewardsPage() {
   const [rewards, setRewards] = useState<Reward[]>(initialRewards);
   const [rewardToEdit, setRewardToEdit] = useState<Reward | null>(null);
   const [rewardToDelete, setRewardToDelete] = useState<Reward | null>(null);
+  const [viewingChampion, setViewingChampion] = useState<Champion | null>(null);
 
   const handleAddReward = (newRewardData: Omit<Reward, "id">) => {
     const newReward: Reward = {
@@ -174,7 +191,7 @@ export default function RewardsPage() {
                       <p className="text-xs text-right mt-1 text-muted-foreground">{champion.points} / {champion.pointsToNextReward} pts</p>
                     </CardContent>
                     <CardFooter>
-                      <Button variant="outline" className="w-full">View Claimed Rewards</Button>
+                      <Button variant="outline" className="w-full" onClick={() => setViewingChampion(champion)}>View Claimed Rewards</Button>
                     </CardFooter>
                   </Card>
                 );
@@ -291,6 +308,12 @@ export default function RewardsPage() {
           </AlertDialogContent>
         </AlertDialog>
       )}
+
+      <ClaimedRewardsDialog
+        champion={viewingChampion}
+        isOpen={!!viewingChampion}
+        onOpenChange={(isOpen) => !isOpen && setViewingChampion(null)}
+      />
     </>
   );
 }
