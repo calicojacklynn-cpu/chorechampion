@@ -134,17 +134,6 @@ export default function RewardsPage() {
     setIsEditDialogOpen(false);
   }, [toast]);
 
-  const handleConfirmDelete = useCallback(() => {
-    if (!rewardToDelete) return;
-    const rewardName = rewardToDelete.name;
-    setRewards(prev => prev.filter(r => r.id !== rewardToDelete.id));
-    toast({
-      title: "Reward Deleted",
-      description: `${rewardName} has been removed from the catalog.`,
-    });
-    setIsDeleteDialogOpen(false);
-  }, [rewardToDelete, toast]);
-
   const openEditDialog = useCallback((reward: Reward) => {
     setRewardToEdit(reward);
     setIsEditDialogOpen(true);
@@ -155,6 +144,18 @@ export default function RewardsPage() {
     setIsDeleteDialogOpen(true);
   }, []);
   
+  const handleConfirmDelete = useCallback(() => {
+    if (!rewardToDelete) return;
+    const rewardName = rewardToDelete.name;
+    setRewards(prev => prev.filter(r => r.id !== rewardToDelete.id));
+    toast({
+      title: "Reward Deleted",
+      description: `${rewardName} has been removed from the catalog.`,
+    });
+    setRewardToDelete(null);
+    setIsDeleteDialogOpen(false);
+  }, [rewardToDelete, toast]);
+
   const openClaimedDialog = useCallback((champion: Champion) => {
     setChampionForHistory(champion);
     setIsClaimedDialogOpen(true);
@@ -250,7 +251,7 @@ export default function RewardsPage() {
                           </Badge>
                         </div>
                     </CardHeader>
-                    <CardFooter className="flex justify-end gap-2 pt-0">
+                    <CardFooter className="flex flex-col items-end gap-2 pt-0">
                         <Button variant="outline" size="icon-sm" onClick={() => openEditDialog(reward)}>
                             <Edit className="h-3.5 w-3.5" />
                             <span className="sr-only">Edit</span>
@@ -278,7 +279,12 @@ export default function RewardsPage() {
         <EditRewardDialog
           reward={rewardToEdit}
           isOpen={isEditDialogOpen}
-          onOpenChange={setIsEditDialogOpen}
+          onOpenChange={(isOpen) => {
+            setIsEditDialogOpen(isOpen);
+            if (!isOpen) {
+              setRewardToEdit(null);
+            }
+          }}
           onSave={handleUpdateReward}
         />
       )}
@@ -296,7 +302,7 @@ export default function RewardsPage() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel onClick={() => setRewardToDelete(null)}>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-destructive hover:bg-destructive/90"
                 onClick={handleConfirmDelete}
@@ -312,7 +318,12 @@ export default function RewardsPage() {
         <ClaimedRewardsDialog
             champion={championForHistory}
             isOpen={isClaimedDialogOpen}
-            onOpenChange={setIsClaimedDialogOpen}
+            onOpenChange={(isOpen) => {
+                setIsClaimedDialogOpen(isOpen);
+                if (!isOpen) {
+                    setChampionForHistory(null);
+                }
+            }}
         />
       )}
     </>
