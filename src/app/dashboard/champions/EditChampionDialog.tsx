@@ -175,12 +175,6 @@ export function EditChampionDialog({
                           </Avatar>
                         </div>
                       )}
-                      <FormControl>
-                        <Input placeholder="Paste an image URL..." {...field} />
-                      </FormControl>
-                      <div className="text-center text-xs text-muted-foreground my-2">
-                        OR
-                      </div>
                       <Button
                         type="button"
                         variant="outline"

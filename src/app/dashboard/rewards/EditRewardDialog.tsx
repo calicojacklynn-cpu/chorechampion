@@ -150,18 +150,16 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
                     <FormItem>
                       <FormLabel>Image (Optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder="Paste an image URL..." {...field} />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => fileInputRef.current?.click()}
+                        >
+                          <Upload className="mr-2 h-4 w-4" />
+                          Upload from Device
+                        </Button>
                       </FormControl>
-                      <div className="text-center text-xs text-muted-foreground my-2">OR</div>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-full"
-                        onClick={() => fileInputRef.current?.click()}
-                      >
-                        <Upload className="mr-2 h-4 w-4" />
-                        Upload from Device
-                      </Button>
                       <input
                         type="file"
                         ref={fileInputRef}

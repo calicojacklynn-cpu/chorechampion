@@ -154,20 +154,16 @@ export function EditAdminDialog({
                     </div>
                   )}
                   <FormControl>
-                    <Input placeholder="Paste an image URL..." {...field} value={field.value || ''}/>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <Upload className="mr-2 h-4 w-4" />
+                      Upload from Device
+                    </Button>
                   </FormControl>
-                  <div className="text-center text-xs text-muted-foreground my-2">
-                    OR
-                  </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <Upload className="mr-2 h-4 w-4" />
-                    Upload from Device
-                  </Button>
                   <input
                     type="file"
                     ref={fileInputRef}
