@@ -50,6 +50,8 @@ export type Champion = {
   choresCompleted: number;
 };
 
+type NewChampionData = { name: string; username: string; pin: string };
+
 // Mock data for champions
 const initialChampions: Champion[] = [
   {
@@ -73,13 +75,12 @@ const initialChampions: Champion[] = [
 export default function ChampionsPage() {
   const { toast } = useToast();
   const [champions, setChampions] = useState<Champion[]>(initialChampions);
-  const [championToEdit, setChampionToEdit] = useState<Champion | null>(null);
-  const [championToDelete, setChampionToDelete] = useState<Champion | null>(
-    null
-  );
 
-  type NewChampionData = { name: string; username: string; pin: string };
+  // State to manage which champion is being edited or deleted
+  const [editingChampion, setEditingChampion] = useState<Champion | null>(null);
+  const [deletingChampion, setDeletingChampion] = useState<Champion | null>(null);
 
+  // --- Callbacks for Champion Data Manipulation ---
   const handleAddChampion = useCallback((newChampionData: NewChampionData) => {
     setChampions((prev) => {
       const newChampion: Champion = {
@@ -101,28 +102,30 @@ export default function ChampionsPage() {
       title: "Champion Updated!",
       description: `${updatedChampion.name}'s details have been updated.`,
     });
-    setChampionToEdit(null);
+    setEditingChampion(null); // Close dialog on save
   }, [toast]);
-  
+
+  const handleConfirmDelete = useCallback(() => {
+    if (!deletingChampion) return;
+    setChampions((prev) => prev.filter((c) => c.id !== deletingChampion.id));
+    toast({
+      title: "Champion Deleted",
+      description: `${deletingChampion.name} has been removed.`,
+    });
+    setDeletingChampion(null); // Close dialog on delete
+  }, [deletingChampion, toast]);
+
+
+  // --- Callbacks for Dialog State Management ---
   const handleEditOpenChange = useCallback((isOpen: boolean) => {
     if (!isOpen) {
-        setChampionToEdit(null);
+        setEditingChampion(null);
     }
   }, []);
 
-  const handleDeleteChampion = useCallback(() => {
-    if (!championToDelete) return;
-    setChampions((prev) => prev.filter((c) => c.id !== championToDelete.id));
-    toast({
-      title: "Champion Deleted",
-      description: `${championToDelete.name} has been removed from your list of champions.`,
-    });
-    setChampionToDelete(null);
-  }, [championToDelete, toast]);
-
-  const handleDeleteDialogChange = useCallback((isOpen: boolean) => {
+  const handleDeleteOpenChange = useCallback((isOpen: boolean) => {
     if (!isOpen) {
-      setChampionToDelete(null);
+      setDeletingChampion(null);
     }
   }, []);
 
@@ -158,8 +161,7 @@ export default function ChampionsPage() {
             </TableHeader>
             <TableBody>
               {champions.length > 0 ? (
-                champions.map((champion) => {
-                  return (
+                champions.map((champion) => (
                     <TableRow key={champion.id}>
                       <TableCell className="hidden sm:table-cell">
                         <Avatar className="h-12 w-12 border">
@@ -204,13 +206,13 @@ export default function ChampionsPage() {
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem
-                              onSelect={() => setChampionToEdit(champion)}
+                              onSelect={() => setEditingChampion(champion)}
                             >
                               Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-                              onSelect={() => setChampionToDelete(champion)}
+                              onSelect={() => setDeletingChampion(champion)}
                             >
                               Delete
                             </DropdownMenuItem>
@@ -218,8 +220,7 @@ export default function ChampionsPage() {
                         </DropdownMenu>
                       </TableCell>
                     </TableRow>
-                  );
-                })
+                  ))
               ) : (
                 <TableRow>
                   <TableCell colSpan={6} className="h-24 text-center">
@@ -231,39 +232,44 @@ export default function ChampionsPage() {
           </Table>
         </CardContent>
       </Card>
-      {!!championToEdit && (
+      
+      {/* Edit Champion Dialog */}
+      {editingChampion && (
         <EditChampionDialog
-          champion={championToEdit}
-          isOpen={!!championToEdit}
+          key={editingChampion.id} // Using key to force re-mount and reset form state
+          champion={editingChampion}
+          isOpen={!!editingChampion}
           onOpenChange={handleEditOpenChange}
           onSave={handleUpdateChampion}
         />
       )}
-      {!!championToDelete && (
-        <AlertDialog
-          open={!!championToDelete}
-          onOpenChange={handleDeleteDialogChange}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete{" "}
-                {championToDelete.name}.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                className="bg-destructive hover:bg-destructive/90"
-                onClick={handleDeleteChampion}
-              >
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+      
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog
+        open={!!deletingChampion}
+        onOpenChange={handleDeleteOpenChange}
+      >
+        {deletingChampion && (
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete{" "}
+                  {deletingChampion.name}.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-destructive hover:bg-destructive/90"
+                  onClick={handleConfirmDelete}
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+        )}
+      </AlertDialog>
     </>
   );
 }

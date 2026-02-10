@@ -52,31 +52,23 @@ export function EditChampionDialog({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: champion.name,
-      username: champion.username,
-      avatarUrl: champion.avatarUrl || "",
-    },
+    // Default values will be set by the useEffect hook
   });
 
   const { reset } = form;
   const avatarUrl = form.watch("avatarUrl");
 
+  // This effect resets the form with the champion's data whenever the dialog
+  // is opened or the champion prop changes.
   useEffect(() => {
-    if (isOpen) {
+    if (champion) {
       reset({
         name: champion.name,
         username: champion.username,
         avatarUrl: champion.avatarUrl || "",
       });
     }
-  }, [
-    isOpen,
-    champion.name,
-    champion.username,
-    champion.avatarUrl,
-    reset,
-  ]);
+  }, [champion, reset]);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
