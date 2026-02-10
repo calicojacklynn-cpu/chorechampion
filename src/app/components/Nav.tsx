@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  Users,
   ListTodo,
   Gift,
   Calendar,
@@ -32,7 +31,6 @@ import { ChoreChampionLogo } from "./ChoreChampionLogo";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/dashboard/champions", icon: Users, label: "Champions" },
   { href: "/dashboard/chores", icon: ListTodo, label: "Chores" },
   { href: "/dashboard/rewards", icon: Gift, label: "Rewards" },
   { href: "/dashboard/calendar", icon: Calendar, label: "Calendar" },
