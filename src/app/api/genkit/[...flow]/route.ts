@@ -7,4 +7,4 @@ import '@/ai/genkit';
 import '@/ai/flows/automated-chore-schedule-generation.ts';
 
 // This exports the handler that will process requests for the flows.
-export const POST = nextHandler();
+export const { GET, POST } = nextHandler();
