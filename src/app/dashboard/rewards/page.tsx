@@ -246,7 +246,7 @@ export default function RewardsPage() {
                     <div className="p-6 flex-grow flex justify-between items-start">
                         <div>
                             <CardTitle className="text-lg leading-tight">{reward.name}</CardTitle>
-                            <Badge variant="secondary" className="w-fit mt-2">
+                            <Badge variant="secondary" className="w-fit mt-2 text-sm">
                                 <Star className="w-3 h-3 mr-1 text-accent fill-accent" />
                                 {reward.points} Points
                             </Badge>
