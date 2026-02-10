@@ -29,7 +29,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AddChampionDialog } from "./AddChampionDialog";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useToast } from "@/hooks/use-toast";
 import { EditChampionDialog } from "./EditChampionDialog";
 import {
@@ -47,7 +46,7 @@ export type Champion = {
   id: string;
   name: string;
   username: string;
-  avatarId: string;
+  avatarUrl?: string;
   points: number;
   choresCompleted: number;
 };
@@ -58,7 +57,7 @@ const initialChampions: Champion[] = [
     id: "alex",
     name: "Alex",
     username: "alex-the-great",
-    avatarId: "champion-alex",
+    avatarUrl: "https://images.unsplash.com/photo-1587743368367-67ec3ec37a5e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjaGlsZCUyMGZhY2V8ZW58MHx8fHwxNzcwNTUzOTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
     points: 125,
     choresCompleted: 12,
   },
@@ -66,7 +65,7 @@ const initialChampions: Champion[] = [
     id: "bella",
     name: "Bella",
     username: "bella-the-brave",
-    avatarId: "champion-bella",
+    avatarUrl: "https://images.unsplash.com/photo-1690237604597-d170faa1e40f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjaGlsZCUyMGZhY2V8ZW58MHx8fHwxNzcwNTUzOTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
     points: 85,
     choresCompleted: 8,
   },
@@ -86,7 +85,7 @@ export default function ChampionsPage() {
     const newChampion: Champion = {
       ...newChampionData,
       id: newChampionData.username.toLowerCase(),
-      avatarId: "champion-charlie", // Use a generic avatar for new champs
+      avatarUrl: "", // No avatar by default
       points: 0,
       choresCompleted: 0,
     };
@@ -147,24 +146,21 @@ export default function ChampionsPage() {
             <TableBody>
               {champions.length > 0 ? (
                 champions.map((champion) => {
-                  const championAvatar = PlaceHolderImages.find(
-                    (p) => p.id === champion.avatarId
-                  );
                   return (
                     <TableRow key={champion.id}>
                       <TableCell className="hidden sm:table-cell">
                         <Avatar className="h-12 w-12 border">
-                          {championAvatar && (
-                            <AvatarImage asChild src={championAvatar.imageUrl}>
+                          {champion.avatarUrl ? (
+                            <AvatarImage asChild src={champion.avatarUrl}>
                               <Image
-                                src={championAvatar.imageUrl}
+                                src={champion.avatarUrl}
                                 width={48}
                                 height={48}
                                 alt={champion.name}
-                                data-ai-hint={championAvatar.imageHint}
+                                className="object-cover"
                               />
                             </AvatarImage>
-                          )}
+                          ) : null}
                           <AvatarFallback>
                             {champion.name.charAt(0)}
                           </AvatarFallback>
