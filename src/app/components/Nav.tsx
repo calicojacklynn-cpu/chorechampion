@@ -10,6 +10,7 @@ import {
   Calendar,
   Settings,
   ChevronDown,
+  Megaphone,
 } from "lucide-react";
 
 import {
@@ -35,6 +36,7 @@ const navItems = [
   { href: "/dashboard/chores", icon: ListTodo, label: "Chores" },
   { href: "/dashboard/rewards", icon: Gift, label: "Rewards" },
   { href: "/dashboard/calendar", icon: Calendar, label: "Calendar" },
+  { href: "/dashboard/broadcast", icon: Megaphone, label: "Broadcasts" },
   {
     href: "/dashboard/settings",
     icon: Settings,

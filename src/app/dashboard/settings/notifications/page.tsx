@@ -52,15 +52,6 @@ export default function NotificationSettingsPage() {
                   </div>
                   <Switch id="reward-claimed" defaultChecked />
               </div>
-              <div className="flex items-center justify-between space-x-2 p-4 rounded-lg border">
-                  <div className="space-y-0.5">
-                      <Label htmlFor="family-broadcasts" className="text-base">Family Broadcasts</Label>
-                        <p className="text-sm text-muted-foreground">
-                          Allow admin messages to be sent to all champion devices.
-                      </p>
-                  </div>
-                  <Switch id="family-broadcasts" />
-              </div>
           </CardContent>
             <CardFooter className="border-t px-6 py-4">
               <Button>Save Notification Settings</Button>
