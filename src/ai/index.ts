@@ -203,14 +203,15 @@ const aiCreateEventsPrompt = ai.definePrompt({
 
 **Instructions:**
 1.  Read the user's instructions carefully.
-2.  Identify the event title, who it's for, days of the week, times, and recurrence pattern (e.g., "every weekday", "daily").
-3.  Look for any stopping conditions or end dates, such as "until August 1st" or "for 3 weeks" or "summer break starts...". You must accurately calculate all occurrences up to this stop date.
-4.  Generate a separate event object for EACH occurrence of the event. For example, "School every weekday from 8am to 3pm until June 15th" must create an event for every single weekday between the reference date and June 15th. Do not summarize or group them.
-5.  If no end date is specified for a recurring event, generate events for the next 4 weeks by default.
-6.  Assume a default event type of 'other' if not specified.
-7.  **CRITICAL:** Ensure all dates in the output are in the 'YYYY-MM-DD' format.
-8.  **CRITICAL:** Ensure all times are in the 'HH:mm' 24-hour format.
-9.  Return all generated events in the 'events' array.
+2.  Identify the core activity (e.g., "School", "Soccer Practice") and any specific person ("Alex") mentioned. Combine them to create a concise, informative event title in the format "Person - Activity" or just "Activity" if no person is named. For example, "School for Alex" becomes "Alex - School".
+3.  Identify the days of the week, times, and recurrence pattern (e.g., "every weekday", "daily").
+4.  Look for any stopping conditions or end dates, such as "until August 1st" or "for 3 weeks" or "summer break starts...". You must accurately calculate all occurrences up to this stop date.
+5.  Generate a separate event object for EACH occurrence of the event. For example, "School every weekday from 8am to 3pm until June 15th" must create an event for every single weekday between the reference date and June 15th. Do not summarize or group them.
+6.  If no end date is specified for a recurring event, generate events for the next 4 weeks by default.
+7.  Assume a default event type of 'other' if not specified.
+8.  **CRITICAL:** Ensure all dates in the output are in the 'YYYY-MM-DD' format.
+9.  **CRITICAL:** Ensure all times are in the 'HH:mm' 24-hour format.
+10. Return all generated events in the 'events' array.
 
 **User's Instructions:**
 {{{instructions}}}
