@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { Upload } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,7 +25,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Upload } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -37,6 +38,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
 import type { Champion } from "./page";
 
+// Zod schema for form validation
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   username: z
@@ -46,6 +48,7 @@ const formSchema = z.object({
   avatarUrl: z.string().optional(),
 });
 
+// Component props
 type EditChampionDialogProps = {
   champion: Champion;
   isOpen: boolean;
@@ -53,6 +56,7 @@ type EditChampionDialogProps = {
   onSave: (champion: Champion) => void;
 };
 
+// Filter placeholder images to get only default champion avatars
 const defaultAvatars = PlaceHolderImages.filter((p) =>
   p.id.startsWith("champion-avatar-")
 );
@@ -68,26 +72,26 @@ export function EditChampionDialog({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: champion.name,
-      username: champion.username,
-      avatarUrl: champion.avatarUrl || "",
+      name: "",
+      username: "",
+      avatarUrl: "",
     },
   });
 
-  // This effect hook will reset the form whenever a new champion is selected.
-  // This is the correct way to handle this when not re-mounting the component with a key.
+  // Reset form fields when the dialog is opened or the champion prop changes
   useEffect(() => {
-    if (champion) {
+    if (isOpen && champion) {
       form.reset({
         name: champion.name,
         username: champion.username,
         avatarUrl: champion.avatarUrl || "",
       });
     }
-  }, [champion, form]);
+  }, [isOpen, champion, form]);
 
   const avatarUrl = form.watch("avatarUrl");
 
+  // Handle file upload for custom avatar
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (file) {
@@ -101,26 +105,29 @@ export function EditChampionDialog({
     }
   }
 
+  // Handle form submission
   function onSubmit(values: z.infer<typeof formSchema>) {
     onSave({
       ...champion,
       ...values,
+      avatarUrl: values.avatarUrl || "",
     });
+    onOpenChange(false);
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-md p-0">
+        <DialogHeader className="p-6 pb-0">
           <DialogTitle>Edit Champion</DialogTitle>
           <DialogDescription>
-            Update the details for {champion.name}.
+            Update the details for {champion?.name}.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <ScrollArea className="h-[70vh] pr-6">
-              <div className="space-y-4 py-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-0">
+            <ScrollArea className="h-[65vh]">
+              <div className="px-6 py-4 space-y-6">
                 <FormField
                   control={form.control}
                   name="name"
@@ -134,6 +141,7 @@ export function EditChampionDialog({
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="username"
@@ -141,114 +149,121 @@ export function EditChampionDialog({
                     <FormItem>
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="e.g. alex-the-great"
-                          {...field}
-                        />
+                        <Input placeholder="e.g. alex-the-great" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="avatarUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Avatar</FormLabel>
-                      {avatarUrl && (
-                        <div className="flex justify-center py-2">
-                          <Avatar className="h-24 w-24 border-2 border-primary">
-                            <AvatarImage asChild>
-                              <Image
-                                src={avatarUrl}
-                                width={96}
-                                height={96}
-                                alt="Avatar preview"
-                                className="object-cover"
-                              />
-                            </AvatarImage>
-                            <AvatarFallback>
-                              {champion.name.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                        </div>
-                      )}
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-full"
-                        onClick={() => fileInputRef.current?.click()}
-                      >
-                        <Upload className="mr-2 h-4 w-4" />
-                        Upload from Device
-                      </Button>
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        className="hidden"
-                        accept="image/png, image/jpeg, image/gif, image/webp"
-                      />
-                      <div className="text-center text-xs text-muted-foreground my-2">
-                        OR
-                      </div>
+                <FormItem>
+                  <FormLabel>Avatar</FormLabel>
+                  <div className="flex justify-center py-2">
+                    <Avatar className="h-24 w-24 border-2 border-primary">
+                      <AvatarImage asChild key={avatarUrl}>
+                        <Image
+                          src={avatarUrl || '/placeholder.svg'}
+                          width={96}
+                          height={96}
+                          alt="Avatar preview"
+                          className="object-cover"
+                        />
+                      </AvatarImage>
+                      <AvatarFallback>
+                        {champion?.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload className="mr-2 h-4 w-4" />
+                    Upload from Device
+                  </Button>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    className="hidden"
+                    accept="image/png, image/jpeg, image/gif, image/webp"
+                  />
 
-                      <div className="space-y-2 pt-2">
-                        <p className="text-sm text-muted-foreground">
-                          Choose a default avatar
-                        </p>
-                        <Carousel
-                          opts={{
-                            align: "start",
-                          }}
-                          className="w-full"
-                        >
-                          <CarouselContent>
-                            {defaultAvatars.map((avatar) => (
-                              <CarouselItem
-                                key={avatar.id}
-                                className="basis-1/3"
+                  <div className="relative my-4">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">
+                        Or
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-muted-foreground">
+                      Choose a default avatar
+                    </p>
+                    <Carousel
+                      opts={{ align: 'start' }}
+                      className="w-full"
+                    >
+                      <CarouselContent>
+                        {defaultAvatars.map((avatar) => (
+                          <CarouselItem key={avatar.id} className="basis-1/3">
+                            <div
+                              className="p-1 cursor-pointer"
+                              onClick={() =>
+                                form.setValue('avatarUrl', avatar.imageUrl, {
+                                  shouldValidate: true,
+                                })
+                              }
+                            >
+                              <Avatar
+                                className={cn(
+                                  'h-20 w-20 border-2',
+                                  avatarUrl === avatar.imageUrl &&
+                                    'border-primary ring-2 ring-primary ring-offset-2'
+                                )}
                               >
-                                <div
-                                  className="p-1 cursor-pointer"
-                                  onClick={() =>
-                                    form.setValue("avatarUrl", avatar.imageUrl, {
-                                      shouldValidate: true,
-                                    })
-                                  }
-                                >
-                                  <Avatar
-                                    className={cn("h-20 w-20 border-2", avatarUrl === avatar.imageUrl && "border-primary" )}
-                                  >
-                                    <AvatarImage asChild>
-                                      <Image
-                                        src={avatar.imageUrl}
-                                        width={80}
-                                        height={80}
-                                        alt={avatar.description}
-                                        data-ai-hint={avatar.imageHint}
-                                        className="object-cover"
-                                      />
-                                    </AvatarImage>
-                                  </Avatar>
-                                </div>
-                              </CarouselItem>
-                            ))}
-                          </CarouselContent>
-                          <CarouselPrevious />
-                          <CarouselNext />
-                        </Carousel>
-                      </div>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                                <AvatarImage asChild>
+                                  <Image
+                                    src={avatar.imageUrl}
+                                    width={80}
+                                    height={80}
+                                    alt={avatar.description}
+                                    data-ai-hint={avatar.imageHint}
+                                    className="object-cover"
+                                  />
+                                </AvatarImage>
+                              </Avatar>
+                            </div>
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <CarouselPrevious />
+                      <CarouselNext />
+                    </Carousel>
+                  </div>
+                   <FormField
+                    control={form.control}
+                    name="avatarUrl"
+                    render={() => <FormMessage />}
+                  />
+                </FormItem>
               </div>
             </ScrollArea>
-            <DialogFooter className="pt-4">
+
+            <DialogFooter className="border-t p-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+              >
+                Cancel
+              </Button>
               <Button type="submit">Save Changes</Button>
             </DialogFooter>
           </form>
