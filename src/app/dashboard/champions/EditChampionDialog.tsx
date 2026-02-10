@@ -155,7 +155,7 @@ export function EditChampionDialog({
                     <Avatar className="h-24 w-24 border-2 border-primary">
                       <AvatarImage
                         key={avatarUrl}
-                        src={avatarUrl || '/placeholder.svg'}
+                        src={avatarUrl}
                         alt="Avatar preview"
                         className="object-cover"
                       />
@@ -220,6 +220,7 @@ export function EditChampionDialog({
                               data-ai-hint={avatar.imageHint}
                               className="object-cover"
                             />
+                             <AvatarFallback>?</AvatarFallback>
                           </Avatar>
                         </div>
                       ))}

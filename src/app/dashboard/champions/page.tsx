@@ -165,13 +165,11 @@ export default function ChampionsPage() {
                     <TableRow key={champion.id}>
                       <TableCell className="hidden sm:table-cell">
                         <Avatar className="h-12 w-12 border">
-                          {champion.avatarUrl ? (
-                            <AvatarImage
+                           <AvatarImage
                               src={champion.avatarUrl}
                               alt={champion.name}
                               className="object-cover"
                             />
-                          ) : null}
                           <AvatarFallback>
                             {champion.name.charAt(0)}
                           </AvatarFallback>

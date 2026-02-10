@@ -143,14 +143,12 @@ export function EditAdminDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Avatar</FormLabel>
-                  {avatarUrl && (
-                    <div className="flex justify-center py-2">
-                      <Avatar className="h-24 w-24 border-2 border-primary">
-                        <AvatarImage src={avatarUrl} alt="Avatar preview" className="object-cover" />
-                        <AvatarFallback>{admin.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                    </div>
-                  )}
+                  <div className="flex justify-center py-2">
+                    <Avatar className="h-24 w-24 border-2 border-primary">
+                      <AvatarImage src={avatarUrl} alt="Avatar preview" className="object-cover" />
+                      <AvatarFallback>{admin.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  </div>
                   <FormControl>
                     <Button
                       type="button"
