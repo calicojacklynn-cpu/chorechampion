@@ -87,3 +87,64 @@ export async function generateChoreSchedule(
 ): Promise<AutomatedChoreScheduleOutput> {
   return generateChoreScheduleFlow(input);
 }
+
+
+// New Schemas and Flow for AI Scheduling a single chore
+
+const AiScheduleChoreInputSchema = z.object({
+  choreName: z.string().describe('The name of the chore to be scheduled.'),
+  championNames: z.array(z.string()).describe('The names of the champions assigned to the chore.'),
+  existingSchedule: z.array(ChoreAssignmentSchema).describe('The list of chores already scheduled for the week.'),
+  constraints: z.string().optional().describe('Any additional constraints for scheduling, like time of day or availability.'),
+});
+export type AiScheduleChoreInput = z.infer<typeof AiScheduleChoreInputSchema>;
+
+const AiScheduleChoreOutputSchema = z.object({
+  assignments: z.array(ChoreAssignmentSchema).describe('The suggested chore assignment(s).'),
+});
+export type AiScheduleChoreOutput = z.infer<typeof AiScheduleChoreOutputSchema>;
+
+const aiScheduleChorePrompt = ai.definePrompt({
+  name: 'aiScheduleChorePrompt',
+  input: { schema: AiScheduleChoreInputSchema },
+  output: { schema: AiScheduleChoreOutputSchema },
+  prompt: `You are an intelligent scheduler for a family. Your task is to schedule a single new chore for one or more "champions" (children) while considering their existing weekly chore schedule and any other constraints.
+
+**Goal:** Find the best day (Monday-Sunday) for the new chore and return the new assignment.
+
+**Inputs:**
+- New Chore: {{{choreName}}}
+- Champions to assign it to: {{{json championNames}}}
+- Existing Weekly Schedule: {{{json existingSchedule}}}
+- Additional Constraints: {{{constraints}}}
+
+**Instructions:**
+1. Analyze the existing schedule to see which days each champion is already busy.
+2. Consider the additional constraints. For example, if the constraint says "after 4pm", this implies a weekday and you should avoid scheduling it during typical school hours. If no constraint is given, simply find the day with the least number of existing chores for the assigned champions.
+3. Choose the most suitable day of the week (e.g., "Monday", "Tuesday", etc.) for the new chore.
+4. Create assignment objects for the new chore for each specified champion on the chosen day.
+5. Return ONLY the new assignment(s) in the 'assignments' array. Do not return the existing schedule.
+`,
+});
+
+const aiScheduleChoreFlow = ai.defineFlow(
+  {
+    name: 'aiScheduleChoreFlow',
+    inputSchema: AiScheduleChoreInputSchema,
+    outputSchema: AiScheduleChoreOutputSchema,
+  },
+  async (input) => {
+    const { output } = await aiScheduleChorePrompt(input);
+    if (!output) {
+      throw new Error('Failed to generate a schedule suggestion.');
+    }
+    return output;
+  }
+);
+
+// Export a client-callable wrapper function
+export async function aiScheduleChore(
+  input: AiScheduleChoreInput
+): Promise<AiScheduleChoreOutput> {
+  return aiScheduleChoreFlow(input);
+}

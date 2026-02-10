@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
+import { Loader2, Wand2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -26,17 +25,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { useSchedule } from '@/app/context/ScheduleContext';
 import type { Chore } from './page';
 import type { ChoreAssignment } from '@/ai';
+import { aiScheduleChore, type AiScheduleChoreInput } from '@/ai';
 
-// Mock data for champions, should be fetched from a central store in a real app
+// Mock data for champions
 const champions = [
   { id: 'alex', name: 'Alex' },
   { id: 'bella', name: 'Bella' },
@@ -46,9 +42,7 @@ const FormSchema = z.object({
   championIds: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: 'You have to select at least one champion.',
   }),
-  date: z.date({
-    required_error: 'A date is required.',
-  }),
+  constraints: z.string().optional(),
 });
 
 type AssignChoreDialogProps = {
@@ -64,36 +58,59 @@ export function AssignChoreDialog({
   onOpenChange,
   onAssign,
 }: AssignChoreDialogProps) {
+  const { toast } = useToast();
+  const { schedule } = useSchedule();
+  const [isAiRunning, setIsAiRunning] = useState(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       championIds: [],
-      date: new Date(),
+      constraints: '',
     },
   });
 
   useEffect(() => {
     if (isOpen) {
-      form.reset({ championIds: [], date: new Date() });
+      form.reset({ championIds: [], constraints: '' });
+      setIsAiRunning(false);
     }
   }, [isOpen, form]);
 
-
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     if (!chore) return;
 
-    const newAssignments: ChoreAssignment[] = data.championIds.map((championId) => {
-      const champion = champions.find((c) => c.id === championId);
-      return {
-        day: format(data.date, 'EEEE'), // e.g., "Monday"
-        championName: champion?.name || 'Unknown',
+    setIsAiRunning(true);
+    try {
+      const selectedChampions = champions.filter(c => data.championIds.includes(c.id));
+      const input: AiScheduleChoreInput = {
         choreName: chore.name,
+        championNames: selectedChampions.map(c => c.name),
+        existingSchedule: schedule,
+        constraints: data.constraints,
       };
-    });
 
-    onAssign(newAssignments);
-    onOpenChange(false);
-    form.reset();
+      const result = await aiScheduleChore(input);
+
+      if (result.assignments && result.assignments.length > 0) {
+        onAssign(result.assignments);
+        toast({
+          title: 'AI Scheduled!',
+          description: `"${chore.name}" has been added to the calendar.`,
+        });
+        onOpenChange(false);
+      } else {
+        throw new Error("The AI couldn't find a suitable time. Try adjusting constraints or adding champions.");
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'AI Scheduling Failed',
+        description: error.message || 'An unexpected error occurred.',
+      });
+    } finally {
+      setIsAiRunning(false);
+    }
   }
 
   if (!chore) return null;
@@ -102,31 +119,29 @@ export function AssignChoreDialog({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Assign Chore: {chore.name}</DialogTitle>
+          <DialogTitle>AI Schedule: {chore.name}</DialogTitle>
           <DialogDescription>
-            Select champions and a date to assign this chore.
+            Let AI find the best time to schedule this chore for your champions.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="championIds"
               render={() => (
                 <FormItem>
-                  <div className="mb-4">
-                    <FormLabel className="text-base">Champions</FormLabel>
-                    <FormDescription>
-                      Select the champion(s) to assign this chore to.
-                    </FormDescription>
-                  </div>
-                  {champions.map((item) => (
-                    <FormField
-                      key={item.id}
-                      control={form.control}
-                      name="championIds"
-                      render={({ field }) => {
-                        return (
+                  <FormLabel className="text-base">Champions</FormLabel>
+                  <FormDescription>
+                    Select the champion(s) to assign this chore to.
+                  </FormDescription>
+                  <div className="space-y-2 pt-2">
+                    {champions.map((item) => (
+                      <FormField
+                        key={item.id}
+                        control={form.control}
+                        name="championIds"
+                        render={({ field }) => (
                           <FormItem
                             key={item.id}
                             className="flex flex-row items-start space-x-3 space-y-0"
@@ -135,72 +150,61 @@ export function AssignChoreDialog({
                               <Checkbox
                                 checked={field.value?.includes(item.id)}
                                 onCheckedChange={(checked) => {
-                                  return checked
-                                    ? field.onChange([...(field.value || []), item.id])
-                                    : field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== item.id
-                                        )
-                                      );
+                                  const currentIds = field.value || [];
+                                  const newIds = checked
+                                    ? [...currentIds, item.id]
+                                    : currentIds.filter(value => value !== item.id);
+                                  field.onChange(newIds);
                                 }}
+                                disabled={isAiRunning}
                               />
                             </FormControl>
                             <FormLabel className="font-normal">
                               {item.name}
                             </FormLabel>
                           </FormItem>
-                        );
-                      }}
-                    />
-                  ))}
+                        )}
+                      />
+                    ))}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="date"
+              name="constraints"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Assignment Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={'outline'}
-                          className={cn(
-                            'w-[240px] pl-3 text-left font-normal',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, 'PPP')
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                <FormItem>
+                  <FormLabel>Constraints (Optional)</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="e.g., 'after 4pm', 'on a weekday', 'not on Tuesday'"
+                      disabled={isAiRunning}
+                      {...field}
+                    />
+                  </FormControl>
                   <FormDescription>
-                    The chore will be scheduled for this day.
+                    Give the AI hints to find the perfect time slot.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter>
-              <Button type="submit">Assign Chore</Button>
+              <Button type="submit" disabled={isAiRunning} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                {isAiRunning ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Scheduling...
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="mr-2 h-4 w-4" />
+                    AI Schedule Chore
+                  </>
+                )}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
