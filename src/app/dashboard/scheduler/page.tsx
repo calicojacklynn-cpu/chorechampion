@@ -4,7 +4,8 @@ import { streamFlow } from '@genkit-ai/next/client';
 import {
   generateChoreSchedule,
   type ChoreScheduleInput,
-} from '@/ai/flows/automated-chore-schedule-generation';
+  type AutomatedChoreScheduleOutput,
+} from '@/ai';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -33,9 +34,16 @@ export default function SchedulerPage() {
   const { toast } = useToast();
   const { setSchedule } = useSchedule();
   const [instructions, setInstructions] = useState('');
+  const [tempSchedule, setTempSchedule] = useState<AutomatedChoreScheduleOutput | null>(null);
 
   const { run, output, running, error } = streamFlow(generateChoreSchedule);
   const prevRunning = useRef(false);
+
+  useEffect(() => {
+    if (output) {
+      setTempSchedule(output);
+    }
+  }, [output]);
 
   // Effect to show toast on error
   useEffect(() => {
@@ -62,6 +70,7 @@ export default function SchedulerPage() {
   }, [running, output, toast]);
 
   const handleGenerateSchedule = () => {
+    setTempSchedule(null); // Clear previous schedule
     if (!instructions.trim()) {
       toast({
         variant: 'destructive',
@@ -75,8 +84,8 @@ export default function SchedulerPage() {
   };
 
   const handleApplyToCalendar = () => {
-    if (output?.schedule) {
-      setSchedule(output.schedule);
+    if (tempSchedule?.schedule) {
+      setSchedule(tempSchedule.schedule);
       toast({
         title: 'Schedule Applied!',
         description: 'The generated schedule has been applied to the in-app calendar.',
@@ -89,6 +98,8 @@ export default function SchedulerPage() {
       });
     }
   };
+
+  const currentDisplaySchedule = running ? null : tempSchedule;
 
   return (
     <div className="space-y-6">
@@ -148,7 +159,7 @@ export default function SchedulerPage() {
         </CardFooter>
       </Card>
 
-      {(running || output) && (
+      {(running || currentDisplaySchedule) && (
         <Card>
           <CardHeader>
             <CardTitle>Generated Schedule</CardTitle>
@@ -158,13 +169,13 @@ export default function SchedulerPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {running && !output && (
+            {running && (
               <div className="flex justify-center items-center py-10 min-h-[200px]">
                 <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 <p className="ml-4 text-muted-foreground">The AI is thinking...</p>
               </div>
             )}
-            {output?.schedule && output.schedule.length > 0 && (
+            {currentDisplaySchedule?.schedule && currentDisplaySchedule.schedule.length > 0 && (
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -175,7 +186,7 @@ export default function SchedulerPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {output.schedule.map((assignment, index) => (
+                    {currentDisplaySchedule.schedule.map((assignment, index) => (
                       <TableRow key={index}>
                         <TableCell className="font-medium">{assignment.day}</TableCell>
                         <TableCell>{assignment.championName}</TableCell>
@@ -186,13 +197,13 @@ export default function SchedulerPage() {
                 </Table>
               </div>
             )}
-            {output && (!output.schedule || output.schedule.length === 0) && (
+            {currentDisplaySchedule && (!currentDisplaySchedule.schedule || currentDisplaySchedule.schedule.length === 0) && (
                  <div className="flex justify-center items-center py-10 min-h-[200px]">
                     <p className="text-muted-foreground">The AI couldn't generate a schedule from the instructions. Please try again with more details.</p>
                  </div>
             )}
           </CardContent>
-          {output && output.schedule && output.schedule.length > 0 && (
+          {currentDisplaySchedule && currentDisplaySchedule.schedule && currentDisplaySchedule.schedule.length > 0 && (
             <CardFooter>
               <Button onClick={handleApplyToCalendar} disabled={running}>
                 <CheckCircle className="mr-2 h-4 w-4" />

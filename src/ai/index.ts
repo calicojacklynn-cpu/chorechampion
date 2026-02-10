@@ -1,18 +1,26 @@
 'use server';
 
 /**
- * @fileOverview This file defines a Genkit flow for automated chore schedule generation.
- *
- * It allows parents to automatically generate a chore schedule based on natural language instructions.
- *
- * @interface ChoreScheduleInput - Defines the input schema for the chore schedule generation.
- * @interface AutomatedChoreScheduleOutput - Defines the output schema for the chore schedule generation.
- * @function generateChoreSchedule - The main function to trigger the chore schedule generation flow.
+ * @fileOverview This file contains all the Genkit AI logic for the application.
+ * It initializes the Genkit instance, defines the AI flow for chore schedule generation,
+ * and exports the necessary functions and types for use in the app.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'zod';
+import { genkit } from 'genkit';
+import { googleAI } from '@genkit-ai/google-genai';
+import { z } from 'zod';
+import { config } from 'dotenv';
 
+// Initialize dotenv
+config();
+
+// Initialize the Genkit AI instance
+export const ai = genkit({
+  plugins: [googleAI()],
+  model: 'googleai/gemini-2.5-flash',
+});
+
+// Define Zod schemas for input and output
 const ChoreScheduleInputSchema = z.object({
   instructions: z
     .string()
@@ -34,16 +42,11 @@ const AutomatedChoreScheduleOutputSchema = z.object({
 });
 export type AutomatedChoreScheduleOutput = z.infer<typeof AutomatedChoreScheduleOutputSchema>;
 
-export async function generateChoreSchedule(
-  input: ChoreScheduleInput
-): Promise<AutomatedChoreScheduleOutput> {
-  return generateChoreScheduleFlow(input);
-}
-
+// Define the Genkit prompt
 const scheduleGenerationPrompt = ai.definePrompt({
   name: 'choreScheduleGenerationPrompt',
-  input: {schema: ChoreScheduleInputSchema},
-  output: {schema: AutomatedChoreScheduleOutputSchema},
+  input: { schema: ChoreScheduleInputSchema },
+  output: { schema: AutomatedChoreScheduleOutputSchema },
   prompt: `You are an expert family organizer. Your task is to create a fair and balanced weekly chore schedule for a family based on the user's instructions.
 
 The user will provide all the necessary information in a single block of text. This may include the names of the children (champions), the chores that need to be done, their frequency, champion availability, and any other rules or constraints.
@@ -62,17 +65,25 @@ Based on the instructions above, generate the weekly chore schedule.
 `,
 });
 
+// Define the Genkit flow
 const generateChoreScheduleFlow = ai.defineFlow(
   {
-    name: 'generateChoreSchedule',
+    name: 'generateChoreScheduleFlow',
     inputSchema: ChoreScheduleInputSchema,
     outputSchema: AutomatedChoreScheduleOutputSchema,
   },
   async (input) => {
-    const {output} = await scheduleGenerationPrompt(input);
+    const { output } = await scheduleGenerationPrompt(input);
     if (!output) {
       throw new Error('Failed to generate a schedule.');
     }
     return output;
   }
 );
+
+// Export a client-callable wrapper function for the flow
+export async function generateChoreSchedule(
+  input: ChoreScheduleInput
+): Promise<AutomatedChoreScheduleOutput> {
+  return generateChoreScheduleFlow(input);
+}
