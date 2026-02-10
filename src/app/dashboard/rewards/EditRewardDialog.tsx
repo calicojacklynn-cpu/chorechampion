@@ -25,6 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { Reward } from "./page";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -86,70 +87,74 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Reward Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. Movie Night" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-             <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Describe the reward..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="points"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Point Cost</FormLabel>
-                  <FormControl>
-                    <Input type="number" inputMode="numeric" min={1} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="imageUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image URL (Optional)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://example.com/image.png" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <ScrollArea className="h-[60vh] pr-6">
+              <div className="space-y-4 py-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Reward Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. Movie Night" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description (Optional)</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Describe the reward..." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="points"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Point Cost</FormLabel>
+                      <FormControl>
+                        <Input type="number" inputMode="numeric" min={1} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Image URL (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="https://example.com/image.png" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            {imageUrl && isUrlValid && (
-              <div>
-                <FormLabel>Image Preview</FormLabel>
-                <div className="relative aspect-video w-full mt-2 rounded-md overflow-hidden border">
-                    <Image src={imageUrl} alt="Reward image preview" fill className="object-cover" />
-                </div>
+                {imageUrl && isUrlValid && (
+                  <div>
+                    <FormLabel>Image Preview</FormLabel>
+                    <div className="relative aspect-video w-full mt-2 rounded-md overflow-hidden border">
+                        <Image src={imageUrl} alt="Reward image preview" fill className="object-cover" />
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
+            </ScrollArea>
 
-            <DialogFooter>
+            <DialogFooter className="pt-4">
               <Button type="submit">Save Changes</Button>
             </DialogFooter>
           </form>
