@@ -59,17 +59,18 @@ export function EditChampionDialog({
     },
   });
 
+  const { reset } = form;
   const avatarUrl = form.watch("avatarUrl");
 
   useEffect(() => {
     if (isOpen) {
-      form.reset({
+      reset({
         name: champion.name,
         username: champion.username,
         avatarUrl: champion.avatarUrl || "",
       });
     }
-  }, [isOpen, champion, form]);
+  }, [isOpen, champion, reset]);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MoreHorizontal } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -81,37 +80,37 @@ export default function ChampionsPage() {
 
   type NewChampionData = { name: string; username: string; pin: string };
 
-  const handleAddChampion = (newChampionData: NewChampionData) => {
+  const handleAddChampion = useCallback((newChampionData: NewChampionData) => {
     const newChampion: Champion = {
       ...newChampionData,
       id: newChampionData.username.toLowerCase(),
-      avatarUrl: "", // No avatar by default
+      avatarUrl: "",
       points: 0,
       choresCompleted: 0,
     };
-    setChampions([newChampion, ...champions]);
-  };
+    setChampions((prev) => [newChampion, ...prev]);
+  }, []);
 
-  const handleUpdateChampion = (updatedChampion: Champion) => {
-    setChampions(
-      champions.map((c) => (c.id === updatedChampion.id ? updatedChampion : c))
+  const handleUpdateChampion = useCallback((updatedChampion: Champion) => {
+    setChampions((prev) =>
+      prev.map((c) => (c.id === updatedChampion.id ? updatedChampion : c))
     );
     toast({
       title: "Champion Updated!",
       description: `${updatedChampion.name}'s details have been updated.`,
     });
     setChampionToEdit(null);
-  };
+  }, [toast]);
 
-  const handleDeleteChampion = (championId: string) => {
-    const championName = champions.find((c) => c.id === championId)?.name;
-    setChampions(champions.filter((c) => c.id !== championId));
+  const handleDeleteChampion = useCallback(() => {
+    if (!championToDelete) return;
+    setChampions((prev) => prev.filter((c) => c.id !== championToDelete.id));
     toast({
       title: "Champion Deleted",
-      description: `${championName} has been removed from your list of champions.`,
+      description: `${championToDelete.name} has been removed from your list of champions.`,
     });
     setChampionToDelete(null);
-  };
+  }, [championToDelete, toast]);
 
   return (
     <>
@@ -133,7 +132,7 @@ export default function ChampionsPage() {
                   <span className="sr-only">Avatar</span>
                 </TableHead>
                 <TableHead>Name</TableHead>
-                <TableHead className="hidden md:table-cell">Username</TableHead>
+                <TableHead>Username</TableHead>
                 <TableHead className="hidden md:table-cell">Points</TableHead>
                 <TableHead className="hidden md:table-cell">
                   Chores Completed
@@ -169,7 +168,7 @@ export default function ChampionsPage() {
                       <TableCell className="font-medium">
                         {champion.name}
                       </TableCell>
-                      <TableCell className="hidden md:table-cell">{champion.username}</TableCell>
+                      <TableCell>{champion.username}</TableCell>
                       <TableCell className="hidden md:table-cell">
                         {champion.points}
                       </TableCell>
@@ -243,7 +242,7 @@ export default function ChampionsPage() {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-destructive hover:bg-destructive/90"
-                onClick={() => handleDeleteChampion(championToDelete.id)}
+                onClick={handleDeleteChampion}
               >
                 Delete
               </AlertDialogAction>
