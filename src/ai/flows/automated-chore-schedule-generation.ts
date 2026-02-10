@@ -27,6 +27,7 @@ const ChoreAssignmentSchema = z.object({
   championName: z.string().describe('The name of the champion assigned to the chore.'),
   choreName: z.string().describe('The name of the assigned chore.'),
 });
+export type ChoreAssignment = z.infer<typeof ChoreAssignmentSchema>;
 
 const AutomatedChoreScheduleOutputSchema = z.object({
   schedule: z.array(ChoreAssignmentSchema).describe('The generated weekly chore schedule.'),

@@ -4,7 +4,6 @@ import { streamFlow } from '@genkit-ai/next/client';
 import {
   generateChoreSchedule,
   type ChoreScheduleInput,
-  type AutomatedChoreScheduleOutput,
 } from '@/ai/flows/automated-chore-schedule-generation';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,6 +28,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import { useSchedule } from '@/app/context/ScheduleContext';
 
 // This is a browser-only API, so we declare the type here.
 declare global {
@@ -40,6 +40,7 @@ declare global {
 
 export default function SchedulerPage() {
   const { toast } = useToast();
+  const { setSchedule } = useSchedule();
   const [instructions, setInstructions] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isSpeechSupported, setIsSpeechSupported] = useState(false);
@@ -89,7 +90,6 @@ export default function SchedulerPage() {
     }
   }, [toast]);
 
-  // Issue 1 Fix: Handle errors in a useEffect
   useEffect(() => {
     if (error) {
       toast({
@@ -100,7 +100,6 @@ export default function SchedulerPage() {
     }
   }, [error, toast]);
 
-  // Issue 4 Fix: Show success toast on generation
   useEffect(() => {
     if (prevRunning.current && !running && output) {
       toast({
@@ -141,12 +140,20 @@ export default function SchedulerPage() {
     run(input);
   };
   
-  // Issue 3 Fix: Add onClick handler for "Apply to Calendar"
   const handleApplyToCalendar = () => {
-    toast({
-      title: 'Schedule Applied!',
-      description: 'The generated chore schedule has been applied to your calendar.',
-    });
+    if (output?.schedule) {
+      setSchedule(output.schedule);
+      toast({
+        title: 'Schedule Applied!',
+        description: 'The generated chore schedule has been applied to the in-app calendar.',
+      });
+    } else {
+       toast({
+        variant: 'destructive',
+        title: 'Nothing to Apply',
+        description: 'Generate a schedule before applying it to the calendar.',
+      });
+    }
   };
 
   return (
@@ -250,7 +257,6 @@ export default function SchedulerPage() {
                 <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
               </div>
             )}
-            {/* Issue 2 Fix: Display schedule in a table */}
             {output?.schedule && output.schedule.length > 0 && (
               <Table>
                 <TableHeader>
