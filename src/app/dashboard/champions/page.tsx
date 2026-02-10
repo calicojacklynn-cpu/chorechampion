@@ -58,7 +58,7 @@ const initialChampions: Champion[] = [
     id: "alex",
     name: "Alex",
     username: "alex-the-great",
-    avatarUrl: "https://images.unsplash.com/photo-1587743368367-67ec3ec37a5e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjaGlsZCUyMGZhY2V8ZW58MHx8fHwxNzcwNTUzOTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    avatarUrl: "https://images.unsplash.com/photo-1587743368367-67ec3e7a5e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjaGlsZCUyMGZhY2V8ZW58MHx8fHwxNzcwNTUzOTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
     points: 125,
     choresCompleted: 12,
   },
@@ -80,7 +80,6 @@ export default function ChampionsPage() {
   const [editingChampion, setEditingChampion] = useState<Champion | null>(null);
   const [deletingChampion, setDeletingChampion] = useState<Champion | null>(null);
 
-  // --- Callbacks for Champion Data Manipulation ---
   const handleAddChampion = useCallback((newChampionData: NewChampionData) => {
     setChampions((prev) => {
       const newChampion: Champion = {
@@ -236,7 +235,7 @@ export default function ChampionsPage() {
       {/* Edit Champion Dialog */}
       {editingChampion && (
         <EditChampionDialog
-          key={editingChampion.id} // Using key to force re-mount and reset form state
+          key={editingChampion.id}
           champion={editingChampion}
           isOpen={!!editingChampion}
           onOpenChange={handleEditOpenChange}

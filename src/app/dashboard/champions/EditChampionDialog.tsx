@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -50,25 +50,21 @@ export function EditChampionDialog({
   onSave,
 }: EditChampionDialogProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // The form is initialized with default values from the champion prop.
+  // Because the parent component uses a `key` on this dialog, the dialog
+  // component is re-mounted (and this hook is re-run) every time a new
+  // champion is selected, ensuring the form has the correct data.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    // Default values will be set by the useEffect hook
+    defaultValues: {
+      name: champion.name,
+      username: champion.username,
+      avatarUrl: champion.avatarUrl || "",
+    },
   });
 
-  const { reset } = form;
   const avatarUrl = form.watch("avatarUrl");
-
-  // This effect resets the form with the champion's data whenever the dialog
-  // is opened or the champion prop changes.
-  useEffect(() => {
-    if (champion) {
-      reset({
-        name: champion.name,
-        username: champion.username,
-        avatarUrl: champion.avatarUrl || "",
-      });
-    }
-  }, [champion, reset]);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
