@@ -37,7 +37,18 @@ export default function ChampionDashboardPage() {
 
     // Fetch champion profile
     const championDocRef = useMemoFirebase(() => doc(firestore, 'champions', championId), [firestore, championId]);
-    const { data: champion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
+    const { data: realChampion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
+
+    // For development, provide a default profile to view the UI.
+    const champion = realChampion || {
+        id: championId,
+        parentId: 'default-parent-id',
+        name: 'Alex',
+        username: 'alex_the_great',
+        email: 'alex@example.com',
+        avatarUrl: '',
+        points: 125,
+    } as Champion;
 
     // Fetch assigned chores for this champion
     const choresQuery = useMemoFirebase(() => collection(firestore, 'champions', championId, 'assignedChores'), [firestore, championId]);
@@ -75,7 +86,7 @@ export default function ChampionDashboardPage() {
         });
     }
 
-    if (isChampionLoading || areChoresLoading || areRewardsLoading) {
+    if ((isChampionLoading && !realChampion) || areChoresLoading || areRewardsLoading) {
         return (
             <div className="flex h-full items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin" />
@@ -83,14 +94,6 @@ export default function ChampionDashboardPage() {
         );
     }
     
-    if (!champion) {
-         return (
-            <div className="flex h-full items-center justify-center">
-                <p>Champion not found.</p>
-            </div>
-        );
-    }
-
     const pendingChores = assignedChores?.filter(c => !c.completed) || [];
     const completedChores = assignedChores?.filter(c => c.completed) || [];
 

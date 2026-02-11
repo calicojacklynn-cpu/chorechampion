@@ -27,21 +27,18 @@ export default function ChampionLayout({
 
   const championId = typeof params.id === 'string' ? params.id : '';
   
-  // Create a memoized reference to the champion document
   const championDocRef = useMemoFirebase(() => {
     if (!firestore || !championId) return null;
     return doc(firestore, 'champions', championId);
   }, [firestore, championId]);
 
-  // Fetch the champion profile from Firestore
-  const { data: champion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
+  // Fetch the real champion profile from Firestore
+  const { data: realChampion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
 
   useEffect(() => {
-    // If auth is done loading and there's no user, go to login page
     if (!isUserLoading && !user) {
       router.push('/');
     }
-    // If a user is logged in but their ID doesn't match the URL, redirect them to their own page.
     if (!isUserLoading && user && user.uid !== championId) {
         router.push(`/champion/${user.uid}`);
     }
@@ -52,8 +49,20 @@ export default function ChampionLayout({
     router.push('/');
   };
 
-  // Show a loader while auth state is resolving or champion data is being fetched
-  if (isUserLoading || isChampionLoading) {
+  // For development purposes, if a champion profile doesn't exist in the database,
+  // we create a default one here to allow for UI editing.
+  const champion = realChampion || (user ? {
+    id: user.uid,
+    parentId: 'default-parent-id',
+    name: 'Alex',
+    username: 'alex_the_great',
+    email: 'alex@example.com',
+    avatarUrl: '',
+    points: 125,
+  } as Champion : null);
+
+  // Show a loader while auth state is resolving or the champion data is being fetched
+  if (isUserLoading || (isChampionLoading && !champion)) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -61,47 +70,30 @@ export default function ChampionLayout({
     );
   }
   
-  // After loading, if the user isn't authenticated or doesn't match the URL param,
-  // this is a fallback for the useEffect redirect.
-  if (!user || user.uid !== championId) {
-    // The useEffect hook should have already redirected, but this is a safeguard.
+  // This is a safeguard redirect for logged-in users who aren't on their own page.
+  if (!isUserLoading && user && user.uid !== championId) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
-            <p className="text-lg font-semibold">Access Denied</p>
-            <p className="text-sm text-muted-foreground">Redirecting...</p>
+            <p className="text-lg font-semibold">Redirecting...</p>
         </div>
       </div>
     );
   }
 
-  // After loading, if the authenticated user is correct, but their profile document doesn't exist in Firestore.
-  // This happens when a champion logs in for the first time before a parent has created their profile.
-  if (user && !champion) {
+  // After loading, if there's no user or champion, access should be denied.
+  if (!user || !champion) {
     return (
-        <div className="flex h-screen items-center justify-center p-4">
-            <div className="text-center max-w-md p-6 border rounded-lg shadow-sm bg-card">
-                <h1 className="text-xl font-bold font-headline mb-2">Welcome, Champion!</h1>
-                <p className="text-lg font-semibold mb-4">Your Account is Almost Ready</p>
-                <p className="text-sm text-muted-foreground mb-6">
-                    Your login has been created, but your champion profile is waiting to be set up by a parent. Please ask them to log in to their dashboard and add you as a champion to complete the process.
-                </p>
-                <Button onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4"/>
-                    Log Out
-                </Button>
-            </div>
-      </div>
-    );
-  }
-
-  // This case should theoretically be covered by the above conditions, but it's a final safeguard.
-  if (!champion) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
-            <p className="text-lg font-semibold">An unexpected error occurred.</p>
-            <p className="text-sm text-muted-foreground">Could not load champion profile.</p>
+      <div className="flex h-screen items-center justify-center p-4">
+        <div className="text-center max-w-md p-6 border rounded-lg shadow-sm bg-card">
+          <h1 className="text-xl font-bold font-headline mb-2">Access Denied</h1>
+          <p className="text-sm text-muted-foreground mb-6">
+            You do not have permission to view this page. Please log in to continue.
+          </p>
+          <Button onClick={handleLogout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Return to Login
+          </Button>
         </div>
       </div>
     );
