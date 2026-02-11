@@ -1,0 +1,338 @@
+{
+  "entities": {
+    "ParentProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ParentProfile",
+      "type": "object",
+      "description": "Represents a parent user profile within the Chore Champion application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ParentProfile entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the parent.",
+          "format": "email"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "First name of the parent."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name of the parent."
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "firstName",
+        "lastName"
+      ]
+    },
+    "ChampionProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ChampionProfile",
+      "type": "object",
+      "description": "Represents a child (champion) profile within the Chore Champion application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ChampionProfile entity."
+        },
+        "parentId": {
+          "type": "string",
+          "description": "Reference to ParentProfile. (Relationship: ParentProfile 1:N ChampionProfile)"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "First name of the champion."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name of the champion."
+        },
+        "points": {
+          "type": "number",
+          "description": "Total reward points earned by the champion."
+        }
+      },
+      "required": [
+        "id",
+        "parentId",
+        "firstName",
+        "lastName",
+        "points"
+      ]
+    },
+    "Chore": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Chore",
+      "type": "object",
+      "description": "Represents a chore that can be assigned to a champion.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Chore entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the chore."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the chore."
+        },
+        "pointsValue": {
+          "type": "number",
+          "description": "Number of reward points awarded for completing the chore."
+        },
+        "preset": {
+          "type": "boolean",
+          "description": "Indicates whether the chore is a preset or custom chore."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "pointsValue",
+        "preset"
+      ]
+    },
+    "AssignedChore": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AssignedChore",
+      "type": "object",
+      "description": "Represents a chore assigned to a specific champion on a specific date.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the AssignedChore entity."
+        },
+        "championId": {
+          "type": "string",
+          "description": "Reference to ChampionProfile. (Relationship: ChampionProfile 1:N AssignedChore)"
+        },
+        "choreId": {
+          "type": "string",
+          "description": "Reference to Chore. (Relationship: Chore 1:N AssignedChore)"
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "The date the chore is due.",
+          "format": "date-time"
+        },
+        "completed": {
+          "type": "boolean",
+          "description": "Indicates whether the chore has been completed."
+        }
+      },
+      "required": [
+        "id",
+        "championId",
+        "choreId",
+        "dueDate",
+        "completed"
+      ]
+    },
+    "Reward": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Reward",
+      "type": "object",
+      "description": "Represents a reward that can be redeemed by a champion.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Reward entity."
+        },
+        "parentId": {
+          "type": "string",
+          "description": "Reference to ParentProfile. (Relationship: ParentProfile 1:N Reward)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the reward."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the reward."
+        },
+        "pointsRequired": {
+          "type": "number",
+          "description": "Number of points required to redeem the reward."
+        }
+      },
+      "required": [
+        "id",
+        "parentId",
+        "name",
+        "description",
+        "pointsRequired"
+      ]
+    },
+    "RedeemedReward": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "RedeemedReward",
+      "type": "object",
+      "description": "Represents a reward that has been redeemed by a champion.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the RedeemedReward entity."
+        },
+        "championId": {
+          "type": "string",
+          "description": "Reference to ChampionProfile. (Relationship: ChampionProfile 1:N RedeemedReward)"
+        },
+        "rewardId": {
+          "type": "string",
+          "description": "Reference to Reward. (Relationship: Reward 1:N RedeemedReward)"
+        },
+        "redemptionDate": {
+          "type": "string",
+          "description": "The date the reward was redeemed.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "championId",
+        "rewardId",
+        "redemptionDate"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "ParentProfile",
+          "schema": {
+            "$ref": "#/backend/entities/ParentProfile"
+          },
+          "description": "Stores parent user profiles. Path-based ownership ensures that only the authenticated user (parent) can access their profile.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the parent user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/champions/{championId}",
+        "definition": {
+          "entityName": "ChampionProfile",
+          "schema": {
+            "$ref": "#/backend/entities/ChampionProfile"
+          },
+          "description": "Stores child (champion) profiles associated with a parent. Enforces parent-child relationship through the path structure. Path-based ownership is implemented.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the parent user."
+            },
+            {
+              "name": "championId",
+              "description": "The unique ID of the champion profile."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/champions/{championId}/assignedChores/{assignedChoreId}",
+        "definition": {
+          "entityName": "AssignedChore",
+          "schema": {
+            "$ref": "#/backend/entities/AssignedChore"
+          },
+          "description": "Stores chores assigned to a specific champion, nested under the champion profile. Path-based ownership ensures only the parent or champion can access assigned chores.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the parent user."
+            },
+            {
+              "name": "championId",
+              "description": "The unique ID of the champion profile."
+            },
+            {
+              "name": "assignedChoreId",
+              "description": "The unique ID of the assigned chore."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/champions/{championId}/redeemedRewards/{redeemedRewardId}",
+        "definition": {
+          "entityName": "RedeemedReward",
+          "schema": {
+            "$ref": "#/backend/entities/RedeemedReward"
+          },
+          "description": "Stores rewards redeemed by a specific champion, nested under the champion profile. Path-based ownership ensures that only the parent or champion can access redeemed rewards data.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the parent user."
+            },
+            {
+              "name": "championId",
+              "description": "The unique ID of the champion profile."
+            },
+            {
+              "name": "redeemedRewardId",
+              "description": "The unique ID of the redeemed reward."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/rewards/{rewardId}",
+        "definition": {
+          "entityName": "Reward",
+          "schema": {
+            "$ref": "#/backend/entities/Reward"
+          },
+          "description": "Stores rewards created by the parent. Path-based ownership allows only the parent to access the rewards they created.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the parent user."
+            },
+            {
+              "name": "rewardId",
+              "description": "The unique ID of the reward."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/chores/{choreId}",
+        "definition": {
+          "entityName": "Chore",
+          "schema": {
+            "$ref": "#/backend/entities/Chore"
+          },
+          "description": "Stores preset chores available to all users. Accessible to all users, but write access is restricted to admin roles (if implemented).",
+          "params": [
+            {
+              "name": "choreId",
+              "description": "The unique ID of the chore."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to support the \"Chore Champion\" application, focusing on secure and scalable management of parent and child profiles, chores, and rewards. It emphasizes authorization independence, clarity, and ease of debugging. Path-based ownership is utilized for private user data, while denormalization is implemented to ensure that security rules can be applied efficiently without complex `get()` calls. Specifically, this design utilizes a nested hierarchy `/users/{userId}/champions/{championId}` for user-owned data, extending to further nested entities such as `AssignedChores` and `RedeemedRewards`. This structure clearly defines ownership and enables robust security rules based on path-based authorization.\n\n**Authorization Independence:** The system achieves authorization independence by avoiding the need for `get()` calls in security rules. Ownership is explicitly defined by the path itself, such as `/users/{userId}` for parent profiles and `/users/{userId}/champions/{championId}` for child profiles. Access control is managed through these paths, allowing direct authorization checks without needing to fetch parent document data.\n\n**QAPs (Rules are not Filters):** The structure facilitates secure `list` operations through structural segregation. Each collection contains documents with homogeneous security requirements. For example, chores assigned to a specific champion are stored under `/users/{userId}/champions/{championId}/assignedChores/{assignedChoreId}`, ensuring that listing chores only returns those accessible to the authenticated user. Path-based rules combined with schema validation guarantees that rules are not used as filters.\n\n**Invariants:** The structure is designed to enforce invariants such as ownership and data integrity. The parent-child relationship between `ParentProfile` and `ChampionProfile` is enforced through the path structure `/users/{userId}/champions/{championId}`. Timestamps can be added to documents to track creation and modification times, further ensuring data integrity. Denormalization of authorization data ensures that security rules remain robust and efficient."
+  }
+}
