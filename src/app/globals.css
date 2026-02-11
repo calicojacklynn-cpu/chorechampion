@@ -7,9 +7,9 @@
   :root {
     --background: 210 40% 98%;
     --foreground: 222.2 84% 4.9%;
-    --card: 210 40% 98%;
+    --card: 210 40% 97%;
     --card-foreground: 222.2 84% 4.9%;
-    --popover: 210 40% 98%;
+    --popover: 210 40% 97%;
     --popover-foreground: 222.2 84% 4.9%;
     --primary: 195 78% 55%;
     --primary-foreground: 224 71% 10%;
@@ -24,15 +24,14 @@
     --border: 195 50% 88%;
     --input: 195 50% 88%;
     --ring: 195 78% 70%;
-    --radius: 0.5rem;
   }
   
   html.theme-sunset {
     --background: 25 80% 95%;
     --foreground: 330 60% 10%;
-    --card: 25 80% 98%;
+    --card: 25 80% 97%;
     --card-foreground: 330 60% 10%;
-    --popover: 25 80% 98%;
+    --popover: 25 80% 97%;
     --popover-foreground: 330 60% 10%;
     --primary: 25 95% 70%;
     --primary-foreground: 330 60% 10%;
@@ -74,9 +73,9 @@
   html.theme-amethyst {
     --background: 280 60% 96%;
     --foreground: 270 80% 15%;
-    --card: 270 60% 98%;
+    --card: 270 60% 97%;
     --card-foreground: 270 80% 15%;
-    --popover: 270 60% 98%;
+    --popover: 270 60% 97%;
     --popover-foreground: 270 80% 15%;
     --primary: 270 70% 75%;
     --primary-foreground: 270 90% 10%;
@@ -123,7 +122,7 @@
     --popover: 240 15% 12%;
     --popover-foreground: 240 20% 98%;
     --primary: 270 70% 65%;
-    --primary-foreground: 270 70% 10%;
+    --primary-foreground: 270 90% 10%;
     --secondary: 260 30% 25%;
     --secondary-foreground: 260 30% 98%;
     --muted: 260 30% 25%;
@@ -162,9 +161,9 @@
   html.theme-coral {
     --background: 5 80% 96%;
     --foreground: 355 70% 20%;
-    --card: 16 85% 98%;
+    --card: 16 85% 97%;
     --card-foreground: 355 70% 20%;
-    --popover: 16 85% 98%;
+    --popover: 16 85% 97%;
     --popover-foreground: 355 70% 20%;
     --primary: 16 100% 70%;
     --primary-foreground: 355 90% 15%;
@@ -293,8 +292,8 @@
   }
 
   /* Shared sidebar styles that derive from theme variables */
-  :root, html[class^="theme-"] {
-    --sidebar-background: hsl(var(--card) / 0.8);
+  :root {
+    --sidebar-background: transparent;
     --sidebar-foreground: var(--foreground);
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: var(--primary-foreground);
@@ -305,7 +304,6 @@
   }
 
   html.theme-midnight {
-    --sidebar-background: hsl(var(--card) / 0.8);
     --sidebar-accent: hsl(260, 30%, 30%);
     --sidebar-accent-foreground: hsl(260, 30%, 98%);
   }
@@ -347,5 +345,7 @@
     
 
 
+
+    
 
     
