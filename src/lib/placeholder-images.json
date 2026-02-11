@@ -3,97 +3,97 @@
     {
       "id": "login-hero",
       "description": "A happy family doing chores together in a clean living room.",
-      "imageUrl": "https://images.unsplash.com/photo-1629042306548-afec37a5e46b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxmYW1pbHklMjBsaXZpbmdyb29tfGVufDB8fHx8MTc3MDY2NDYwNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1629042306547-c1d7c6c85ffa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmYW1pbHklMjBsaXZpbmdyb29tfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "family livingroom"
     },
     {
       "id": "user-avatar-parent",
       "description": "Avatar for parent user.",
-      "imageUrl": "https://images.unsplash.com/photo-1626526804650-7118ac691b7a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxwZXJzb24lMjBmYWNlfGVufDB8fHx8MTc3MDY1MTEzMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwZXJzb24lMjBmYWNlfGVufDB8fHx8MTc3MDY1MTEzMXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "person face"
     },
     {
       "id": "champion-avatar-1",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1529306436573-30b146d1e433?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTcyMTg0NjQzNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1767035698194-920cbe5b9f1c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero costume"
     },
     {
       "id": "champion-avatar-2",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1610212570082-9a715694c922?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBjYXBlfGVufDB8fHx8MTcyMTg0NjQ4Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1758874573805-80d0773bf7a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzdXBlcmhlcm8lMjBjYXBlfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero cape"
     },
     {
       "id": "champion-avatar-3",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1592764535332-94575971a8f9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBtYXNrfGVufDB8fHx8MTcyMTg0NjUwNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1758599543117-26784eda59e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8c3VwZXJoZXJvJTIwbWFza3xlbnwwfHx8fDE3NzA3NjkxMjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero mask"
     },
     {
       "id": "champion-avatar-4",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1611267294912-7919a7447833?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzdXBlcmhlcm8lMjBtYXNrfGVufDB8fHx8MTcyMTg0NjUwNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1765635648081-73f1e9e2189a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzdXBlcmhlcm8lMjBtYXNrfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero mask"
     },
     {
       "id": "champion-avatar-5",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1569351052295-a22a3a5273b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzdXBlcmhlcm8lMjBjYXBlfGVufDB8fHx8MTcyMTg0NjQ4Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1759663177104-342e75a0a8ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzdXBlcmhlcm8lMjBjYXBlfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero cape"
     },
     {
       "id": "champion-avatar-6",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1588349479344-733479a1f286?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBoZWxtZXR8ZW58MHx8fHwxNzIxODQ2NTQyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1630763882488-73a2d2267c0d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBoZWxtZXR8ZW58MHx8fHwxNzcwNzY5MTIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero helmet"
     },
     {
       "id": "champion-avatar-7",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1618063878230-340620613bb2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTcyMTg0NjQzNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1758599543128-a7fa95a49b7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero costume"
     },
     {
       "id": "champion-avatar-8",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1582845873995-188c634d1e67?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjB3aW5nc3xlbnwwfHx8fDE3MjE4NDY1ODV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1759663173841-7fa083109667?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjB3aW5nc3xlbnwwfHx8fDE3NzA3NjkxMjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero wings"
     },
     {
       "id": "champion-avatar-9",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1629893963809-568853f5d5e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTcyMTg0NjQzNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1765635499497-c5ee4e1cd226?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero costume"
     },
     {
       "id": "champion-avatar-10",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1614926034403-91c1370255c2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyMXx8Y2hpbGQlMjBwb3J0cmFpdHxlbnwwfHx8fDE3MjExNDY2MTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1472490059022-d5d084f09e5e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjaGlsZCUyMHBvcnRyYWl0fGVufDB8fHx8MTc3MDc0MjgzOXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "child portrait"
     },
     {
       "id": "reward-movie",
       "description": "Popcorn and a movie ticket.",
-      "imageUrl": "https://images.unsplash.com/photo-1620177088260-a9150572baf4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwb3Bjb3JuJTIwbW92aWV8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1620177088258-c84147ee601f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwb3Bjb3JuJTIwbW92aWV8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "popcorn movie"
     },
     {
       "id": "reward-icecream",
       "description": "Colorful scoops of ice cream in a cone.",
-      "imageUrl": "https://images.unsplash.com/photo-1560008581-09826d1de69e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxpY2UlMjBjcmVhbXxlbnwwfHx8fDE3NzA2MTU4Njl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1629385701021-fcd568a743e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxpY2UlMjBjcmVhbXxlbnwwfHx8fDE3NzA3MjYzMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "ice cream"
     },
     {
       "id": "reward-lego",
       "description": "A colorful structure made of toy bricks.",
-      "imageUrl": "https://images.unsplash.com/photo-1636314229901-61b1c1da1675?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx0b3klMjBibG9ja3N8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1541692641319-981cc79ee10a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx0b3klMjBibG9ja3N8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "toy blocks"
     },
     {
       "id": "reward-screentime",
       "description": "A person using a tablet computer.",
-      "imageUrl": "https://images.unsplash.com/photo-1746289434176-40f821d31216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx0YWJsZXQlMjBzY3JlZW58ZW58MHx8fHwxNzcwNjMzNDAzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1746289434176-40f821d31216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx0YWJsZXQlMjBzY3JlZW58ZW58MHx8fHwxNzcwNzY5MTIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "tablet screen"
     }
   ]
