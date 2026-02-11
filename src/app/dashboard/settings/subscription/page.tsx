@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Check, UserPlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { PayPalSubscribeButton } from "./PayPalButtons";
+import { PayPalUpgradeButton } from "./PayPalButtons";
 
 export default function SubscriptionSettingsPage() {
   const { toast } = useToast();
@@ -20,7 +20,7 @@ export default function SubscriptionSettingsPage() {
   const [childSlots, setChildSlots] = useState(3);
   const [maxSlots, setMaxSlots] = useState(3);
 
-  const handleSubscriptionApproved = () => {
+  const handleUpgradeApproved = () => {
     setCurrentPlan("Premium");
     setMaxSlots(5);
     toast({
@@ -79,12 +79,12 @@ export default function SubscriptionSettingsPage() {
         <Card className="lg:col-span-1 border-primary">
             <CardHeader>
                 <CardTitle>Chore Champion Premium</CardTitle>
-                 <CardDescription>Unlock more features and support the app!</CardDescription>
+                 <CardDescription>A one-time payment to upgrade your account.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                  <div className="flex items-baseline">
                     <span className="text-4xl font-bold">$4.99</span>
-                    <span className="text-muted-foreground">/month</span>
+                    <span className="text-muted-foreground"> one-time</span>
                 </div>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                     <li className="flex items-center gap-2">
@@ -93,13 +93,13 @@ export default function SubscriptionSettingsPage() {
                     </li>
                      <li className="flex items-center gap-2">
                         <Check className="h-4 w-4 text-primary" />
-                        All current features
+                        All current and future features
                     </li>
                 </ul>
             </CardContent>
              <CardFooter>
-                <PayPalSubscribeButton 
-                  onSubscriptionApproved={handleSubscriptionApproved}
+                <PayPalUpgradeButton 
+                  onPaymentApproved={handleUpgradeApproved}
                   disabled={currentPlan === 'Premium'}
                 />
             </CardFooter>
@@ -114,7 +114,7 @@ export default function SubscriptionSettingsPage() {
             <CardContent className="space-y-4">
                  <div className="flex items-baseline">
                     <span className="text-4xl font-bold">$0.75</span>
-                    <span className="text-muted-foreground">/slot</span>
+                    <span className="text-muted-foreground">/slot (one-time)</span>
                 </div>
                 <p className="text-sm text-muted-foreground">
                     Purchase additional slots one by one. Only available after upgrading to Premium.

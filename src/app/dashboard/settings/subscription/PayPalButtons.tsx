@@ -4,24 +4,25 @@ import {
   PayPalScriptProvider,
   PayPalButtons,
   type OnApproveData,
-  type CreateSubscriptionActions
+  type CreateOrderActions,
+  type OnApproveActions,
 } from '@paypal/react-paypal-js';
 import { useToast } from '@/hooks/use-toast';
 
 const PAYPAL_CLIENT_ID = "YOUR_PAYPAL_CLIENT_ID_HERE"; // IMPORTANT: Replace with your actual client ID
 
 type PayPalButtonsProps = {
-  onSubscriptionApproved: () => void;
+  onPaymentApproved: () => void;
   disabled?: boolean;
 }
 
-export function PayPalSubscribeButton({ onSubscriptionApproved, disabled = false }: PayPalButtonsProps) {
+export function PayPalUpgradeButton({ onPaymentApproved, disabled = false }: PayPalButtonsProps) {
   const { toast } = useToast();
 
   if (disabled) {
     return (
        <div className="w-full h-10 px-4 py-2 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium bg-primary text-primary-foreground opacity-50 cursor-not-allowed">
-        Already Subscribed
+        Already on Premium
       </div>
     );
   }
@@ -35,56 +36,48 @@ export function PayPalSubscribeButton({ onSubscriptionApproved, disabled = false
   }
 
   return (
-    <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID, intent: 'subscription', vault: true }}>
+    <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID, intent: 'capture' }}>
       <PayPalButtons
-        style={{ layout: 'horizontal', label: 'subscribe', color: 'blue', shape: 'rect' }}
+        style={{ layout: 'horizontal', label: 'buynow', color: 'blue', shape: 'rect' }}
         disabled={disabled}
-        createSubscription={async (data: Record<string, unknown>, actions: CreateSubscriptionActions) => {
-          // IMPORTANT: This function should call your backend server.
-          // Your server would then call the PayPal Subscriptions API to create a subscription.
-          // https://developer.paypal.com/docs/api/subscriptions/v1/#subscriptions_create
-          // It must return the subscription ID.
+        createOrder={async (data: Record<string, unknown>, actions: CreateOrderActions) => {
+          // IMPORTANT: This function can call your backend server to create an order.
+          // Your server would then call the PayPal Orders API.
+          // https://developer.paypal.com/docs/api/orders/v2/#orders_create
+          // For this simulation, we'll create the order on the client side.
           
           toast({
-            title: "Creating Subscription...",
-            description: "Connecting to backend... (This is a simulation)",
+            title: "Creating Order...",
+            description: "Please complete the payment in the PayPal window.",
           });
-          
-          // --- SIMULATION ---
-          // In a real app, you would make a fetch call here:
-          // const response = await fetch('/api/paypal/create-subscription', { method: 'POST' });
-          // const order = await response.json();
-          // return order.id;
 
-          // For now, we'll use a placeholder plan ID. This must be created in your PayPal developer dashboard.
-          const planId = "YOUR_PAYPAL_PLAN_ID_HERE"; 
-          if (planId === "YOUR_PAYPAL_PLAN_ID_HERE") {
-             toast({
-                variant: 'destructive',
-                title: "PayPal Plan Not Configured",
-                description: "A developer must set the PayPal Plan ID in PayPalButtons.tsx.",
-            });
-            // This will prevent the PayPal modal from opening
-            return Promise.reject(new Error("PayPal Plan ID not configured."));
-          }
-          return actions.subscription.create({
-            plan_id: planId
+          const order = await actions.order.create({
+            purchase_units: [
+              {
+                description: 'Chore Champion Premium Plan (One-Time Payment)',
+                amount: {
+                  value: '4.99', // The price for the one-time upgrade
+                  currency_code: 'USD',
+                },
+              },
+            ],
           });
+          return order; // Return the order ID
         }}
-        onApprove={async (data: OnApproveData) => {
+        onApprove={async (data: OnApproveData, actions: OnApproveActions) => {
           // IMPORTANT: This function is called after the user approves the payment on PayPal's site.
-          // You should send the subscriptionID to your server to verify and activate the subscription.
-          console.log('PayPal subscription approved:', data);
+          // You should capture the transaction and send the orderID to your server for verification.
+          console.log('PayPal payment approved. Order ID:', data.orderID);
 
           // --- SIMULATION ---
-          // In a real app, you would make a fetch call here:
-          // await fetch('/api/paypal/approve-subscription', { 
+          // In a real app, you would make a fetch call here to capture the payment:
+          // await fetch('/api/paypal/capture-order', { 
           //   method: 'POST',
           //   headers: { 'Content-Type': 'application/json' },
-          //   body: JSON.stringify({ subscriptionID: data.subscriptionID })
+          //   body: JSON.stringify({ orderID: data.orderID })
           // });
           
-          onSubscriptionApproved(); // Update the UI state
+          onPaymentApproved(); // Update the UI state
           return Promise.resolve();
         }}
         onError={(err) => {
@@ -92,7 +85,7 @@ export function PayPalSubscribeButton({ onSubscriptionApproved, disabled = false
           toast({
             variant: "destructive",
             title: "PayPal Error",
-            description: "An error occurred. If you are developing, ensure your Client and Plan IDs are correct.",
+            description: "An error occurred. If you are a developer, please check your Client ID.",
           });
         }}
       />
