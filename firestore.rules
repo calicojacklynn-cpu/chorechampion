@@ -50,11 +50,12 @@ service cloud.firestore {
       allow delete: if isExistingOwner(userId);
 
       /**
-       * @description Controls access to custom rewards created by a parent.
+       * @description Controls access to custom rewards created by a parent. A champion can read their parent's rewards.
        * @path /users/{userId}/rewards/{rewardId}
        */
       match /rewards/{rewardId} {
-        allow read, write: if isOwner(userId);
+        allow get, list: if isOwner(userId) || (isSignedIn() && exists(/databases/$(database)/documents/champions/$(request.auth.uid)) && get(/databases/$(database)/documents/champions/$(request.auth.uid)).data.parentId == userId);
+        allow create, update, delete: if isOwner(userId);
       }
     }
 

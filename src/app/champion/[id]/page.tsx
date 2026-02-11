@@ -56,9 +56,11 @@ export default function ChampionDashboardPage() {
     
     // Fetch parent's rewards catalog
     const rewardsQuery = useMemoFirebase(() => {
-        if (!champion?.parentId) return null;
-        return collection(firestore, 'users', champion.parentId, 'rewards');
-    }, [firestore, champion]);
+        // Only attempt to fetch rewards if we have a real champion profile from Firestore.
+        // The fallback profile has a placeholder parentId which will cause a permission error.
+        if (!realChampion?.parentId) return null;
+        return collection(firestore, 'users', realChampion.parentId, 'rewards');
+    }, [firestore, realChampion]);
     const { data: rewards, isLoading: areRewardsLoading } = useCollection<Reward>(rewardsQuery);
     
     const handleClaimReward = (reward: Reward) => {
