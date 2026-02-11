@@ -32,11 +32,15 @@ import type { AssignedChore } from '@/ai';
 export default function ChampionDashboardPage() {
     const { toast } = useToast();
     const firestore = useFirestore();
+    const { user } = useUser();
     const params = useParams();
     const championId = typeof params.id === 'string' ? params.id : '';
 
     // Fetch champion profile
-    const championDocRef = useMemoFirebase(() => doc(firestore, 'champions', championId), [firestore, championId]);
+    const championDocRef = useMemoFirebase(() => {
+      if (!firestore || !user) return null;
+      return doc(firestore, 'champions', championId);
+    }, [firestore, user, championId]);
     const { data: realChampion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
 
     // For development, provide a default profile to view the UI.
@@ -51,7 +55,10 @@ export default function ChampionDashboardPage() {
     } as Champion;
 
     // Fetch assigned chores for this champion
-    const choresQuery = useMemoFirebase(() => collection(firestore, 'champions', championId, 'assignedChores'), [firestore, championId]);
+    const choresQuery = useMemoFirebase(() => {
+      if (!firestore || !user) return null;
+      return collection(firestore, 'champions', championId, 'assignedChores');
+    }, [firestore, user, championId]);
     const { data: assignedChores, isLoading: areChoresLoading } = useCollection<AssignedChore>(choresQuery);
     
     // Fetch parent's rewards catalog

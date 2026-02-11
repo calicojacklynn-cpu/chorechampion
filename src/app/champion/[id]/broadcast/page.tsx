@@ -9,7 +9,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { useFirestore, useDoc, useMemoFirebase, useUser } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import type { Champion } from '@/app/dashboard/champions/page';
 
@@ -56,13 +56,14 @@ export default function ChampionBroadcastPage() {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const firestore = useFirestore();
+  const { user } = useUser();
   const params = useParams();
   const championId = typeof params.id === 'string' ? params.id : '';
 
   const championDocRef = useMemoFirebase(() => {
-    if (!firestore || !championId) return null;
+    if (!firestore || !user || !championId) return null;
     return doc(firestore, 'champions', championId);
-  }, [firestore, championId]);
+  }, [firestore, user, championId]);
 
   const { data: realChampion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
 

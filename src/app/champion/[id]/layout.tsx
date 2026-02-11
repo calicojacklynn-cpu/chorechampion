@@ -35,9 +35,9 @@ export default function ChampionLayout({
   const championId = typeof params.id === 'string' ? params.id : '';
   
   const championDocRef = useMemoFirebase(() => {
-    if (!firestore || !championId) return null;
+    if (!firestore || !user || !championId) return null;
     return doc(firestore, 'champions', championId);
-  }, [firestore, championId]);
+  }, [firestore, user, championId]);
 
   // Fetch the real champion profile from Firestore
   const { data: realChampion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
@@ -71,7 +71,7 @@ export default function ChampionLayout({
   } as Champion : null);
 
   // Show a loader while auth state is resolving or the champion data is being fetched
-  if (isUserLoading || (isChampionLoading && !champion)) {
+  if (isUserLoading || (championId && !realChampion && isChampionLoading)) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
