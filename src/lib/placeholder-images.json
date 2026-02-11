@@ -9,68 +9,68 @@
     {
       "id": "user-avatar-parent",
       "description": "Avatar for parent user.",
-      "imageUrl": "https://images.unsplash.com/photo-1548544149-4835e62ee5b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxwZXJzb24lMjBmYWNlfGVufDB8fHx8MTc3MDY1MTEzMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1521146764736-56c929d59c83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwZXJzb24lMjBmYWNlfGVufDB8fHx8MTc3MDY1MTEzMXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "person face"
     },
     {
       "id": "champion-avatar-1",
-      "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1758599543128-a7fa95a49b7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "superhero costume"
+      "description": "A cartoon chibi superhero avatar.",
+      "imageUrl": "https://picsum.photos/seed/chibi1/200/200",
+      "imageHint": "chibi superhero"
     },
     {
       "id": "champion-avatar-2",
-      "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1758874573872-4e08c6fb466e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzdXBlcmhlcm8lMjBjYXBlfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "superhero cape"
+      "description": "A cartoon chibi superhero avatar.",
+      "imageUrl": "https://picsum.photos/seed/chibi2/200/200",
+      "imageHint": "chibi superhero"
     },
     {
       "id": "champion-avatar-3",
-      "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1758874573805-80d0773bf7a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzdXBlcmhlcm8lMjBtYXNrfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "superhero mask"
+      "description": "A cartoon chibi superhero avatar.",
+      "imageUrl": "https://picsum.photos/seed/chibi3/200/200",
+      "imageHint": "chibi superhero"
     },
     {
       "id": "champion-avatar-4",
-      "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1765635648081-73f1e9e2189a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzdXBlcmhlcm8lMjBtYXNrfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "superhero mask"
+      "description": "A cartoon chibi superhero avatar.",
+      "imageUrl": "https://picsum.photos/seed/chibi4/200/200",
+      "imageHint": "chibi superhero"
     },
     {
       "id": "champion-avatar-5",
-      "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1596284274000-7d3eca888e3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBjYXBlfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "superhero cape"
+      "description": "A cartoon chibi superhero avatar.",
+      "imageUrl": "https://picsum.photos/seed/chibi5/200/200",
+      "imageHint": "chibi superhero"
     },
     {
       "id": "champion-avatar-6",
-      "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1630763882488-73a2d2267c0d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBoZWxtZXR8ZW58MHx8fHwxNzcwNzY5MTIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "superhero helmet"
+      "description": "A cartoon chibi superhero avatar.",
+      "imageUrl": "https://picsum.photos/seed/chibi6/200/200",
+      "imageHint": "chibi superhero"
     },
     {
       "id": "champion-avatar-7",
-      "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1572541860701-0e6677735cef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "superhero costume"
+      "description": "A cartoon chibi superhero avatar.",
+      "imageUrl": "https://picsum.photos/seed/chibi7/200/200",
+      "imageHint": "chibi superhero"
     },
     {
       "id": "champion-avatar-8",
-      "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1759663173841-7fa083109667?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjB3aW5nc3xlbnwwfHx8fDE3NzA3NjkxMjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "superhero wings"
+      "description": "A cartoon chibi superhero avatar.",
+      "imageUrl": "https://picsum.photos/seed/chibi8/200/200",
+      "imageHint": "chibi superhero"
     },
     {
       "id": "champion-avatar-9",
-      "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1765635648081-73f1e9e2189a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "superhero costume"
+      "description": "A cartoon chibi superhero avatar.",
+      "imageUrl": "https://picsum.photos/seed/chibi9/200/200",
+      "imageHint": "chibi superhero"
     },
     {
       "id": "champion-avatar-10",
-      "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1637878314356-9f3b0338bc7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjaGlsZCUyMHBvcnRyYWl0fGVufDB8fHx8MTc3MDc0MjgzOXww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "child portrait"
+      "description": "A cartoon chibi superhero avatar.",
+      "imageUrl": "https://picsum.photos/seed/chibi10/200/200",
+      "imageHint": "chibi superhero"
     },
     {
       "id": "reward-movie",
@@ -81,19 +81,19 @@
     {
       "id": "reward-icecream",
       "description": "Colorful scoops of ice cream in a cone.",
-      "imageUrl": "https://images.unsplash.com/photo-1629385701021-fcd568a743e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxpY2UlMjBjcmVhbXxlbnwwfHx8fDE3NzA3MjYzMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1629385701021-fcd568a743e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxpY2UlMjBjcmVhbXxlbnwwfHx8fDE3NzA3MjYzMDJ8MA&ixlib.rb-4.1.0&q=80&w=1080",
       "imageHint": "ice cream"
     },
     {
       "id": "reward-lego",
       "description": "A colorful structure made of toy bricks.",
-      "imageUrl": "https://images.unsplash.com/photo-1541692641319-981cc79ee10a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx0b3klMjBibG9ja3N8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1541692641319-981cc79ee10a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx0b3klMjBibG9ja3N8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib.rb-4.1.0&q=80&w=1080",
       "imageHint": "toy blocks"
     },
     {
       "id": "reward-screentime",
       "description": "A person using a tablet computer.",
-      "imageUrl": "https://images.unsplash.com/photo-1746289434176-40f821d31216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx0YWJsZXQlMjBzY3JlZW58ZW58MHx8fHwxNzcwNzY5MTIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1746289434176-40f821d31216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx0YWJsZXQlMjBzY3JlZW58ZW58MHx8fHwxNzcwNzY5MTIzfDA&ixlib.rb-4.1.0&q=80&w=1080",
       "imageHint": "tablet screen"
     }
   ]
