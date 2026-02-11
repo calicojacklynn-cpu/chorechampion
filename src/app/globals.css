@@ -116,25 +116,25 @@
   }
 
   html.theme-midnight {
-    --background: 240 40% 10%;
-    --foreground: 250 50% 95%;
-    --card: 240 40% 15%;
-    --card-foreground: 250 50% 95%;
-    --popover: 240 40% 12%;
-    --popover-foreground: 250 50% 95%;
-    --primary: 260 60% 45%;
-    --primary-foreground: 260 50% 98%;
-    --secondary: 240 30% 20%;
-    --secondary-foreground: 250 50% 95%;
-    --muted: 240 30% 20%;
-    --muted-foreground: 250 30% 70%;
-    --accent: 240 50% 25%;
-    --accent-foreground: 240 50% 98%;
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 30% 25%;
-    --input: 240 30% 25%;
-    --ring: 260 60% 50%;
+    --background: 240 20% 8%;
+    --foreground: 240 20% 98%;
+    --card: 240 15% 12%;
+    --card-foreground: 240 20% 98%;
+    --popover: 240 15% 12%;
+    --popover-foreground: 240 20% 98%;
+    --primary: 270 70% 65%;
+    --primary-foreground: 270 70% 10%;
+    --secondary: 260 30% 25%;
+    --secondary-foreground: 260 30% 98%;
+    --muted: 260 30% 25%;
+    --muted-foreground: 250 20% 70%;
+    --accent: 48 90% 60%;
+    --accent-foreground: 50 95% 15%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 85% 98%;
+    --border: 240 15% 18%;
+    --input: 240 15% 18%;
+    --ring: 270 70% 65%;
   }
 
   html.theme-mint {
@@ -294,7 +294,7 @@
 
   /* Shared sidebar styles that derive from theme variables */
   :root, html[class^="theme-"] {
-    --sidebar-background: hsl(var(--background) / 0.8);
+    --sidebar-background: hsl(var(--card) / 0.8);
     --sidebar-foreground: var(--foreground);
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: var(--primary-foreground);
@@ -305,9 +305,9 @@
   }
 
   html.theme-midnight {
-    --sidebar-background: hsl(var(--background) / 0.8);
-    --sidebar-accent: hsl(240, 30%, 22%);
-    --sidebar-accent-foreground: hsl(250, 50%, 95%);
+    --sidebar-background: hsl(var(--card) / 0.8);
+    --sidebar-accent: hsl(260, 30%, 30%);
+    --sidebar-accent-foreground: hsl(260, 30%, 98%);
   }
 }
 
@@ -346,3 +346,6 @@
 
     
 
+
+
+    
