@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Check, UserPlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { PayPalSubscribeButton } from "./PayPalButtons";
 
 export default function SubscriptionSettingsPage() {
   const { toast } = useToast();
@@ -19,7 +20,7 @@ export default function SubscriptionSettingsPage() {
   const [childSlots, setChildSlots] = useState(3);
   const [maxSlots, setMaxSlots] = useState(3);
 
-  const handleUpgrade = () => {
+  const handleSubscriptionApproved = () => {
     setCurrentPlan("Premium");
     setMaxSlots(5);
     toast({
@@ -97,9 +98,10 @@ export default function SubscriptionSettingsPage() {
                 </ul>
             </CardContent>
              <CardFooter>
-                <Button className="w-full" onClick={handleUpgrade} disabled={currentPlan === 'Premium'}>
-                    {currentPlan === 'Premium' ? 'Already Subscribed' : 'Upgrade to Premium'}
-                </Button>
+                <PayPalSubscribeButton 
+                  onSubscriptionApproved={handleSubscriptionApproved}
+                  disabled={currentPlan === 'Premium'}
+                />
             </CardFooter>
         </Card>
         
