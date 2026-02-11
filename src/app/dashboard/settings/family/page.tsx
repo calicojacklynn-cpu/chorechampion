@@ -37,7 +37,7 @@ export default function FamilySettingsPage() {
                 <h3 className="font-semibold mb-2">Child Profiles & Champion Identity</h3>
                 <p className="text-sm text-muted-foreground mb-4">Customize usernames and "Hero" icons for your champions on the Champions page.</p>
                 <Button asChild>
-                    <Link href="/dashboard/champions">Manage Champions</Link>
+                    <Link href="/dashboard/settings/family/champions">Manage Champions</Link>
                 </Button>
             </div>
         </CardContent>
