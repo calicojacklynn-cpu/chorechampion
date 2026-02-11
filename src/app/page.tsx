@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth, useUser } from '@/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -40,7 +40,7 @@ export default function LoginPage() {
 
   const parentForm = useForm<z.infer<typeof parentLoginSchema>>({
     resolver: zodResolver(parentLoginSchema),
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: 'parent@example.com', password: 'password' },
   });
 
   const championForm = useForm<z.infer<typeof championLoginSchema>>({
@@ -49,8 +49,9 @@ export default function LoginPage() {
   });
 
   useEffect(() => {
-    // This logic needs to be improved to differentiate user roles.
-    // For now, any logged-in user is redirected to the parent dashboard.
+    // For development ease, any logged-in user is redirected to the parent dashboard.
+    // This allows you to bypass the login screen if you're already authenticated.
+    // Champion-specific routing is handled on successful champion login.
     if (!isUserLoading && user) {
       router.push('/dashboard');
     }
@@ -58,14 +59,31 @@ export default function LoginPage() {
 
   const handleParentLogin = async (values: z.infer<typeof parentLoginSchema>) => {
     try {
+      // Try to sign in first
       await signInWithEmailAndPassword(auth, values.email, values.password);
       router.push('/dashboard');
     } catch (error: any) {
-      toast({
-        variant: 'destructive',
-        title: 'Login Failed',
-        description: error.message,
-      });
+      // If the user doesn't exist or credentials are new, create a new account
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+        try {
+          await createUserWithEmailAndPassword(auth, values.email, values.password);
+          // The useEffect will handle the redirect after the auth state changes
+          router.push('/dashboard');
+        } catch (signUpError: any) {
+          toast({
+            variant: "destructive",
+            title: "Sign Up Failed",
+            description: signUpError.message,
+          });
+        }
+      } else {
+        // For other errors (e.g., wrong password for an existing user)
+        toast({
+          variant: "destructive",
+          title: "Login Failed",
+          description: error.message,
+        });
+      }
     }
   };
   
