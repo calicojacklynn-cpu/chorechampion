@@ -2,28 +2,27 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { Megaphone, Send } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import { Megaphone, Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
+import type { Champion } from '@/app/dashboard/champions/page';
 
 type Message = {
-    id: string;
-    senderId: string;
-    senderName: string;
-    avatarId?: string;
-    avatarUrl?: string;
-    text: string;
-    timestamp: string;
-}
+  id: string;
+  senderId: string;
+  senderName: string;
+  avatarId?: string;
+  avatarUrl?: string;
+  text: string;
+  timestamp: string;
+};
 
-// Mock messages for demonstration
 const initialMessages: Message[] = [
   {
     id: 'msg-1',
@@ -46,15 +45,38 @@ const initialMessages: Message[] = [
     senderId: 'bella',
     senderName: 'Bella',
     avatarId: 'champion-avatar-2',
-    text: "Me too! Good luck! 🍀",
+    text: 'Me too! Good luck! 🍀',
     timestamp: '10:32 AM',
   },
 ];
 
-export default function BroadcastPage() {
+export default function ChampionBroadcastPage() {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  const firestore = useFirestore();
+  const params = useParams();
+  const championId = typeof params.id === 'string' ? params.id : '';
+
+  const championDocRef = useMemoFirebase(() => {
+    if (!firestore || !championId) return null;
+    return doc(firestore, 'champions', championId);
+  }, [firestore, championId]);
+
+  const { data: realChampion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
+
+  const champion =
+    realChampion ||
+    ({
+      id: championId,
+      parentId: 'default-parent-id',
+      name: 'Alex',
+      username: 'alex_the_great',
+      email: 'alex@example.com',
+      avatarUrl: '',
+      points: 125,
+    } as Champion);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -65,22 +87,34 @@ export default function BroadcastPage() {
   }, [messages]);
 
   const handleSendMessage = () => {
-    if (!newMessage.trim()) {
+    if (!newMessage.trim() || !champion) {
       return;
     }
 
     const messageToSend: Message = {
       id: `msg-${Date.now()}`,
-      senderId: 'parent',
-      senderName: 'Parent',
-      avatarId: 'user-avatar-parent',
+      senderId: champion.id,
+      senderName: champion.name,
+      avatarUrl: champion.avatarUrl,
       text: newMessage,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }),
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      }),
     };
 
     setMessages([...messages, messageToSend]);
     setNewMessage('');
   };
+
+  if (isChampionLoading && !realChampion) {
+    return (
+      <div className="flex h-[calc(100vh-10rem)] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 flex flex-col h-[calc(100vh-10rem)]">
@@ -98,18 +132,21 @@ export default function BroadcastPage() {
       <Card className="flex-1 flex flex-col">
         <CardContent className="flex-1 p-6 space-y-6 overflow-y-auto">
           {messages.map((message) => {
-            const avatarPlaceholder = message.avatarId ? PlaceHolderImages.find(p => p.id === message.avatarId) : null;
+            const isSelf = champion && message.senderId === champion.id;
+
+            const avatarPlaceholder = message.avatarId
+              ? PlaceHolderImages.find((p) => p.id === message.avatarId)
+              : null;
             const imageUrl = message.avatarUrl || avatarPlaceholder?.imageUrl;
             const imageHint = avatarPlaceholder?.imageHint;
             const altText = avatarPlaceholder?.description || message.senderName;
-            const isParent = message.senderId === 'parent';
 
             return (
               <div
                 key={message.id}
-                className={`flex items-start gap-4 ${!isParent ? 'justify-end' : ''}`}
+                className={`flex items-start gap-4 ${isSelf ? 'justify-end' : ''}`}
               >
-                {isParent && (
+                {!isSelf && (
                   <Avatar className="h-10 w-10 border">
                     <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
                     <AvatarFallback>{message.senderName.charAt(0)}</AvatarFallback>
@@ -117,18 +154,22 @@ export default function BroadcastPage() {
                 )}
                 <div
                   className={`max-w-md rounded-xl px-4 py-3 ${
-                    isParent
-                      ? 'bg-primary text-primary-foreground rounded-tl-none'
-                      : 'bg-muted text-foreground rounded-tr-none'
+                    isSelf
+                      ? 'bg-primary text-primary-foreground rounded-br-none'
+                      : 'bg-muted text-foreground rounded-bl-none'
                   }`}
                 >
                   <p className={'font-bold text-sm mb-1'}>{message.senderName}</p>
                   <p>{message.text}</p>
-                   <p className={`text-xs mt-2 opacity-70 ${!isParent ? 'text-right' : 'text-left'}`}>
+                  <p
+                    className={`text-xs mt-2 opacity-70 ${
+                      isSelf ? 'text-right' : 'text-left'
+                    }`}
+                  >
                     {message.timestamp}
                   </p>
                 </div>
-                 {!isParent && (
+                {isSelf && (
                   <Avatar className="h-10 w-10 border">
                     <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
                     <AvatarFallback>{message.senderName.charAt(0)}</AvatarFallback>

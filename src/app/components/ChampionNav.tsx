@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   Settings,
   ChevronDown,
+  Megaphone,
 } from "lucide-react";
 
 import {
@@ -32,6 +33,7 @@ export function ChampionNav() {
   const championId = typeof params.id === 'string' ? params.id : '';
   
   const dashboardHref = `/champion/${championId}`;
+  const broadcastHref = `/champion/${championId}/broadcast`;
   const settingsBaseHref = `/champion/${championId}/settings`;
 
   const settingsChildren = [
@@ -64,6 +66,18 @@ export function ChampionNav() {
               <Link href={dashboardHref}>
                 <LayoutDashboard />
                 <span>Dashboard</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              isActive={pathname === broadcastHref}
+              tooltip={{ children: "Broadcasts" }}
+              asChild
+            >
+              <Link href={broadcastHref}>
+                <Megaphone />
+                <span>Broadcasts</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
