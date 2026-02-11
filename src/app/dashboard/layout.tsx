@@ -9,7 +9,15 @@ import { Nav } from "@/app/components/Nav";
 import { UserNav } from "@/app/components/UserNav";
 import { ScheduleProvider } from "@/app/context/ScheduleContext";
 import { Loader2 } from 'lucide-react';
-import type { Champion } from './champions/page';
+
+// Based on ParentProfile in backend.json
+export type UserProfile = {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+};
+
 
 export default function DashboardLayout({
   children,
@@ -20,13 +28,13 @@ export default function DashboardLayout({
   const router = useRouter();
   const firestore = useFirestore();
 
-  // Check if the currently logged-in user has a profile in the 'champions' collection.
-  const championDocRef = useMemoFirebase(() => {
+  // Check if the currently logged-in user has a profile in the 'users' (parent) collection.
+  const parentProfileDocRef = useMemoFirebase(() => {
     if (!firestore || !user) return null;
-    return doc(firestore, 'champions', user.uid);
+    return doc(firestore, 'users', user.uid);
   }, [firestore, user]);
 
-  const { data: champion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
+  const { data: parentProfile, isLoading: isParentLoading } = useDoc<UserProfile>(parentProfileDocRef);
 
   useEffect(() => {
     // If user is loaded and not logged in, redirect to home.
@@ -35,21 +43,20 @@ export default function DashboardLayout({
       return;
     }
     
-    // If user and champion profile are loaded, check if they are a champion.
-    if (!isUserLoading && !isChampionLoading && user) {
-        // If a champion document exists, it means this user is a champion.
+    // If user and parent profile check are loaded, decide where to route.
+    if (!isUserLoading && !isParentLoading && user) {
+        // If a parent profile does NOT exist for this user, they must be a champion.
         // Redirect them to their dedicated champion dashboard.
-        if (champion) {
+        if (!parentProfile) {
             router.push(`/champion/${user.uid}`);
         }
-        // If no champion document exists, they are a parent and can stay here.
+        // If a parent profile *does* exist, they are a parent and can stay on the dashboard.
     }
-  }, [isUserLoading, isChampionLoading, user, champion, router]);
+  }, [isUserLoading, isParentLoading, user, parentProfile, router]);
 
   // Show a loader while we determine auth state and user role.
-  // Also keep showing loader if we have determined the user is a champion,
-  // to avoid a flash of the parent dashboard before redirecting.
-  if (isUserLoading || isChampionLoading || (user && champion)) {
+  // Also keep showing loader if we have determined the user is a champion and are about to redirect.
+  if (isUserLoading || isParentLoading || (user && !parentProfile)) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -58,8 +65,8 @@ export default function DashboardLayout({
   }
 
   // If we've passed the checks above, it means the user is loaded,
-  // is NOT a champion, so they must be a parent. Render the parent dashboard.
-  if (user && !champion) {
+  // is a parent (has a profile), so render the parent dashboard.
+  if (user && parentProfile) {
       return (
         <ScheduleProvider>
           <SidebarProvider>
