@@ -166,7 +166,7 @@
     --border: 215 20% 25%;
     --input: 215 20% 30%;
     --ring: 205 90% 65%;
-    --sidebar-foreground: 0 0% 10%;
+    --sidebar-foreground: 0 0% 0%;
     --sidebar-accent: hsl(215, 20%, 20%);
     --sidebar-accent-foreground: hsl(210, 40%, 98%);
   }
