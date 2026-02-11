@@ -8,9 +8,11 @@ import { LogOut, Star, Loader2 } from 'lucide-react';
 import { Toaster } from "@/components/ui/toaster";
 import { SidebarProvider, Sidebar, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { ChampionNav } from "@/app/components/ChampionNav";
-import { useUser, useAuth } from '@/firebase';
+import { useUser, useAuth, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { useEffect } from 'react';
+import { doc } from 'firebase/firestore';
+import type { Champion } from '@/app/dashboard/champions/page';
 
 export default function ChampionLayout({
   children,
@@ -20,39 +22,54 @@ export default function ChampionLayout({
   const params = useParams();
   const router = useRouter();
   const auth = useAuth();
+  const firestore = useFirestore();
   const { user, isUserLoading } = useUser();
 
   const championId = typeof params.id === 'string' ? params.id : '';
   
+  // Create a memoized reference to the champion document
+  const championDocRef = useMemoFirebase(() => {
+    if (!firestore || !championId) return null;
+    return doc(firestore, 'champions', championId);
+  }, [firestore, championId]);
+
+  // Fetch the champion profile from Firestore
+  const { data: champion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
+
   useEffect(() => {
+    // If auth is done loading and there's no user, go to login page
     if (!isUserLoading && !user) {
       router.push('/');
     }
-    // If a user is logged in but their ID doesn't match the URL, redirect them.
+    // If a user is logged in but their ID doesn't match the URL, redirect them to their own page.
     if (!isUserLoading && user && user.uid !== championId) {
         router.push(`/champion/${user.uid}`);
     }
   }, [isUserLoading, user, router, championId]);
-  
-  // Construct the champion object from the authenticated user.
-  // In a real app, this would be fetched from Firestore, but this works for now.
-  const champion = user ? {
-    id: user.uid,
-    name: user.displayName || 'Champion',
-    avatarUrl: user.photoURL || '',
-    points: 125, // Mock points, as we don't have this in auth user object
-  } : null;
 
   const handleLogout = async () => {
     await signOut(auth);
     router.push('/');
   };
 
-  // If loading, or if the user is not the champion of this page, show a loader.
-  if (isUserLoading || !user || !champion || user.uid !== championId) {
+  // Show a loader while auth state is resolving or champion data is being fetched
+  if (isUserLoading || isChampionLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  // If there is no authenticated user, or the champion document doesn't exist,
+  // or the logged-in user doesn't match the page, show a loader/error state.
+  if (!user || !champion || user.uid !== championId) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+            <p className="text-lg font-semibold">Loading Champion...</p>
+            <p className="text-sm text-muted-foreground">Or you may not have permission to view this page.</p>
+        </div>
       </div>
     );
   }

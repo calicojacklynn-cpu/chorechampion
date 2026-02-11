@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -48,15 +47,6 @@ export default function LoginPage() {
     defaultValues: { email: 'alex@example.com', password: 'password' },
   });
 
-  useEffect(() => {
-    // For development ease, any logged-in user is redirected to the parent dashboard.
-    // This allows you to bypass the login screen if you're already authenticated.
-    // Champion-specific routing is handled on successful champion login.
-    if (!isUserLoading && user) {
-      router.push('/dashboard');
-    }
-  }, [user, isUserLoading, router]);
-
   const handleParentLogin = async (values: z.infer<typeof parentLoginSchema>) => {
     try {
       // Try to sign in first
@@ -67,7 +57,6 @@ export default function LoginPage() {
       if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
         try {
           await createUserWithEmailAndPassword(auth, values.email, values.password);
-          // The useEffect will handle the redirect after the auth state changes
           router.push('/dashboard');
         } catch (signUpError: any) {
           toast({
@@ -101,12 +90,28 @@ export default function LoginPage() {
     }
   };
   
-  if (isUserLoading || user) {
+  // If we are still determining the auth state, show a loader.
+  // The login handlers will redirect if a user is successfully logged in.
+  if (isUserLoading) {
     return (
         <div className="flex h-screen w-full items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin" />
         </div>
     )
+  }
+
+  // If a user is already logged in, redirect them away from the login page.
+  // This handles cases where a logged-in user tries to navigate back to the root URL.
+  if (user) {
+    // A simple approach: send everyone to the parent dashboard.
+    // The dashboard's own layout will handle redirecting champions if needed.
+    // This could be made more sophisticated with roles if they existed.
+    router.push('/dashboard');
+    return ( // Render a loader while redirecting
+        <div className="flex h-screen w-full items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+    );
   }
 
   return (

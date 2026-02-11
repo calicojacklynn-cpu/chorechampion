@@ -2,7 +2,8 @@
 
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { useUser } from '@/firebase';
+import { useUser, useDoc, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { doc, collection, query, where } from 'firebase/firestore';
 import {
   Card,
   CardContent,
@@ -24,38 +25,35 @@ import { Button } from '@/components/ui/button';
 import { Star, Trophy, CheckCircle2, Loader2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-
-// MOCK DATA - in a real app, this would be fetched based on the champion's ID
-const allChores = [
-    { id: 'chore-1', name: 'Water the plants', points: 5, assignedTo: 'alex', status: 'pending' },
-    { id: 'chore-2', name: 'Set the dinner table', points: 3, assignedTo: 'bella', status: 'pending' },
-    { id: 'chore-3', name: 'Take out the trash', points: 5, assignedTo: 'alex', status: 'completed' },
-    { id: 'chore-4', name: 'Feed the pets', points: 3, assignedTo: 'alex', status: 'pending' },
-];
-
-const allRewards = [
-  { id: "reward-screentime", name: "Extra Screen Time", description: "30 extra minutes of screen time.", points: 75, imageId: "reward-screentime" },
-  { id: "reward-icecream", name: "Ice Cream Trip", description: "A trip to the ice cream parlor.", points: 150, imageId: "reward-icecream" },
-  { id: "reward-movie", name: "Movie Night Choice", description: "You pick the movie for movie night.", points: 200, imageId: "reward-movie" },
-  { id: "reward-lego", name: "New Lego Set", description: "Pick out a new Lego set (up to $25).", points: 500, imageId: "reward-lego" },
-];
-
+import type { Champion } from '@/app/dashboard/champions/page';
+import type { Reward } from '@/app/dashboard/rewards/page';
+import type { AssignedChore } from '@/ai';
 
 export default function ChampionDashboardPage() {
     const { toast } = useToast();
-    const { user, isUserLoading } = useUser();
-    
-    // Construct champion object from the authenticated user. Points are still mock.
-    const champion = user ? { id: user.uid, name: user.displayName || 'Champion', points: 125 } : null;
-    
-    // This is still mock data. Filtered by 'alex' to show something. 
-    // In a real app, this would fetch chores for the logged in championId.
-    const chores = allChores.filter(c => c.assignedTo === 'alex'); 
-    const rewards = allRewards;
+    const firestore = useFirestore();
+    const params = useParams();
+    const championId = typeof params.id === 'string' ? params.id : '';
 
-    const handleClaimReward = (reward: typeof allRewards[0]) => {
+    // Fetch champion profile
+    const championDocRef = useMemoFirebase(() => doc(firestore, 'champions', championId), [firestore, championId]);
+    const { data: champion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
+
+    // Fetch assigned chores for this champion
+    const choresQuery = useMemoFirebase(() => collection(firestore, 'champions', championId, 'assignedChores'), [firestore, championId]);
+    const { data: assignedChores, isLoading: areChoresLoading } = useCollection<AssignedChore>(choresQuery);
+    
+    // Fetch parent's rewards catalog
+    const rewardsQuery = useMemoFirebase(() => {
+        if (!champion?.parentId) return null;
+        return collection(firestore, 'users', champion.parentId, 'rewards');
+    }, [firestore, champion]);
+    const { data: rewards, isLoading: areRewardsLoading } = useCollection<Reward>(rewardsQuery);
+    
+    const handleClaimReward = (reward: Reward) => {
         if (champion && champion.points >= reward.points) {
-            // In a real app, you would deduct points and record the claim
+            // In a real app, this would deduct points and record the claim in Firestore
+            // e.g., create a document in /champions/{championId}/redeemedRewards
             toast({
                 title: "Reward Claimed!",
                 description: `You've successfully claimed "${reward.name}". Your parent has been notified.`,
@@ -68,14 +66,33 @@ export default function ChampionDashboardPage() {
             });
         }
     };
+    
+    const handleMarkAsDone = (choreId: string) => {
+        // In a real app, this would update the 'completed' status of the chore in Firestore.
+        toast({
+            title: "Quest Submitted!",
+            description: "Your parent has been notified for approval.",
+        });
+    }
 
-    if (isUserLoading || !champion) {
+    if (isChampionLoading || areChoresLoading || areRewardsLoading) {
         return (
             <div className="flex h-full items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin" />
             </div>
         );
     }
+    
+    if (!champion) {
+         return (
+            <div className="flex h-full items-center justify-center">
+                <p>Champion not found.</p>
+            </div>
+        );
+    }
+
+    const pendingChores = assignedChores?.filter(c => !c.completed) || [];
+    const completedChores = assignedChores?.filter(c => c.completed) || [];
 
     return (
         <div className="space-y-8">
@@ -104,17 +121,17 @@ export default function ChampionDashboardPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {chores.filter(c => c.status === 'pending').length > 0 ? (
-                                    chores.filter(c => c.status === 'pending').map(chore => (
+                                {pendingChores.length > 0 ? (
+                                    pendingChores.map(chore => (
                                     <TableRow key={chore.id}>
-                                        <TableCell className="font-medium">{chore.name}</TableCell>
+                                        <TableCell className="font-medium">{chore.choreName}</TableCell>
                                         <TableCell>
                                             <Badge variant="secondary" className="flex items-center gap-1 w-fit">
-                                                <Star className="w-3 h-3 text-accent fill-accent" /> {chore.points}
+                                                <Star className="w-3 h-3 text-accent fill-accent" /> {chore.pointsValue}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-right">
-                                            <Button variant="outline" size="sm">Mark as Done</Button>
+                                            <Button variant="outline" size="sm" onClick={() => handleMarkAsDone(chore.id)}>Mark as Done</Button>
                                         </TableCell>
                                     </TableRow>
                                     ))
@@ -144,10 +161,10 @@ export default function ChampionDashboardPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {chores.filter(c => c.status === 'completed').length > 0 ? (
-                                    chores.filter(c => c.status === 'completed').map(chore => (
+                                {completedChores.length > 0 ? (
+                                    completedChores.map(chore => (
                                     <TableRow key={chore.id} className="text-muted-foreground">
-                                        <TableCell className="font-medium">{chore.name}</TableCell>
+                                        <TableCell className="font-medium">{chore.choreName}</TableCell>
                                         <TableCell className="text-right flex items-center justify-end gap-2">
                                             <CheckCircle2 className="h-4 w-4 text-green-500" />
                                             Done
@@ -172,15 +189,16 @@ export default function ChampionDashboardPage() {
                     <h2 className="text-2xl font-semibold tracking-tight font-headline">Reward Catalog</h2>
                 </div>
                  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {rewards.map((reward) => {
-                        const rewardImage = PlaceHolderImages.find(p => p.id === reward.imageId);
+                    {rewards && rewards.map((reward) => {
+                        const rewardImage = PlaceHolderImages.find(p => p.id === reward.id);
+                        const imageUrl = reward.imageUrl || rewardImage?.imageUrl;
                         const canAfford = champion.points >= reward.points;
                         return (
                             <Card key={reward.id} className="overflow-hidden flex flex-col">
                                 <CardContent className="p-0">
                                     <div className="relative aspect-[4/3] bg-muted">
-                                        {rewardImage?.imageUrl ? (
-                                            <Image src={rewardImage.imageUrl} alt={reward.name} fill className="object-cover" data-ai-hint={rewardImage.imageHint} />
+                                        {imageUrl ? (
+                                            <Image src={imageUrl} alt={reward.name} fill className="object-cover" data-ai-hint={reward.imageHint} />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center bg-secondary">
                                                 <Trophy className="w-12 h-12 text-muted-foreground" />

@@ -45,24 +45,35 @@
           "type": "string",
           "description": "Reference to ParentProfile. (Relationship: ParentProfile 1:N ChampionProfile)"
         },
-        "firstName": {
+        "name": {
           "type": "string",
           "description": "First name of the champion."
         },
-        "lastName": {
+        "username": {
           "type": "string",
-          "description": "Last name of the champion."
+          "description": "The champion's username."
+        },
+        "email": {
+          "type": "string",
+          "description": "The champion's email address.",
+          "format": "email"
         },
         "points": {
           "type": "number",
           "description": "Total reward points earned by the champion."
+        },
+        "avatarUrl": {
+          "type": "string",
+          "description": "URL for the champion's avatar image.",
+          "format": "uri"
         }
       },
       "required": [
         "id",
         "parentId",
-        "firstName",
-        "lastName",
+        "name",
+        "username",
+        "email",
         "points"
       ]
     },
@@ -229,38 +240,30 @@
         }
       },
       {
-        "path": "/users/{userId}/champions/{championId}",
+        "path": "/champions/{championId}",
         "definition": {
           "entityName": "ChampionProfile",
           "schema": {
             "$ref": "#/backend/entities/ChampionProfile"
           },
-          "description": "Stores child (champion) profiles associated with a parent. Enforces parent-child relationship through the path structure. Path-based ownership is implemented.",
+          "description": "Top-level collection for champion profiles. Accessible by the champion and their parent.",
           "params": [
             {
-              "name": "userId",
-              "description": "The unique ID of the parent user."
-            },
-            {
               "name": "championId",
-              "description": "The unique ID of the champion profile."
+              "description": "The unique ID of the champion (matches their auth UID)."
             }
           ]
         }
       },
       {
-        "path": "/users/{userId}/champions/{championId}/assignedChores/{assignedChoreId}",
+        "path": "/champions/{championId}/assignedChores/{assignedChoreId}",
         "definition": {
           "entityName": "AssignedChore",
           "schema": {
             "$ref": "#/backend/entities/AssignedChore"
           },
-          "description": "Stores chores assigned to a specific champion, nested under the champion profile. Path-based ownership ensures only the parent or champion can access assigned chores.",
+          "description": "Stores chores assigned to a specific champion. Accessible by both champion and parent.",
           "params": [
-            {
-              "name": "userId",
-              "description": "The unique ID of the parent user."
-            },
             {
               "name": "championId",
               "description": "The unique ID of the champion profile."
@@ -273,18 +276,14 @@
         }
       },
       {
-        "path": "/users/{userId}/champions/{championId}/redeemedRewards/{redeemedRewardId}",
+        "path": "/champions/{championId}/redeemedRewards/{redeemedRewardId}",
         "definition": {
           "entityName": "RedeemedReward",
           "schema": {
             "$ref": "#/backend/entities/RedeemedReward"
           },
-          "description": "Stores rewards redeemed by a specific champion, nested under the champion profile. Path-based ownership ensures that only the parent or champion can access redeemed rewards data.",
+          "description": "Stores rewards redeemed by a specific champion. Accessible by both champion and parent.",
           "params": [
-            {
-              "name": "userId",
-              "description": "The unique ID of the parent user."
-            },
             {
               "name": "championId",
               "description": "The unique ID of the champion profile."
@@ -333,6 +332,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore data structure is designed to support the \"Chore Champion\" application, focusing on secure and scalable management of parent and child profiles, chores, and rewards. It emphasizes authorization independence, clarity, and ease of debugging. Path-based ownership is utilized for private user data, while denormalization is implemented to ensure that security rules can be applied efficiently without complex `get()` calls. Specifically, this design utilizes a nested hierarchy `/users/{userId}/champions/{championId}` for user-owned data, extending to further nested entities such as `AssignedChores` and `RedeemedRewards`. This structure clearly defines ownership and enables robust security rules based on path-based authorization.\n\n**Authorization Independence:** The system achieves authorization independence by avoiding the need for `get()` calls in security rules. Ownership is explicitly defined by the path itself, such as `/users/{userId}` for parent profiles and `/users/{userId}/champions/{championId}` for child profiles. Access control is managed through these paths, allowing direct authorization checks without needing to fetch parent document data.\n\n**QAPs (Rules are not Filters):** The structure facilitates secure `list` operations through structural segregation. Each collection contains documents with homogeneous security requirements. For example, chores assigned to a specific champion are stored under `/users/{userId}/champions/{championId}/assignedChores/{assignedChoreId}`, ensuring that listing chores only returns those accessible to the authenticated user. Path-based rules combined with schema validation guarantees that rules are not used as filters.\n\n**Invariants:** The structure is designed to enforce invariants such as ownership and data integrity. The parent-child relationship between `ParentProfile` and `ChampionProfile` is enforced through the path structure `/users/{userId}/champions/{championId}`. Timestamps can be added to documents to track creation and modification times, further ensuring data integrity. Denormalization of authorization data ensures that security rules remain robust and efficient."
+    "reasoning": "The Firestore data structure has been revised to solve a critical access control issue for champion users. Originally, champion data was nested under a parent's user document (`/users/{userId}/champions/{championId}`), which made it impossible for a logged-in champion to access their own data without knowing their parent's ID. The new structure promotes the `champions` collection to the top level (`/champions/{championId}`). This allows a champion to directly and securely access their own profile and subcollections using their own UID. The parent-child relationship is maintained via a `parentId` field within each champion document, enabling parents to query for all their children. This model supports secure and efficient access for both parents and champions without compromising data ownership principles."
   }
 }

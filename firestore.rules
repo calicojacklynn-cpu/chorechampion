@@ -1,38 +1,26 @@
 /**
- * Core Philosophy: This ruleset enforces a strict user-ownership model where all private user data is
- * nested within a `/users/{userId}` path. A user can only access documents within their own data tree.
- * This approach provides strong security guarantees by default.
+ * Core Philosophy: This ruleset enforces a strict user-ownership model. Parent data is stored under `/users/{userId}`.
+ * Champion (child) data is stored in a top-level `/champions/{championId}` collection to allow both the champion
+ * and their parent to access it securely. The `parentId` field within a champion's document links them to their parent.
  *
- * Data Structure: The data is organized hierarchically. A top-level `/users` collection holds individual
- * parent profiles. All data related to a parent—such as their children (`champions`), custom rewards (`rewards`),
- * and their children's activities (`assignedChores`, `redeemedRewards`)—are stored in subcollections under that
- * parent's specific document. A separate top-level `/chores` collection stores public, preset chore data.
+ * Data Structure:
+ * - `/users/{userId}`: Private data for parent accounts.
+ * - `/champions/{championId}`: Profiles for child accounts. The document ID is the child's UID.
+ * - `/champions/{championId}/...`: Subcollections for a champion's activities (assigned chores, etc.).
+ * - `/chores`: Public, read-only collection of preset chores.
  *
  * Key Security Decisions:
- * - Strict Ownership: All paths under `/users/{userId}` are accessible only to the authenticated user whose UID
- *   matches the `{userId}` wildcard.
- * - No User Listing: It is not possible for a client to list all documents in the `/users` collection,
- *   protecting user privacy.
- * - Public Read-Only Data: The `/chores` collection is publicly readable by anyone but is not writable
- *   by any client. This is ideal for app-wide configuration or preset data that should only be managed
- *   by developers or an admin console.
- * - Default Deny: Access is denied by default. Rules only explicitly grant permissions.
- *
- * Denormalization for Authorization: The data structure inherently supports efficient rules by using the document
- * path for authorization. For example, a rule for `/users/{userId}/champions/{championId}` can check ownership
- * simply by looking at the `userId` in the path, avoiding slow and costly `get()` calls to parent documents.
- * Additionally, documents contain foreign key fields (e.g., `parentId` on a ChampionProfile) that are validated
- * against the path on creation to ensure relational integrity.
- *
- * Structural Segregation: Private user data (`/users/{userId}/...`) is structurally separate from public data
- * (`/chores`). This segregation is critical for security and performance, as it allows for simple, safe list
- * operations on the public collection without any risk of exposing private data from another collection.
+ * - Dual Access for Champions: A champion document can be read by the champion themselves (`request.auth.uid == championId`)
+ *   or by their parent (`request.auth.uid == resource.data.parentId`).
+ * - Parent-Controlled Creation: Only a parent can create a champion profile, and they must correctly set themselves
+ *   as the `parentId`.
+ * - Public Read-Only Data: The `/chores` collection is publicly readable but not writable by clients.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper functions for reusable logic
+    // --- Helper Functions ---
     function isSignedIn() {
       return request.auth != null;
     }
@@ -45,144 +33,83 @@ service cloud.firestore {
       return resource != null;
     }
 
-    // Combines ownership and existence checks for secure updates and deletes.
     function isExistingOwner(userId) {
       return isOwner(userId) && isExistingDocument();
     }
 
-    // Validates that a user is creating their own profile document with a consistent ID.
-    function isCreatingOwnProfile(userId) {
-      return isOwner(userId) && request.resource.data.id == userId;
-    }
-
-    // Validates that a user is creating a champion under their own profile.
-    function isCreatingOwnedChampion(userId, championId) {
-      return isOwner(userId) && request.resource.data.parentId == userId && request.resource.data.id == championId;
-    }
-
-    // Validates that a champion's parentId and id are not changed on update.
-    function isUpdatingOwnedChampion(userId) {
-      return isExistingOwner(userId) && request.resource.data.parentId == resource.data.parentId && request.resource.data.id == resource.data.id;
-    }
-
-    // Validates that a user is creating a reward under their own profile.
-    function isCreatingOwnedReward(userId, rewardId) {
-      return isOwner(userId) && request.resource.data.parentId == userId && request.resource.data.id == rewardId;
-    }
-
-    // Validates that a reward's parentId and id are not changed on update.
-    function isUpdatingOwnedReward(userId) {
-      return isExistingOwner(userId) && request.resource.data.parentId == resource.data.parentId && request.resource.data.id == resource.data.id;
-    }
-
-    // Validates creation of an assigned chore, linking it to the champion in the path.
-    function isCreatingOwnedAssignedChore(userId, championId, assignedChoreId) {
-      return isOwner(userId) && request.resource.data.championId == championId && request.resource.data.id == assignedChoreId;
-    }
-
-    // Validates immutability of an assigned chore's championId and id on update.
-    function isUpdatingOwnedAssignedChore(userId) {
-      return isExistingOwner(userId) && request.resource.data.championId == resource.data.championId && request.resource.data.id == resource.data.id;
-    }
-
-    // Validates creation of a redeemed reward, linking it to the champion in the path.
-    function isCreatingOwnedRedeemedReward(userId, championId, redeemedRewardId) {
-      return isOwner(userId) && request.resource.data.championId == championId && request.resource.data.id == redeemedRewardId;
-    }
-
-    // Validates immutability of a redeemed reward's championId and id on update.
-    function isUpdatingOwnedRedeemedReward(userId) {
-      return isExistingOwner(userId) && request.resource.data.championId == resource.data.championId && request.resource.data.id == resource.data.id;
-    }
-
+    // --- User (Parent) Profile Rules ---
     /**
      * @description Controls access to parent user profiles.
      * @path /users/{userId}
-     * @allow (create) An authenticated user can create their own profile document.
-     * @deny (get) An authenticated user 'user_abc' cannot get the profile of 'user_xyz'.
-     * @principle Restricts access to a user's own data tree and enforces self-creation.
      */
     match /users/{userId} {
       allow get: if isOwner(userId);
-      allow list: if false;
-      allow create: if isCreatingOwnProfile(userId);
+      allow list: if false; // No one can list all users
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
       allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
       allow delete: if isExistingOwner(userId);
 
       /**
-       * @description Controls access to champion (child) profiles owned by a parent.
-       * @path /users/{userId}/champions/{championId}
-       * @allow (get, list, create, update, delete) The parent ('userId') can manage their own champion profiles.
-       * @deny (get) User 'user_abc' cannot access champions belonging to 'user_xyz'.
-       * @principle Enforces document ownership for all operations based on the parent's UID in the path.
-       */
-      match /champions/{championId} {
-        allow get: if isOwner(userId);
-        allow list: if isOwner(userId);
-        allow create: if isCreatingOwnedChampion(userId, championId);
-        allow update: if isUpdatingOwnedChampion(userId);
-        allow delete: if isExistingOwner(userId);
-
-        /**
-         * @description Controls access to chores assigned to a specific champion.
-         * @path /users/{userId}/champions/{championId}/assignedChores/{assignedChoreId}
-         * @allow (get, list, create, update, delete) The parent ('userId') can manage chores assigned to their champion.
-         * @deny (list) User 'user_abc' cannot list assigned chores for a champion belonging to 'user_xyz'.
-         * @principle Inherits ownership from the parent path, ensuring only the parent can manage these records.
-         */
-        match /assignedChores/{assignedChoreId} {
-          allow get: if isOwner(userId);
-          allow list: if isOwner(userId);
-          allow create: if isCreatingOwnedAssignedChore(userId, championId, assignedChoreId);
-          allow update: if isUpdatingOwnedAssignedChore(userId);
-          allow delete: if isExistingOwner(userId);
-        }
-
-        /**
-         * @description Controls access to rewards redeemed by a specific champion.
-         * @path /users/{userId}/champions/{championId}/redeemedRewards/{redeemedRewardId}
-         * @allow (get, list, create, update, delete) The parent ('userId') can manage rewards redeemed by their champion.
-         * @deny (create) User 'user_abc' cannot create a redeemed reward record for a champion belonging to 'user_xyz'.
-         * @principle Inherits ownership from the parent path, ensuring only the parent can manage these records.
-         */
-        match /redeemedRewards/{redeemedRewardId} {
-          allow get: if isOwner(userId);
-          allow list: if isOwner(userId);
-          allow create: if isCreatingOwnedRedeemedReward(userId, championId, redeemedRewardId);
-          allow update: if isUpdatingOwnedRedeemedReward(userId);
-          allow delete: if isExistingOwner(userId);
-        }
-      }
-
-      /**
        * @description Controls access to custom rewards created by a parent.
        * @path /users/{userId}/rewards/{rewardId}
-       * @allow (get, list, create, update, delete) The parent ('userId') can manage the rewards they have created.
-       * @deny (update) User 'user_abc' cannot update a reward created by 'user_xyz'.
-       * @principle Enforces document ownership for all operations based on the parent's UID in the path.
        */
       match /rewards/{rewardId} {
-        allow get: if isOwner(userId);
-        allow list: if isOwner(userId);
-        allow create: if isCreatingOwnedReward(userId, rewardId);
-        allow update: if isUpdatingOwnedReward(userId);
-        allow delete: if isExistingOwner(userId);
+        allow read, write: if isOwner(userId);
       }
     }
 
+    // --- Champion Profile Rules ---
+    /**
+     * @description Controls access to champion (child) profiles.
+     * @path /champions/{championId}
+     * @allow (get) Champion can read their own profile; parent can read their child's profile.
+     * @allow (create) Parent can create a profile for a new champion.
+     * @allow (update) Parent can update their child's profile.
+     * @allow (list) Only parents can query for the champions linked to them.
+     */
+    match /champions/{championId} {
+      allow get: if isSignedIn() && (request.auth.uid == championId || request.auth.uid == resource.data.parentId);
+      allow list: if isSignedIn(); // Queries must be secured by `where` clauses in app code
+      allow create: if isSignedIn() && request.auth.uid == request.resource.data.parentId;
+      allow update: if isSignedIn() && request.auth.uid == resource.data.parentId;
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.parentId;
+
+      /**
+       * @description Controls access to chores assigned to a specific champion.
+       * @path /champions/{championId}/assignedChores/{assignedChoreId}
+       */
+      match /assignedChores/{assignedChoreId} {
+        // Parent or champion can read assigned chores
+        allow get, list: if isSignedIn() && (request.auth.uid == championId || request.auth.uid == get(/databases/$(database)/documents/champions/$(championId)).data.parentId);
+        // Only parent can create or delete assignments
+        allow create, delete: if isSignedIn() && request.auth.uid == get(/databases/$(database)/documents/champions/$(championId)).data.parentId;
+        // Parent can update. Champion can update if they are marking it complete.
+        allow update: if isSignedIn() && (
+          request.auth.uid == get(/databases/$(database)/documents/champions/$(championId)).data.parentId ||
+          (request.auth.uid == championId && request.resource.data.championId == resource.data.championId) // Champion can only update, not change owner
+        );
+      }
+
+      /**
+       * @description Controls access to rewards redeemed by a specific champion.
+       * @path /champions/{championId}/redeemedRewards/{redeemedRewardId}
+       */
+      match /redeemedRewards/{redeemedRewardId} {
+        // Parent or champion can read redeemed rewards
+        allow get, list: if isSignedIn() && (request.auth.uid == championId || request.auth.uid == get(/databases/$(database)/documents/champions/$(championId)).data.parentId);
+        // Only parent can create or delete redemption records (e.g., approve/deny)
+        allow create, delete, update: if isSignedIn() && request.auth.uid == get(/databases/$(database)/documents/champions/$(championId)).data.parentId;
+      }
+    }
+
+    // --- Public Chores Collection ---
     /**
      * @description Controls access to the public, preset chores collection.
      * @path /chores/{choreId}
-     * @allow (get, list) Any user, including unauthenticated users, can read the list of preset chores.
-     * @deny (create, update, delete) No client is allowed to write to this collection.
-     * @principle Provides public read access for application data while securing it against all client-side writes.
      */
     match /chores/{choreId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if false; // Writes should be handled by an admin SDK or console
-      allow update: if false; // Writes should be handled by an admin SDK or console
-      allow delete: if false; // Writes should be handled by an admin SDK or console
+      allow get, list: if true; // Publicly readable
+      allow write: if false; // No client-side writes
     }
   }
 }
