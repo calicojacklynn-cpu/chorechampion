@@ -45,7 +45,7 @@ export default function ThemesSettingsPage() {
                   aria-pressed={theme === t.className}
                 >
                   <div className="aspect-video w-full rounded-md"
-                    style={{ background: t.gradient }}
+                    style={{ backgroundImage: t.gradient }}
                   />
                 </button>
                 <div className="flex items-center justify-center gap-2">
