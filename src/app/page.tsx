@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth, useUser } from '@/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -104,26 +105,23 @@ export default function LoginPage() {
     }
   };
   
-  // If we are still determining the auth state, show a loader.
-  if (isUserLoading) {
+  // If a user is already logged in, redirect them away from the login page.
+  useEffect(() => {
+    if (user) {
+      // This will redirect to the correct dashboard after a page refresh.
+      // The specific logic inside the layouts will handle if it's a parent or champion.
+      // For now, a simple push to a generic path is sufficient, letting layouts handle the rest.
+      router.push('/dashboard');
+    }
+  }, [user, router]);
+
+  // If we are still determining the auth state OR if a user exists and we are about to redirect, show a loader.
+  if (isUserLoading || user) {
     return (
         <div className="flex h-screen w-full items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin" />
         </div>
     )
-  }
-
-  // If a user is already logged in, redirect them away from the login page.
-  if (user) {
-    // This will redirect to the correct dashboard after a page refresh.
-    // The specific logic inside the layouts will handle if it's a parent or champion.
-    // For now, a simple push to a generic path is sufficient, letting layouts handle the rest.
-    router.push('/dashboard'); 
-    return ( // Render a loader while redirecting
-        <div className="flex h-screen w-full items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
-    );
   }
 
   return (
