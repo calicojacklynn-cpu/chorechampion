@@ -9,7 +9,7 @@ export const themes: Theme[] = [
   {
     name: 'Default',
     className: 'theme-default',
-    gradient: 'linear-gradient(to right, hsl(195, 78%, 55%), hsl(220, 80%, 65%))',
+    gradient: 'linear-gradient(to right, hsl(210, 90%, 70%), hsl(220, 90%, 75%))',
   },
   {
     name: 'Sunset',
