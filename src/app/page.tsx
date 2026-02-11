@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -7,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth, useUser, useFirestore } from '@/firebase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, UserCredential } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useEffect } from 'react';
 
@@ -52,110 +51,107 @@ export default function LoginPage() {
   });
 
   const handleParentLogin = async (values: z.infer<typeof parentLoginSchema>) => {
+    let userCredential: UserCredential | undefined;
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
-      const loggedInUser = userCredential.user;
-
-      // After successful sign-in, check if the parent profile exists.
-      const parentProfileDocRef = doc(firestore, 'users', loggedInUser.uid);
-      const docSnap = await getDoc(parentProfileDocRef);
-
-      // If it DOESN'T exist, create it. This fixes accounts created before the profile logic was added.
-      if (!docSnap.exists()) {
-        const nameParts = loggedInUser.email?.split('@')[0].split('.') || ['New', 'User'];
-        const firstName = nameParts[0] ? nameParts[0].charAt(0).toUpperCase() + nameParts[0].slice(1) : 'New';
-        const lastName = nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() + nameParts[1].slice(1) : 'User';
-
-        await setDoc(parentProfileDocRef, {
-            id: loggedInUser.uid,
-            email: loggedInUser.email,
-            firstName: firstName,
-            lastName: lastName,
-        });
-      }
-      // On successful sign-in (and potential profile fix), the useEffect hook will handle redirection.
-
-    } catch (error: any) {
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-        try {
-          const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-          const newUser = userCredential.user;
-
-          // Create the parent's profile document in Firestore upon sign-up.
-          const parentProfileDocRef = doc(firestore, 'users', newUser.uid);
-          
-          const nameParts = newUser.email?.split('@')[0].split('.') || ['New', 'User'];
-          const firstName = nameParts[0] ? nameParts[0].charAt(0).toUpperCase() + nameParts[0].slice(1) : 'New';
-          const lastName = nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() + nameParts[1].slice(1) : 'User';
-          
-          await setDoc(parentProfileDocRef, {
-            id: newUser.uid,
-            email: newUser.email,
-            firstName: firstName,
-            lastName: lastName,
-          });
-
-        } catch (signUpError: any) {
-          toast({
-            variant: "destructive",
-            title: "Sign Up Failed",
-            description: signUpError.message,
-          });
+        // Try to sign in first
+        userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+    } catch (signInError: any) {
+        // If user not found or invalid credential, try to sign them up
+        if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/invalid-credential') {
+            try {
+                userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+            } catch (signUpError: any) {
+                toast({ variant: "destructive", title: "Sign Up Failed", description: signUpError.message });
+                return; // Stop execution on failed sign-up
+            }
+        } else {
+            toast({ variant: "destructive", title: "Login Failed", description: signInError.message });
+            return; // Stop execution on other login errors
         }
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Login Failed",
-          description: error.message,
-        });
-      }
+    }
+
+    if (!userCredential) return;
+
+    try {
+        // Now that we have a user, ensure their profile exists
+        const loggedInUser = userCredential.user;
+        const parentProfileDocRef = doc(firestore, 'users', loggedInUser.uid);
+        const docSnap = await getDoc(parentProfileDocRef);
+
+        if (!docSnap.exists()) {
+            const nameParts = loggedInUser.email?.split('@')[0].split('.') || ['New', 'User'];
+            const firstName = nameParts[0] ? nameParts[0].charAt(0).toUpperCase() + nameParts[0].slice(1) : 'New';
+            const lastName = nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() + nameParts[1].slice(1) : 'User';
+            await setDoc(parentProfileDocRef, {
+                id: loggedInUser.uid,
+                email: loggedInUser.email,
+                firstName: firstName,
+                lastName: lastName,
+            });
+        }
+        
+        // All checks and creation are done. Now, navigate.
+        router.push('/dashboard');
+
+    } catch (profileError: any) {
+        toast({ variant: "destructive", title: "Profile Error", description: profileError.message });
     }
   };
   
   const handleChampionLogin = async (values: z.infer<typeof championLoginSchema>) => {
+    let userCredential: UserCredential | undefined;
     try {
-      await signInWithEmailAndPassword(auth, values.email, values.password);
-      // On successful sign-in, the useEffect hook will handle redirection.
-    } catch (error: any) {
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+      userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+    } catch (signInError: any) {
+      if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/invalid-credential') {
         try {
-          await createUserWithEmailAndPassword(auth, values.email, values.password);
-          // NOTE: This only creates the auth user. The Firestore document must be created
-          // from the parent dashboard for the champion profile to be complete.
-          // The useEffect hook will handle redirection.
-        } catch (signUpError: any) {
+          userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
           toast({
-            variant: "destructive",
-            title: "Champion Sign Up Failed",
-            description: signUpError.message,
+            title: 'Welcome!',
+            description: "Your champion account has been created."
           });
+        } catch (signUpError: any) {
+          toast({ variant: "destructive", title: "Sign Up Failed", description: signUpError.message });
+          return;
         }
       } else {
-        toast({
-          variant: 'destructive',
-          title: 'Login Failed',
-          description: error.message,
-        });
+        toast({ variant: "destructive", title: "Login Failed", description: signInError.message });
+        return;
       }
     }
+
+    if (!userCredential) return;
+
+    // After login/signup, navigate to the specific champion page.
+    router.push(`/champion/${userCredential.user.uid}`);
   };
   
-  // If a user is already logged in, redirect them away from the login page.
+  // Redirect already logged-in users. This hook is safe because it only runs *after*
+  // the initial auth state is resolved and a user is present.
   useEffect(() => {
     if (!isUserLoading && user) {
-      // This will redirect to the correct dashboard after a page refresh.
-      // The specific logic inside the layouts will handle if it's a parent or champion.
       router.push('/dashboard');
     }
   }, [isUserLoading, user, router]);
 
-  // If we are still determining the auth state OR if a user exists and we are about to redirect, show a loader.
-  if (isUserLoading || user) {
+  // If we are still determining the auth state, show a loader.
+  // We no longer redirect if user is present, that's handled by the useEffect above.
+  if (isUserLoading) {
     return (
         <div className="flex h-screen w-full items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin" />
         </div>
     )
+  }
+  
+  // If a user is logged in, this page will redirect, so we can show a loader
+  // or null to prevent the login form from flashing.
+  if (user) {
+    return (
+       <div className="flex h-screen w-full items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+    );
   }
 
   return (
