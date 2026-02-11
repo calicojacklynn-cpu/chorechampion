@@ -5,10 +5,6 @@
 
 @layer base {
   :root {
-    --radius: 0.5rem;
-  }
-  
-  html.theme-default {
     --background: 197 67% 94%; /* #E5F4F8 */
     --foreground: 224 71% 4%; /* A dark blue for better contrast */
     --card: 0 0% 100%;
@@ -28,8 +24,9 @@
     --border: 195 50% 88%;
     --input: 195 50% 88%;
     --ring: 195 78% 70%;
+    --radius: 0.5rem;
   }
-
+  
   html.theme-sunset {
     --background: 25 80% 95%;
     --foreground: 330 60% 10%;
@@ -343,3 +340,5 @@
     opacity: 0;
   }
 }
+
+    
