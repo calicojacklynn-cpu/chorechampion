@@ -19,53 +19,51 @@ export const themes: Theme[] = [
   {
     name: 'Forest',
     className: 'theme-forest',
-    gradient: 'linear-gradient(to right, hsl(120, 40%, 60%), hsl(90, 50%, 65%))',
+    gradient: 'linear-gradient(to right, hsl(120, 40%, 45%), hsl(90, 50%, 55%))',
   },
   {
     name: 'Amethyst',
     className: 'theme-amethyst',
-    gradient: 'linear-gradient(to right, hsl(270, 70%, 75%), hsl(300, 70%, 85%))',
+    gradient: 'linear-gradient(to right, hsl(270, 70%, 70%), hsl(300, 70%, 80%))',
   },
   {
     name: 'Sunrise',
     className: 'theme-sunrise',
-    gradient: 'linear-gradient(to right, hsl(45, 100%, 70%), hsl(20, 100%, 70%))',
+    gradient: 'linear-gradient(to right, hsl(45, 100%, 65%), hsl(20, 100%, 65%))',
   },
   {
-    name: 'Midnight',
-    className: 'theme-midnight',
-    gradient: 'linear-gradient(to right, hsl(240, 20%, 8%), hsl(270, 70%, 55%))',
+    name: 'Ocean',
+    className: 'theme-ocean',
+    gradient: 'linear-gradient(to right, hsl(210, 50%, 20%), hsl(190, 60%, 50%))',
   },
   {
     name: 'Mint',
     className: 'theme-mint',
-    gradient: 'linear-gradient(to right, hsl(150, 70%, 70%), hsl(170, 60%, 75%))',
+    gradient: 'linear-gradient(to right, hsl(150, 70%, 65%), hsl(170, 60%, 70%))',
   },
   {
     name: 'Coral',
     className: 'theme-coral',
-    gradient: 'linear-gradient(to right, hsl(16, 100%, 70%), hsl(0, 100%, 75%))',
+    gradient: 'linear-gradient(to right, hsl(16, 100%, 65%), hsl(0, 100%, 70%))',
   },
   {
     name: 'Ruby',
     className: 'theme-ruby',
-    gradient: 'linear-gradient(to right, hsl(350, 80%, 60%), hsl(10, 85%, 65%))',
+    gradient: 'linear-gradient(to right, hsl(350, 80%, 55%), hsl(10, 85%, 60%))',
   },
   {
     name: 'Emerald',
     className: 'theme-emerald',
-    gradient: 'linear-gradient(to right, hsl(145, 63%, 49%), hsl(165, 70%, 55%))',
+    gradient: 'linear-gradient(to right, hsl(145, 63%, 42%), hsl(165, 70%, 50%))',
   },
   {
     name: 'Slate',
     className: 'theme-slate',
-    gradient: 'linear-gradient(to right, hsl(210, 20%, 50%), hsl(220, 25%, 70%))',
+    gradient: 'linear-gradient(to right, hsl(210, 20%, 45%), hsl(220, 25%, 65%))',
   },
   {
     name: 'Rose',
     className: 'theme-rose',
-    gradient: 'linear-gradient(to right, hsl(340, 80%, 85%), hsl(10, 80%, 90%))',
+    gradient: 'linear-gradient(to right, hsl(340, 80%, 80%), hsl(10, 80%, 85%))',
   },
 ];
-
-    

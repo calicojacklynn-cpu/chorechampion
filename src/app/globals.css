@@ -147,29 +147,29 @@
     --ring: 45 100% 65%;
   }
 
-  html.theme-midnight {
-    --background: 240 20% 8%;
-    --foreground: 270 80% 94%;
-    --card: 240 15% 12%;
-    --card-foreground: 270 80% 94%;
-    --popover: 240 15% 12%;
-    --popover-foreground: 270 80% 94%;
-    --primary: 270 70% 35%;
-    --primary-foreground: 270 80% 94%;
-    --secondary: 260 30% 25%;
-    --secondary-foreground: 260 30% 98%;
-    --muted: 260 30% 25%;
-    --muted-foreground: 270 40% 80%;
+  html.theme-ocean {
+    --background: 220 30% 10%;
+    --foreground: 210 40% 98%;
+    --card: 220 30% 15%;
+    --card-foreground: 210 40% 98%;
+    --popover: 220 30% 15%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 205 90% 55%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 215 20% 25%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 215 20% 25%;
+    --muted-foreground: 215 20% 65%;
     --accent: 48 90% 60%;
     --accent-foreground: 50 95% 15%;
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 85% 98%;
-    --border: 240 15% 25%;
-    --input: 240 15% 18%;
-    --ring: 270 70% 45%;
-    --sidebar-foreground: 270 80% 94%;
-    --sidebar-accent: hsl(260, 30%, 30%);
-    --sidebar-accent-foreground: hsl(260, 30%, 98%);
+    --border: 215 20% 25%;
+    --input: 215 20% 30%;
+    --ring: 205 90% 65%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-accent: hsl(215, 20%, 20%);
+    --sidebar-accent-foreground: hsl(210, 40%, 98%);
   }
 
   html.theme-mint {
@@ -358,17 +358,3 @@
     opacity: 0;
   }
 }
-    
-
-    
-
-
-
-    
-
-    
-
-    
-
-    
-
