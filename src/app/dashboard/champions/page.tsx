@@ -50,7 +50,7 @@ const initialChampions: Champion[] = [
     id: "alex",
     name: "Alex",
     username: "alex-the-great",
-    avatarUrl: PlaceHolderImages.find(p => p.id === 'champion-avatar-1')?.imageUrl,
+    avatarUrl: "",
     points: 125,
     choresCompleted: 12,
   },
@@ -58,7 +58,7 @@ const initialChampions: Champion[] = [
     id: "bella",
     name: "Bella",
     username: "bella-the-brave",
-    avatarUrl: PlaceHolderImages.find(p => p.id === 'champion-avatar-2')?.imageUrl,
+    avatarUrl: "",
     points: 85,
     choresCompleted: 8,
   },
@@ -168,7 +168,6 @@ export default function ChampionsPage() {
                            <AvatarImage
                               src={champion.avatarUrl}
                               alt={champion.name}
-                              className="object-cover"
                             />
                           <AvatarFallback>
                             {champion.name.charAt(0)}

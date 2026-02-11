@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -27,8 +26,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { cn } from "@/lib/utils";
 import type { Champion } from "./page";
 
 // Zod schema for form validation
@@ -48,11 +45,6 @@ type EditChampionDialogProps = {
   onOpenChange: (isOpen: boolean) => void;
   onSave: (champion: Champion) => void;
 };
-
-// Filter placeholder images to get the first 9 champion avatars
-const defaultAvatars = PlaceHolderImages.filter((p) =>
-  p.id.startsWith("champion-avatar-")
-).slice(0, 9);
 
 export function EditChampionDialog({
   champion,
@@ -119,7 +111,7 @@ export function EditChampionDialog({
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-0">
-            <ScrollArea className="h-[65vh]">
+            <ScrollArea className="h-auto max-h-[65vh]">
               <div className="px-6 py-4 space-y-6">
                 <FormField
                   control={form.control}
@@ -154,10 +146,8 @@ export function EditChampionDialog({
                   <div className="flex justify-center py-2">
                     <Avatar className="h-24 w-24 border-2 border-primary">
                       <AvatarImage
-                        key={avatarUrl}
                         src={avatarUrl}
                         alt="Avatar preview"
-                        className="object-cover"
                       />
                       <AvatarFallback>
                         {champion?.name.charAt(0)}
@@ -180,53 +170,7 @@ export function EditChampionDialog({
                     className="hidden"
                     accept="image/png, image/jpeg, image/gif, image/webp"
                   />
-
-                  <div className="relative my-4">
-                    <div className="absolute inset-0 flex items-center">
-                      <span className="w-full border-t" />
-                    </div>
-                    <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-background px-2 text-muted-foreground">
-                        Or
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="text-sm text-muted-foreground">
-                      Choose a default avatar
-                    </p>
-                    <div className="grid grid-cols-3 gap-4">
-                      {defaultAvatars.map((avatar) => (
-                        <div
-                          key={avatar.id}
-                          className="p-1 cursor-pointer flex justify-center"
-                          onClick={() =>
-                            form.setValue("avatarUrl", avatar.imageUrl, {
-                              shouldValidate: true,
-                            })
-                          }
-                        >
-                          <Avatar
-                            className={cn(
-                              "h-20 w-20 border-2",
-                              avatarUrl === avatar.imageUrl &&
-                                "border-primary ring-2 ring-primary ring-offset-2"
-                            )}
-                          >
-                            <AvatarImage
-                              src={avatar.imageUrl}
-                              alt={avatar.description}
-                              data-ai-hint={avatar.imageHint}
-                              className="object-cover"
-                            />
-                             <AvatarFallback>?</AvatarFallback>
-                          </Avatar>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                   <FormField
+                  <FormField
                     control={form.control}
                     name="avatarUrl"
                     render={() => <FormMessage />}
