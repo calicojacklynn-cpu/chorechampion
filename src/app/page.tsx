@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -7,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth, useUser, useFirestore } from '@/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -52,21 +53,37 @@ export default function LoginPage() {
 
   const handleParentLogin = async (values: z.infer<typeof parentLoginSchema>) => {
     try {
-      // Try to sign in first
-      await signInWithEmailAndPassword(auth, values.email, values.password);
-      // On successful sign-in, the useEffect hook will handle redirection.
+      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+      const loggedInUser = userCredential.user;
+
+      // After successful sign-in, check if the parent profile exists.
+      const parentProfileDocRef = doc(firestore, 'users', loggedInUser.uid);
+      const docSnap = await getDoc(parentProfileDocRef);
+
+      // If it DOESN'T exist, create it. This fixes accounts created before the profile logic was added.
+      if (!docSnap.exists()) {
+        const nameParts = loggedInUser.email?.split('@')[0].split('.') || ['New', 'User'];
+        const firstName = nameParts[0] ? nameParts[0].charAt(0).toUpperCase() + nameParts[0].slice(1) : 'New';
+        const lastName = nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() + nameParts[1].slice(1) : 'User';
+
+        await setDoc(parentProfileDocRef, {
+            id: loggedInUser.uid,
+            email: loggedInUser.email,
+            firstName: firstName,
+            lastName: lastName,
+        });
+      }
+      // On successful sign-in (and potential profile fix), the useEffect hook will handle redirection.
+
     } catch (error: any) {
-      // If the user doesn't exist or credentials are new, create a new account
       if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
         try {
           const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
           const newUser = userCredential.user;
 
-          // **FIX**: Create the parent's profile document in Firestore upon sign-up.
-          // This marks them as a parent and ensures they are routed correctly.
+          // Create the parent's profile document in Firestore upon sign-up.
           const parentProfileDocRef = doc(firestore, 'users', newUser.uid);
           
-          // Make a reasonable default name from the email
           const nameParts = newUser.email?.split('@')[0].split('.') || ['New', 'User'];
           const firstName = nameParts[0] ? nameParts[0].charAt(0).toUpperCase() + nameParts[0].slice(1) : 'New';
           const lastName = nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() + nameParts[1].slice(1) : 'User';
@@ -78,7 +95,6 @@ export default function LoginPage() {
             lastName: lastName,
           });
 
-          // After creating the user and profile, the useEffect hook will handle redirection.
         } catch (signUpError: any) {
           toast({
             variant: "destructive",
@@ -87,7 +103,6 @@ export default function LoginPage() {
           });
         }
       } else {
-        // For other errors (e.g., wrong password for an existing user)
         toast({
           variant: "destructive",
           title: "Login Failed",
@@ -99,15 +114,15 @@ export default function LoginPage() {
   
   const handleChampionLogin = async (values: z.infer<typeof championLoginSchema>) => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
-      router.push(`/champion/${userCredential.user.uid}`);
+      await signInWithEmailAndPassword(auth, values.email, values.password);
+      // On successful sign-in, the useEffect hook will handle redirection.
     } catch (error: any) {
       if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
         try {
-          const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+          await createUserWithEmailAndPassword(auth, values.email, values.password);
           // NOTE: This only creates the auth user. The Firestore document must be created
           // from the parent dashboard for the champion profile to be complete.
-          router.push(`/champion/${userCredential.user.uid}`);
+          // The useEffect hook will handle redirection.
         } catch (signUpError: any) {
           toast({
             variant: "destructive",
