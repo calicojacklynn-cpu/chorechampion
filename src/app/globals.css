@@ -7,9 +7,9 @@
   :root {
     --background: 197 67% 94%; /* #E5F4F8 */
     --foreground: 224 71% 4%; /* A dark blue for better contrast */
-    --card: 0 0% 100%;
+    --card: 195 70% 97%;
     --card-foreground: 224 71% 4%;
-    --popover: 0 0% 100%;
+    --popover: 195 70% 97%;
     --popover-foreground: 224 71% 4%;
     --primary: 195 78% 78%; /* #89CFF0 */
     --primary-foreground: 224 71% 4%;
@@ -30,9 +30,9 @@
   html.theme-sunset {
     --background: 25 80% 95%;
     --foreground: 330 60% 10%;
-    --card: 0 0% 100%;
+    --card: 25 80% 98%;
     --card-foreground: 330 60% 10%;
-    --popover: 0 0% 100%;
+    --popover: 25 80% 98%;
     --popover-foreground: 330 60% 10%;
     --primary: 25 95% 70%;
     --primary-foreground: 330 60% 10%;
@@ -52,9 +52,9 @@
   html.theme-forest {
     --background: 100 40% 95%;
     --foreground: 120 60% 10%;
-    --card: 0 0% 100%;
+    --card: 120 30% 97%;
     --card-foreground: 120 60% 10%;
-    --popover: 0 0% 100%;
+    --popover: 120 30% 97%;
     --popover-foreground: 120 60% 10%;
     --primary: 120 40% 60%;
     --primary-foreground: 120 90% 5%;
@@ -74,9 +74,9 @@
   html.theme-amethyst {
     --background: 280 60% 96%;
     --foreground: 270 80% 15%;
-    --card: 0 0% 100%;
+    --card: 270 60% 98%;
     --card-foreground: 270 80% 15%;
-    --popover: 0 0% 100%;
+    --popover: 270 60% 98%;
     --popover-foreground: 270 80% 15%;
     --primary: 270 70% 75%;
     --primary-foreground: 270 90% 10%;
@@ -96,9 +96,9 @@
   html.theme-sunrise {
     --background: 40 100% 96%;
     --foreground: 20 80% 15%;
-    --card: 0 0% 100%;
+    --card: 45 85% 97%;
     --card-foreground: 20 80% 15%;
-    --popover: 0 0% 100%;
+    --popover: 45 85% 97%;
     --popover-foreground: 20 80% 15%;
     --primary: 45 100% 70%;
     --primary-foreground: 30 90% 10%;
@@ -140,9 +140,9 @@
   html.theme-mint {
     --background: 160 60% 95%;
     --foreground: 165 60% 15%;
-    --card: 0 0% 100%;
+    --card: 150 60% 97%;
     --card-foreground: 165 60% 15%;
-    --popover: 0 0% 100%;
+    --popover: 150 60% 97%;
     --popover-foreground: 165 60% 15%;
     --primary: 150 70% 70%;
     --primary-foreground: 150 90% 10%;
@@ -162,9 +162,9 @@
   html.theme-coral {
     --background: 5 80% 96%;
     --foreground: 355 70% 20%;
-    --card: 0 0% 100%;
+    --card: 16 85% 98%;
     --card-foreground: 355 70% 20%;
-    --popover: 0 0% 100%;
+    --popover: 16 85% 98%;
     --popover-foreground: 355 70% 20%;
     --primary: 16 100% 70%;
     --primary-foreground: 355 90% 15%;
@@ -184,9 +184,9 @@
   html.theme-ruby {
     --background: 350 70% 97%;
     --foreground: 350 80% 15%;
-    --card: 0 0% 100%;
+    --card: 350 70% 98%;
     --card-foreground: 350 80% 15%;
-    --popover: 0 0% 100%;
+    --popover: 350 70% 98%;
     --popover-foreground: 350 80% 15%;
     --primary: 350 80% 60%;
     --primary-foreground: 350 90% 98%;
@@ -206,9 +206,9 @@
   html.theme-emerald {
     --background: 145 50% 96%;
     --foreground: 145 70% 10%;
-    --card: 0 0% 100%;
+    --card: 145 50% 97%;
     --card-foreground: 145 70% 10%;
-    --popover: 0 0% 100%;
+    --popover: 145 50% 97%;
     --popover-foreground: 145 70% 10%;
     --primary: 145 63% 49%;
     --primary-foreground: 145 90% 98%;
@@ -228,9 +228,9 @@
   html.theme-slate {
     --background: 220 20% 95%;
     --foreground: 220 30% 15%;
-    --card: 0 0% 100%;
+    --card: 210 20% 97%;
     --card-foreground: 220 30% 15%;
-    --popover: 0 0% 100%;
+    --popover: 210 20% 97%;
     --popover-foreground: 220 30% 15%;
     --primary: 210 20% 50%;
     --primary-foreground: 210 50% 98%;
@@ -250,9 +250,9 @@
   html.theme-rose {
     --background: 350 60% 97%;
     --foreground: 345 50% 20%;
-    --card: 0 0% 100%;
+    --card: 340 70% 98%;
     --card-foreground: 345 50% 20%;
-    --popover: 0 0% 100%;
+    --popover: 340 70% 98%;
     --popover-foreground: 345 50% 20%;
     --primary: 340 80% 85%;
     --primary-foreground: 340 70% 15%;
@@ -340,5 +340,7 @@
     opacity: 0;
   }
 }
+
+    
 
     
