@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,11 +11,44 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Check, UserPlus } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SubscriptionSettingsPage() {
-  const currentPlan = "Free"; // Mock state
-  const childSlots = 3; // Mock data
-  const maxSlots = 3; // Mock data
+  const { toast } = useToast();
+  const [currentPlan, setCurrentPlan] = useState("Free"); 
+  const [childSlots, setChildSlots] = useState(3);
+  const [maxSlots, setMaxSlots] = useState(3);
+
+  const handleUpgrade = () => {
+    setCurrentPlan("Premium");
+    setMaxSlots(5);
+    toast({
+      title: "Upgrade Successful!",
+      description: "You are now on the Chore Champion Premium plan.",
+    });
+  };
+
+  const handleManageBilling = () => {
+    toast({
+      title: "Manage Billing",
+      description: "In a real app, this would redirect you to a secure billing portal.",
+    });
+  };
+
+  const handleViewHistory = () => {
+    toast({
+      title: "Transaction History",
+      description: "In a real app, this would show a list of your past payments.",
+    });
+  };
+  
+  const handlePurchaseSlot = () => {
+    setMaxSlots(prev => prev + 1);
+    toast({
+      title: "Slot Purchased!",
+      description: `You can now add another champion. You have ${maxSlots + 1} total slots.`
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -63,7 +97,9 @@ export default function SubscriptionSettingsPage() {
                 </ul>
             </CardContent>
              <CardFooter>
-                <Button className="w-full">Upgrade to Premium</Button>
+                <Button className="w-full" onClick={handleUpgrade} disabled={currentPlan === 'Premium'}>
+                    {currentPlan === 'Premium' ? 'Already Subscribed' : 'Upgrade to Premium'}
+                </Button>
             </CardFooter>
         </Card>
         
@@ -83,7 +119,7 @@ export default function SubscriptionSettingsPage() {
                 </p>
             </CardContent>
              <CardFooter>
-                <Button className="w-full" variant="secondary" disabled={currentPlan !== 'Premium'}>
+                <Button className="w-full" variant="secondary" disabled={currentPlan !== 'Premium'} onClick={handlePurchaseSlot}>
                     <UserPlus className="mr-2 h-4 w-4" />
                     Purchase Slot
                 </Button>
@@ -98,8 +134,8 @@ export default function SubscriptionSettingsPage() {
               <CardDescription>Manage your payment method and view transaction history.</CardDescription>
           </CardHeader>
           <CardContent className="flex gap-4">
-              <Button variant="outline">Manage Billing</Button>
-              <Button variant="outline">View History</Button>
+              <Button variant="outline" onClick={handleManageBilling}>Manage Billing</Button>
+              <Button variant="outline" onClick={handleViewHistory}>View History</Button>
           </CardContent>
       </Card>
     </div>
