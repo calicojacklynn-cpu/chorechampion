@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    --background: 210 100% 98%;
+    --background: 210 80% 96%;
     --foreground: 220 50% 15%;
     --card: 210 100% 97%;
     --card-foreground: 220 50% 15%;
@@ -24,7 +24,6 @@
     --border: 210 80% 88%;
     --input: 210 80% 88%;
     --ring: 210 90% 65%;
-    --radius: 0.5rem;
 
     /* Shared sidebar styles that derive from theme variables */
     --sidebar-background: transparent;
@@ -38,7 +37,7 @@
   }
   
   html.theme-default {
-    --background: 210 100% 98%;
+    --background: 210 80% 96%;
     --foreground: 220 50% 15%;
     --card: 210 100% 97%;
     --card-foreground: 220 50% 15%;
@@ -167,7 +166,7 @@
     --border: 215 20% 25%;
     --input: 215 20% 30%;
     --ring: 205 90% 65%;
-    --sidebar-foreground: 210 40% 98%;
+    --sidebar-foreground: 220 50% 15%;
     --sidebar-accent: hsl(215, 20%, 20%);
     --sidebar-accent-foreground: hsl(210, 40%, 98%);
   }
