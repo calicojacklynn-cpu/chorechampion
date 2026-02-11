@@ -73,32 +73,32 @@ const initialRewards: Reward[] = [
     name: "Extra Screen Time",
     description: "30 extra minutes of screen time on a device of your choice.",
     points: 75,
-    imageUrl: "https://images.unsplash.com/photo-1746289434176-40f821d31216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx0YWJsZXQlMjBzY3JlZW58ZW58MHx8fHwxNzcwNjMzNDAzfDA&ixlib=rb-4.1.0&q=80&w=1080",
-    imageHint: "tablet screen"
+    imageUrl: PlaceHolderImages.find(p => p.id === 'reward-screentime')?.imageUrl,
+    imageHint: PlaceHolderImages.find(p => p.id === 'reward-screentime')?.imageHint,
   },
   {
     id: "reward-icecream",
     name: "Ice Cream Trip",
     description: "A family trip to the local ice cream parlor.",
     points: 150,
-    imageUrl: "https://images.unsplash.com/photo-1560008581-09826d1de69e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxpY2UlMjBjcmVhbXxlbnwwfHx8fDE3NzA2MTU4Njl8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    imageHint: "ice cream"
+    imageUrl: PlaceHolderImages.find(p => p.id === 'reward-icecream')?.imageUrl,
+    imageHint: PlaceHolderImages.find(p => p.id === 'reward-icecream')?.imageHint,
   },
   {
     id: "reward-movie",
     name: "Movie Night Choice",
     description: "You get to pick the movie for family movie night.",
     points: 200,
-    imageUrl: "https://images.unsplash.com/photo-1620177088260-a9150572baf4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwb3Bjb3JuJTIwbW92aWV8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
-    imageHint: "popcorn movie"
+    imageUrl: PlaceHolderImages.find(p => p.id === 'reward-movie')?.imageUrl,
+    imageHint: PlaceHolderImages.find(p => p.id === 'reward-movie')?.imageHint,
   },
   {
     id: "reward-lego",
     name: "New Lego Set",
     description: "Pick out a new Lego set (up to a $25 value).",
     points: 500,
-    imageUrl: "https://images.unsplash.com/photo-1636314229901-61b1c1da1675?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx0b3klMjBibG9ja3N8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
-    imageHint: "toy blocks"
+    imageUrl: PlaceHolderImages.find(p => p.id === 'reward-lego')?.imageUrl,
+    imageHint: PlaceHolderImages.find(p => p.id === 'reward-lego')?.imageHint,
   },
 ];
 
@@ -187,7 +187,7 @@ export default function RewardsPage() {
                   <Card key={champion.id} className="flex flex-col">
                     <CardHeader className="flex flex-row items-center gap-4">
                       <Avatar className="h-16 w-16 border-2 border-primary">
-                        <AvatarImage src={champion.avatarUrl} alt={champion.name} data-ai-hint="child portrait" className="object-cover" />
+                        <AvatarImage src={champion.avatarUrl} alt={champion.name} className="object-cover" />
                         <AvatarFallback className="text-xl">{champion.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div>
@@ -265,7 +265,7 @@ export default function RewardsPage() {
                 )
               )
             ) : (
-                  <Card className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
+                  <Card className="sm:col-span-2 lg:col-span-3 xl:grid-cols-4">
                       <CardContent className="flex items-center justify-center h-48">
                           <p className="text-muted-foreground">No rewards added yet. Start by adding a new reward.</p>
                       </CardContent>

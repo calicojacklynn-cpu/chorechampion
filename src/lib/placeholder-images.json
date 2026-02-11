@@ -9,25 +9,25 @@
     {
       "id": "user-avatar-parent",
       "description": "Avatar for parent user.",
-      "imageUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwZXJzb24lMjBmYWNlfGVufDB8fHx8MTc3MDY1MTEzMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1548544149-4835e62ee5b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxwZXJzb24lMjBmYWNlfGVufDB8fHx8MTc3MDY1MTEzMXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "person face"
     },
     {
       "id": "champion-avatar-1",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1767035698194-920cbe5b9f1c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1758599543128-a7fa95a49b7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero costume"
     },
     {
       "id": "champion-avatar-2",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1758874573805-80d0773bf7a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzdXBlcmhlcm8lMjBjYXBlfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1758874573872-4e08c6fb466e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzdXBlcmhlcm8lMjBjYXBlfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero cape"
     },
     {
       "id": "champion-avatar-3",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1758599543117-26784eda59e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8c3VwZXJoZXJvJTIwbWFza3xlbnwwfHx8fDE3NzA3NjkxMjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1758874573805-80d0773bf7a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzdXBlcmhlcm8lMjBtYXNrfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero mask"
     },
     {
@@ -39,7 +39,7 @@
     {
       "id": "champion-avatar-5",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1759663177104-342e75a0a8ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzdXBlcmhlcm8lMjBjYXBlfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1596284274000-7d3eca888e3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBjYXBlfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero cape"
     },
     {
@@ -51,7 +51,7 @@
     {
       "id": "champion-avatar-7",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1758599543128-a7fa95a49b7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1572541860701-0e6677735cef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero costume"
     },
     {
@@ -63,13 +63,13 @@
     {
       "id": "champion-avatar-9",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1765635499497-c5ee4e1cd226?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1765635648081-73f1e9e2189a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzdXBlcmhlcm8lMjBjb3N0dW1lfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero costume"
     },
     {
       "id": "champion-avatar-10",
       "description": "Avatar for a champion.",
-      "imageUrl": "https://images.unsplash.com/photo-1472490059022-d5d084f09e5e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjaGlsZCUyMHBvcnRyYWl0fGVufDB8fHx8MTc3MDc0MjgzOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1637878314356-9f3b0338bc7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjaGlsZCUyMHBvcnRyYWl0fGVufDB8fHx8MTc3MDc0MjgzOXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "child portrait"
     },
     {
