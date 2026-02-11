@@ -121,8 +121,8 @@
     --card-foreground: 240 20% 98%;
     --popover: 240 15% 12%;
     --popover-foreground: 240 20% 98%;
-    --primary: 270 70% 65%;
-    --primary-foreground: 270 90% 10%;
+    --primary: 270 70% 45%;
+    --primary-foreground: 260 80% 90%;
     --secondary: 260 30% 25%;
     --secondary-foreground: 260 30% 98%;
     --muted: 260 30% 25%;
@@ -133,7 +133,7 @@
     --destructive-foreground: 0 85% 98%;
     --border: 240 15% 18%;
     --input: 240 15% 18%;
-    --ring: 270 70% 65%;
+    --ring: 270 70% 45%;
   }
 
   html.theme-mint {
@@ -339,12 +339,13 @@
     opacity: 0;
   }
 }
-
     
 
     
 
 
+
+    
 
     
 
