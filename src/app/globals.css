@@ -5,20 +5,20 @@
 
 @layer base {
   :root {
-    --background: 197 67% 94%; /* #E5F4F8 */
-    --foreground: 224 71% 4%; /* A dark blue for better contrast */
-    --card: 195 70% 97%;
-    --card-foreground: 224 71% 4%;
-    --popover: 195 70% 97%;
-    --popover-foreground: 224 71% 4%;
-    --primary: 195 78% 78%; /* #89CFF0 */
-    --primary-foreground: 224 71% 4%;
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 210 40% 98%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 210 40% 98%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 195 78% 55%;
+    --primary-foreground: 224 71% 10%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 210 40% 9%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 48 90% 60%; /* #F4D03F */
-    --accent-foreground: 50 95% 15%; /* A dark brown for text on yellow */
+    --accent: 48 90% 60%;
+    --accent-foreground: 50 95% 15%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 195 50% 88%;
@@ -294,17 +294,18 @@
 
   /* Shared sidebar styles that derive from theme variables */
   :root, html[class^="theme-"] {
-    --sidebar-background: var(--background);
-    --sidebar-foreground: var(--card-foreground);
+    --sidebar-background: hsl(var(--background) / 0.8);
+    --sidebar-foreground: var(--foreground);
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: var(--primary-foreground);
-    --sidebar-accent: var(--background);
-    --sidebar-accent-foreground: var(--foreground);
-    --sidebar-border: var(--border);
+    --sidebar-accent: hsl(var(--primary) / 0.2);
+    --sidebar-accent-foreground: var(--primary-foreground);
+    --sidebar-border: hsl(var(--border) / 0.5);
     --sidebar-ring: var(--ring);
   }
 
   html.theme-midnight {
+    --sidebar-background: hsl(var(--background) / 0.8);
     --sidebar-accent: hsl(240, 30%, 22%);
     --sidebar-accent-foreground: hsl(250, 50%, 95%);
   }
@@ -344,3 +345,4 @@
     
 
     
+

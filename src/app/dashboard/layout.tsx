@@ -33,7 +33,7 @@ export default function DashboardLayout({
   const { theme } = useTheme();
 
   const currentTheme = themes.find((t) => t.className === theme);
-  const mainStyle = currentTheme ? { backgroundImage: currentTheme.gradient } : {};
+  const bodyStyle = currentTheme ? { backgroundImage: currentTheme.gradient } : {};
 
   // Check if the currently logged-in user has a profile in the 'users' (parent) collection.
   const parentProfileDocRef = useMemoFirebase(() => {
@@ -75,22 +75,24 @@ export default function DashboardLayout({
   // is a parent (has a profile), so render the parent dashboard.
   if (user && parentProfile) {
       return (
-        <ScheduleProvider>
-          <SidebarProvider>
-            <Sidebar variant="inset" collapsible="icon">
-              <Nav />
-            </Sidebar>
-            <SidebarInset>
-              <header className="flex h-16 items-center justify-end border-b bg-background px-4 sticky top-0 z-30 lg:px-6">
-                <SidebarTrigger className="md:hidden mr-auto" />
-                <UserNav />
-              </header>
-              <main style={mainStyle} className="flex-1 overflow-auto p-4 lg:p-6">
-                {children}
-              </main>
-            </SidebarInset>
-          </SidebarProvider>
-        </ScheduleProvider>
+        <div style={bodyStyle}>
+          <ScheduleProvider>
+            <SidebarProvider>
+              <Sidebar variant="inset" collapsible="icon">
+                <Nav />
+              </Sidebar>
+              <SidebarInset>
+                <header className="flex h-16 items-center justify-end border-b bg-background/80 backdrop-blur-sm px-4 sticky top-0 z-30 lg:px-6">
+                  <SidebarTrigger className="md:hidden mr-auto" />
+                  <UserNav />
+                </header>
+                <main className="flex-1 overflow-auto p-4 lg:p-6">
+                  {children}
+                </main>
+              </SidebarInset>
+            </SidebarProvider>
+          </ScheduleProvider>
+        </div>
       );
   }
 
