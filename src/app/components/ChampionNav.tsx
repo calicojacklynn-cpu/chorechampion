@@ -32,12 +32,15 @@ export function ChampionNav() {
   const championId = typeof params.id === 'string' ? params.id : '';
   
   const dashboardHref = `/champion/${championId}`;
-  const settingsHref = `/champion/${championId}/settings`;
-  const notificationsHref = `/champion/${championId}/settings/notifications`;
+  const settingsBaseHref = `/champion/${championId}/settings`;
 
   const settingsChildren = [
-      { href: settingsHref, label: "Account" },
-      { href: notificationsHref, label: "Notifications" },
+      { href: `${settingsBaseHref}`, label: "Account" },
+      { href: `${settingsBaseHref}/notifications`, label: "Notifications" },
+      { href: `${settingsBaseHref}/family`, label: "Family" },
+      { href: `${settingsBaseHref}/subscription`, label: "Subscription" },
+      { href: `${settingsBaseHref}/localization`, label: "Localization" },
+      { href: `${settingsBaseHref}/themes`, label: "Themes" },
   ];
 
   return (
@@ -66,12 +69,12 @@ export function ChampionNav() {
           </SidebarMenuItem>
           <Collapsible
             asChild
-            defaultOpen={pathname.startsWith(settingsHref)}
+            defaultOpen={pathname.startsWith(settingsBaseHref)}
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton
-                  isActive={pathname.startsWith(settingsHref) && !settingsChildren.some(c => c.href === pathname)}
+                  isActive={pathname.startsWith(settingsBaseHref) && !settingsChildren.some(c => c.href === pathname)}
                   tooltip={{ children: "Settings" }}
                   className="w-full justify-start group"
                 >
