@@ -294,7 +294,7 @@
 
   /* Shared sidebar styles that derive from theme variables */
   :root, html[class^="theme-"] {
-    --sidebar-background: var(--card);
+    --sidebar-background: var(--background);
     --sidebar-foreground: var(--card-foreground);
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: var(--primary-foreground);
