@@ -39,9 +39,6 @@ export function ChampionNav() {
   const settingsChildren = [
       { href: `${settingsBaseHref}`, label: "Account" },
       { href: `${settingsBaseHref}/notifications`, label: "Notifications" },
-      { href: `${settingsBaseHref}/family`, label: "Family" },
-      { href: `${settingsBaseHref}/subscription`, label: "Subscription" },
-      { href: `${settingsBaseHref}/localization`, label: "Localization" },
       { href: `${settingsBaseHref}/themes`, label: "Themes" },
   ];
 
