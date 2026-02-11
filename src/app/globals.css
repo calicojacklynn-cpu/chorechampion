@@ -24,8 +24,41 @@
     --border: 195 50% 88%;
     --input: 195 50% 88%;
     --ring: 195 78% 70%;
+    --radius: 0.5rem;
+
+    /* Shared sidebar styles that derive from theme variables */
+    --sidebar-background: transparent;
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: hsl(var(--primary) / 0.2);
+    --sidebar-accent-foreground: var(--primary-foreground);
+    --sidebar-border: hsl(var(--border) / 0.5);
+    --sidebar-ring: var(--ring);
   }
   
+  html.theme-default {
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 210 40% 97%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 210 40% 97%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 195 78% 55%;
+    --primary-foreground: 224 71% 10%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 210 40% 9%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 48 90% 60%;
+    --accent-foreground: 50 95% 15%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 195 50% 88%;
+    --input: 195 50% 88%;
+    --ring: 195 78% 70%;
+  }
+
   html.theme-sunset {
     --background: 25 80% 95%;
     --foreground: 330 60% 10%;
@@ -121,7 +154,7 @@
     --card-foreground: 270 80% 94%;
     --popover: 240 15% 12%;
     --popover-foreground: 270 80% 94%;
-    --primary: 270 70% 45%;
+    --primary: 270 70% 35%;
     --primary-foreground: 270 80% 94%;
     --secondary: 260 30% 25%;
     --secondary-foreground: 260 30% 98%;
@@ -134,6 +167,9 @@
     --border: 240 15% 25%;
     --input: 240 15% 18%;
     --ring: 270 70% 45%;
+    --sidebar-foreground: 270 80% 94%;
+    --sidebar-accent: hsl(260, 30%, 30%);
+    --sidebar-accent-foreground: hsl(260, 30%, 98%);
   }
 
   html.theme-mint {
@@ -290,23 +326,6 @@
     --input: 215 28% 17%;
     --ring: 195 78% 78%;
   }
-
-  /* Shared sidebar styles that derive from theme variables */
-  :root {
-    --sidebar-background: transparent;
-    --sidebar-foreground: var(--foreground);
-    --sidebar-primary: var(--primary);
-    --sidebar-primary-foreground: var(--primary-foreground);
-    --sidebar-accent: hsl(var(--primary) / 0.2);
-    --sidebar-accent-foreground: var(--primary-foreground);
-    --sidebar-border: hsl(var(--border) / 0.5);
-    --sidebar-ring: var(--ring);
-  }
-
-  html.theme-midnight {
-    --sidebar-accent: hsl(260, 30%, 30%);
-    --sidebar-accent-foreground: hsl(260, 30%, 98%);
-  }
 }
 
 @layer base {
@@ -352,3 +371,4 @@
     
 
     
+
