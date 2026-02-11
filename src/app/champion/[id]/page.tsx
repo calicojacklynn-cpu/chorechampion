@@ -2,6 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
+import { useUser } from '@/firebase';
 import {
   Card,
   CardContent,
@@ -48,10 +49,12 @@ const allRewards = [
 export default function ChampionDashboardPage() {
     const params = useParams();
     const { toast } = useToast();
-    const championId = typeof params.id === 'string' ? params.id : '';
+    const { user } = useUser();
+    const championId = user?.uid;
     
-    const champion = championsData.find(c => c.id === championId);
-    const chores = allChores.filter(c => c.assignedTo === championId);
+    // This is still mock data. Replace with Firestore data fetching.
+    const champion = championId ? { id: championId, name: user?.displayName || 'Champion', points: 125 } : null;
+    const chores = allChores.filter(c => c.assignedTo === 'alex'); // Hardcoded until we fetch real data
     const rewards = allRewards;
 
     const handleClaimReward = (reward: typeof allRewards[0]) => {

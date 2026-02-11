@@ -1,19 +1,36 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { useUser } from '@/firebase';
 import { SidebarProvider, Sidebar, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Nav } from "@/app/components/Nav";
 import { UserNav } from "@/app/components/UserNav";
-import type { Metadata } from "next";
 import { ScheduleProvider } from "@/app/context/ScheduleContext";
-
-export const metadata: Metadata = {
-  title: 'Chore Champion Dashboard',
-  description: 'Your family chore management center.',
-};
+import { Loader2 } from 'lucide-react';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { user, isUserLoading } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.push('/');
+    }
+  }, [isUserLoading, user, router]);
+
+  if (isUserLoading || !user) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <ScheduleProvider>
       <SidebarProvider>

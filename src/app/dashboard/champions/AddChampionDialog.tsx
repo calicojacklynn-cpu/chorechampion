@@ -22,17 +22,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
-  username: z
-    .string()
-    .min(2, "Username must be at least 2 characters.")
-    .refine((s) => !s.includes(" "), "Username cannot contain spaces."),
-  pin: z
-    .string()
-    .length(4, "PIN must be 4 digits.")
-    .regex(/^\d{4}$/, "PIN must be 4 digits."),
+  email: z.string().email("Please provide a valid email for the champion."),
+  password: z.string().min(6, "Password must be at least 6 characters."),
 });
 
 // The shape of the data for a new champion
@@ -42,15 +37,16 @@ type AddChampionDialogProps = {
   onAdd: (champion: NewChampionData) => void;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
+  isAdding: boolean;
 };
 
-export function AddChampionDialog({ onAdd, isOpen, onOpenChange }: AddChampionDialogProps) {
+export function AddChampionDialog({ onAdd, isOpen, onOpenChange, isAdding }: AddChampionDialogProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      username: "",
-      pin: "",
+      email: "",
+      password: "",
     },
   });
 
@@ -71,7 +67,7 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange }: AddChampionDi
         <DialogHeader>
           <DialogTitle>Add New Champion</DialogTitle>
           <DialogDescription>
-            Fill out the details below to add a new champion to your roster.
+            Create a login for a new champion. They will use this email and password to log in.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -86,7 +82,7 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange }: AddChampionDi
                 <FormItem>
                   <FormLabel>Display Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Alex" {...field} />
+                    <Input placeholder="e.g. Alex" {...field} disabled={isAdding}/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -94,12 +90,12 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange }: AddChampionDi
             />
             <FormField
               control={form.control}
-              name="username"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. alex-the-great" {...field} />
+                    <Input placeholder="e.g. alex@example.com" {...field} disabled={isAdding}/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -107,17 +103,16 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange }: AddChampionDi
             />
             <FormField
               control={form.control}
-              name="pin"
+              name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>4-Digit PIN</FormLabel>
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
-                      inputMode="numeric"
-                      maxLength={4}
-                      placeholder="••••"
+                      placeholder="••••••••"
                       {...field}
+                      disabled={isAdding}
                     />
                   </FormControl>
                   <FormMessage />
@@ -125,10 +120,13 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange }: AddChampionDi
               )}
             />
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isAdding}>
                 Cancel
               </Button>
-              <Button type="submit">Create Champion</Button>
+              <Button type="submit" disabled={isAdding}>
+                {isAdding && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Create Champion
+              </Button>
             </DialogFooter>
           </form>
         </Form>

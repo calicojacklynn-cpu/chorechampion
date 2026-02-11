@@ -1,7 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useCallback } from "react";
+import { initializeApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import {
   Table,
   TableBody,
@@ -33,12 +34,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { useAuth, firebaseConfig } from "@/firebase";
 
 export type Champion = {
   id: string;
   name: string;
-  username: string;
+  email: string;
   avatarUrl?: string;
   points: number;
   choresCompleted: number;
@@ -49,7 +50,7 @@ const initialChampions: Champion[] = [
   {
     id: "alex",
     name: "Alex",
-    username: "alex-the-great",
+    email: "alex@example.com",
     avatarUrl: "",
     points: 125,
     choresCompleted: 12,
@@ -57,7 +58,7 @@ const initialChampions: Champion[] = [
   {
     id: "bella",
     name: "Bella",
-    username: "bella-the-brave",
+    email: "bella@example.com",
     avatarUrl: "",
     points: 85,
     choresCompleted: 8,
@@ -67,6 +68,8 @@ const initialChampions: Champion[] = [
 export default function ChampionsPage() {
   const { toast } = useToast();
   const [champions, setChampions] = useState<Champion[]>(initialChampions);
+  const [isAdding, setIsAdding] = useState(false);
+  const parentAuth = useAuth();
   
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -74,20 +77,49 @@ export default function ChampionsPage() {
 
   const [selectedChampion, setSelectedChampion] = useState<Champion | null>(null);
 
-  const handleAddChampion = useCallback((newChampionData: NewChampionData) => {
-    const newChampion: Champion = {
-      ...newChampionData,
-      id: newChampionData.username.toLowerCase(),
-      avatarUrl: "",
-      points: 0,
-      choresCompleted: 0,
-    };
-    setChampions((prev) => [newChampion, ...prev]);
-    toast({
-      title: "Champion Added!",
-      description: `${newChampion.name} has been added to your list of champions.`,
-    });
-    setIsAddDialogOpen(false);
+  const handleAddChampion = useCallback(async (newChampionData: NewChampionData) => {
+    setIsAdding(true);
+
+    const tempAppName = `temp-app-for-champion-creation-${Date.now()}`;
+    const tempApp = initializeApp(firebaseConfig, tempAppName);
+    const tempAuth = getAuth(tempApp);
+
+    try {
+      // Create the champion user in the temporary auth instance
+      const userCredential = await createUserWithEmailAndPassword(tempAuth, newChampionData.email, newChampionData.password);
+      const newUserId = userCredential.user.uid;
+
+      // In a real app, we would also update their profile, e.g., with updateProfile
+      // and save the champion's profile to Firestore.
+
+      const newChampion: Champion = {
+        id: newUserId,
+        name: newChampionData.name,
+        email: newChampionData.email,
+        avatarUrl: "",
+        points: 0,
+        choresCompleted: 0,
+      };
+
+      setChampions((prev) => [newChampion, ...prev]);
+      toast({
+        title: "Champion Added!",
+        description: `${newChampion.name} can now log in with their email and password.`,
+      });
+      setIsAddDialogOpen(false);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Failed to Add Champion",
+        description: error.message,
+      });
+    } finally {
+      // Sign out from the temporary instance.
+      await signOut(tempAuth);
+      // The client SDK doesn't have a public API to delete an app instance, 
+      // but signing out ensures the session is cleared.
+      setIsAdding(false);
+    }
   }, [toast]);
 
   const handleUpdateChampion = useCallback((updatedChampion: Champion) => {
@@ -103,6 +135,8 @@ export default function ChampionsPage() {
 
   const handleConfirmDelete = useCallback(() => {
     if (!selectedChampion) return;
+    // In a real app, you would also need to delete the user from Firebase Auth
+    // and delete their data from Firestore. This requires backend logic.
     setChampions((prev) => prev.filter((c) => c.id !== selectedChampion.id));
     toast({
       title: "Champion Deleted",
@@ -151,7 +185,7 @@ export default function ChampionsPage() {
                   <span className="sr-only">Avatar</span>
                 </TableHead>
                 <TableHead>Name</TableHead>
-                <TableHead>Username</TableHead>
+                <TableHead>Email</TableHead>
                 <TableHead className="hidden md:table-cell">Points</TableHead>
                 <TableHead className="hidden md:table-cell">
                   Chores Completed
@@ -177,7 +211,7 @@ export default function ChampionsPage() {
                       <TableCell className="font-medium">
                         {champion.name}
                       </TableCell>
-                      <TableCell>{champion.username}</TableCell>
+                      <TableCell>{champion.email}</TableCell>
                       <TableCell className="hidden md:table-cell">
                         {champion.points}
                       </TableCell>
@@ -212,6 +246,7 @@ export default function ChampionsPage() {
         isOpen={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
         onAdd={handleAddChampion}
+        isAdding={isAdding}
       />
 
       {selectedChampion && (

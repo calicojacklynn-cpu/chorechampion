@@ -66,30 +66,6 @@ export default function SettingsPage() {
           </CardFooter>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Parent PIN</CardTitle>
-            <CardDescription>
-              Set a 4-digit PIN for your children to use when logging in.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <Label htmlFor="parent-pin">4-Digit PIN</Label>
-              <Input
-                id="parent-pin"
-                type="password"
-                inputMode="numeric"
-                maxLength={4}
-                placeholder="••••"
-              />
-            </div>
-          </CardContent>
-          <CardFooter className="border-t px-6 py-4">
-            <Button>Save PIN</Button>
-          </CardFooter>
-        </Card>
-
         <Card className="border-destructive">
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <div>
