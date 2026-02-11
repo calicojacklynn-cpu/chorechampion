@@ -102,95 +102,81 @@ export function EditChampionDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md flex flex-col max-h-[90vh] p-0">
-        <DialogHeader className="p-6 pb-4 flex-shrink-0">
+      <DialogContent className="sm:max-w-md max-h-[90vh] grid grid-rows-[auto_1fr_auto] p-0">
+        <DialogHeader className="p-6 pb-4 border-b">
           <DialogTitle>Edit Champion</DialogTitle>
           <DialogDescription>
             Update the details for {champion?.name}.
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col min-h-0">
-            <ScrollArea className="flex-1 p-6">
-              <div className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Display Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g. Alex" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+
+        <ScrollArea className="px-6 overflow-y-auto">
+          <Form {...form}>
+            <form id="edit-champion-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Display Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. Alex" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. alex-the-great" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormItem>
+                <FormLabel>Avatar</FormLabel>
+                <div className="flex justify-center py-2">
+                  <Avatar className="h-24 w-24 border-2 border-primary">
+                    <AvatarImage src={avatarUrl} alt="Avatar preview" />
+                    <AvatarFallback>{champion?.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Upload className="mr-2 h-4 w-4" />
+                  Upload from Device
+                </Button>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  className="hidden"
+                  accept="image/png, image/jpeg, image/gif, image/webp"
                 />
+                <FormField control={form.control} name="avatarUrl" render={() => <FormMessage />} />
+              </FormItem>
+            </form>
+          </Form>
+        </ScrollArea>
 
-                <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Username</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g. alex-the-great" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormItem>
-                  <FormLabel>Avatar</FormLabel>
-                  <div className="flex justify-center py-2">
-                    <Avatar className="h-24 w-24 border-2 border-primary">
-                      <AvatarImage
-                        src={avatarUrl}
-                        alt="Avatar preview"
-                      />
-                      <AvatarFallback>
-                        {champion?.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <Upload className="mr-2 h-4 w-4" />
-                    Upload from Device
-                  </Button>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                    className="hidden"
-                    accept="image/png, image/jpeg, image/gif, image/webp"
-                  />
-                  <FormField
-                    control={form.control}
-                    name="avatarUrl"
-                    render={() => <FormMessage />}
-                  />
-                </FormItem>
-              </div>
-            </ScrollArea>
-
-            <DialogFooter className="p-6 border-t flex-shrink-0">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-              >
-                Cancel
-              </Button>
-              <Button type="submit">Save Changes</Button>
-            </DialogFooter>
-          </form>
-        </Form>
+        <DialogFooter className="p-6 border-t">
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <Button type="submit" form="edit-champion-form">Save Changes</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
