@@ -3,7 +3,7 @@
     {
       "id": "login-hero",
       "description": "A happy family doing chores together in a clean living room.",
-      "imageUrl": "https://images.unsplash.com/photo-1629042306547-c1d7c6c85ffa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmYW1pbHklMjBsaXZpbmdyb29tfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1611818831327-de3982fe1420?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmYW1pbHklMjBsaXZpbmdyb29tfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "family livingroom"
     },
     {
@@ -14,57 +14,57 @@
     },
     {
       "id": "champion-avatar-1",
-      "description": "A yellow placeholder avatar with the letter S.",
-      "imageUrl": "https://placehold.co/200x200/F4D03F/4A3C0B?text=S",
-      "imageHint": "letter S"
+      "description": "A blue avatar with a shield symbol.",
+      "imageUrl": "https://placehold.co/200x200/89CFF0/062338?text=%F0%9F%9B%A1%EF%B8%8F",
+      "imageHint": "shield symbol"
     },
     {
       "id": "champion-avatar-2",
-      "description": "A blue placeholder avatar with the letter H.",
-      "imageUrl": "https://placehold.co/200x200/89CFF0/062338?text=H",
-      "imageHint": "letter H"
+      "description": "A yellow avatar with a star symbol.",
+      "imageUrl": "https://placehold.co/200x200/F4D03F/4A3C0B?text=%E2%AD%90%EF%B8%8F",
+      "imageHint": "star symbol"
     },
     {
       "id": "champion-avatar-3",
-      "description": "A red placeholder avatar with the letter P.",
-      "imageUrl": "https://placehold.co/200x200/F87171/FAFAFA?text=P",
-      "imageHint": "letter P"
+      "description": "A red avatar with a lightning bolt symbol.",
+      "imageUrl": "https://placehold.co/200x200/F87171/FAFAFA?text=%E2%9A%A1%EF%B8%8F",
+      "imageHint": "lightning symbol"
     },
     {
       "id": "champion-avatar-4",
-      "description": "A dark brown placeholder avatar with the letter C.",
-      "imageUrl": "https://placehold.co/200x200/4A3C0B/F4D03F?text=C",
-      "imageHint": "letter C"
+      "description": "A dark blue avatar with a comet symbol.",
+      "imageUrl": "https://placehold.co/200x200/062338/FAFAFA?text=%E2%98%84%EF%B8%8F",
+      "imageHint": "comet symbol"
     },
     {
       "id": "champion-avatar-5",
-      "description": "A dark blue placeholder avatar with the letter X.",
-      "imageUrl": "https://placehold.co/200x200/062338/89CFF0?text=X",
-      "imageHint": "letter X"
+      "description": "A green avatar with an atom symbol.",
+      "imageUrl": "https://placehold.co/200x200/4ade80/14532d?text=%E2%9A%9B%EF%B8%8F",
+      "imageHint": "atom symbol"
     },
     {
       "id": "champion-avatar-6",
-      "description": "A yellow placeholder avatar with the letter A.",
-      "imageUrl": "https://placehold.co/200x200/F4D03F/4A3C0B?text=A",
-      "imageHint": "letter A"
+      "description": "An orange avatar with a fist symbol.",
+      "imageUrl": "https://placehold.co/200x200/fb923c/9a3412?text=%E2%9C%8A",
+      "imageHint": "fist symbol"
     },
     {
       "id": "champion-avatar-7",
-      "description": "A blue placeholder avatar with the letter B.",
-      "imageUrl": "https://placehold.co/200x200/89CFF0/062338?text=B",
-      "imageHint": "letter B"
+      "description": "A purple avatar with a spiral symbol.",
+      "imageUrl": "https://placehold.co/200x200/c084fc/581c87?text=%F0%9F%8C%80",
+      "imageHint": "spiral symbol"
     },
     {
       "id": "champion-avatar-8",
-      "description": "A red placeholder avatar with the letter Z.",
-      "imageUrl": "https://placehold.co/200x200/F87171/FAFAFA?text=Z",
-      "imageHint": "letter Z"
+      "description": "A teal avatar with a crossed swords symbol.",
+      "imageUrl": "https://placehold.co/200x200/2dd4bf/115e59?text=%E2%9A%94%EF%B8%8F",
+      "imageHint": "swords symbol"
     },
     {
       "id": "champion-avatar-9",
-      "description": "A yellow placeholder avatar with a star symbol.",
-      "imageUrl": "https://placehold.co/200x200/F4D03F/4A3C0B?text=%E2%98%85",
-      "imageHint": "star symbol"
+      "description": "A pink avatar with a heart on fire symbol.",
+      "imageUrl": "https://placehold.co/200x200/f472b6/9d174d?text=%E2%9D%A4%EF%B8%8F%E2%80%8D%F0%9F%94%A5",
+      "imageHint": "fire heart"
     },
     {
       "id": "reward-movie",
@@ -75,19 +75,19 @@
     {
       "id": "reward-icecream",
       "description": "Colorful scoops of ice cream in a cone.",
-      "imageUrl": "https://images.unsplash.com/photo-1629385701021-fcd568a743e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxpY2UlMjBjcmVhbXxlbnwwfHx8fDE3NzA3MjYzMDJ8MA&ixlib.rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1629385701021-fcd568a743e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxpY2UlMjBjcmVhbXxlbnwwfHx8fDE3NzA3MjYzMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "ice cream"
     },
     {
       "id": "reward-lego",
       "description": "A colorful structure made of toy bricks.",
-      "imageUrl": "https://images.unsplash.com/photo-1541692641319-981cc79ee10a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx0b3klMjBibG9ja3N8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib.rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1535572290543-960a8046f5af?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx0b3klMjBibG9ja3N8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "toy blocks"
     },
     {
       "id": "reward-screentime",
       "description": "A person using a tablet computer.",
-      "imageUrl": "https://images.unsplash.com/photo-1746289434176-40f821d31216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx0YWJsZXQlMjBzY3JlZW58ZW58MHx8fHwxNzcwNzY5MTIzfDA&ixlib.rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1649151139875-ae8ea07082e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx0YWJsZXQlMjBzY3JlZW58ZW58MHx8fHwxNzcwNzY5MTIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "tablet screen"
     }
   ]
