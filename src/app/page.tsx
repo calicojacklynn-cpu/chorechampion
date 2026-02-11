@@ -79,19 +79,32 @@ export default function LoginPage() {
   const handleChampionLogin = async (values: z.infer<typeof championLoginSchema>) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
-      const championId = userCredential.user.uid;
-      router.push(`/champion/${championId}`);
+      router.push(`/champion/${userCredential.user.uid}`);
     } catch (error: any) {
-      toast({
-        variant: 'destructive',
-        title: 'Login Failed',
-        description: "Please check your email and password.",
-      });
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+          // NOTE: This only creates the auth user. The Firestore document must be created
+          // from the parent dashboard for the champion profile to be complete.
+          router.push(`/champion/${userCredential.user.uid}`);
+        } catch (signUpError: any) {
+          toast({
+            variant: "destructive",
+            title: "Champion Sign Up Failed",
+            description: signUpError.message,
+          });
+        }
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Login Failed',
+          description: error.message,
+        });
+      }
     }
   };
   
   // If we are still determining the auth state, show a loader.
-  // The login handlers will redirect if a user is successfully logged in.
   if (isUserLoading) {
     return (
         <div className="flex h-screen w-full items-center justify-center">
@@ -101,12 +114,11 @@ export default function LoginPage() {
   }
 
   // If a user is already logged in, redirect them away from the login page.
-  // This handles cases where a logged-in user tries to navigate back to the root URL.
   if (user) {
-    // Attempt to redirect based on which page they should be on.
-    // In a real app, this logic might be based on user roles stored in Firestore.
-    // For now, we make a basic assumption.
-    router.push('/dashboard'); // Default to parent dashboard
+    // This will redirect to the correct dashboard after a page refresh.
+    // The specific logic inside the layouts will handle if it's a parent or champion.
+    // For now, a simple push to a generic path is sufficient, letting layouts handle the rest.
+    router.push('/dashboard'); 
     return ( // Render a loader while redirecting
         <div className="flex h-screen w-full items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin" />
@@ -225,7 +237,7 @@ export default function LoginPage() {
                           />
                           <Button type="submit" className="w-full !mt-6" disabled={championForm.formState.isSubmitting}>
                             {championForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Login
+                            Login or Sign Up
                           </Button>
                         </form>
                       </Form>
