@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useAuth, useUser } from '@/firebase';
+import { useAuth, useUser, useFirestore } from '@/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -37,6 +38,7 @@ export default function LoginPage() {
   const { toast } = useToast();
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
+  const firestore = useFirestore();
 
   const parentForm = useForm<z.infer<typeof parentLoginSchema>>({
     resolver: zodResolver(parentLoginSchema),
@@ -52,13 +54,31 @@ export default function LoginPage() {
     try {
       // Try to sign in first
       await signInWithEmailAndPassword(auth, values.email, values.password);
-      router.push('/dashboard');
+      // On successful sign-in, the useEffect hook will handle redirection.
     } catch (error: any) {
       // If the user doesn't exist or credentials are new, create a new account
       if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
         try {
-          await createUserWithEmailAndPassword(auth, values.email, values.password);
-          router.push('/dashboard');
+          const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+          const newUser = userCredential.user;
+
+          // **FIX**: Create the parent's profile document in Firestore upon sign-up.
+          // This marks them as a parent and ensures they are routed correctly.
+          const parentProfileDocRef = doc(firestore, 'users', newUser.uid);
+          
+          // Make a reasonable default name from the email
+          const nameParts = newUser.email?.split('@')[0].split('.') || ['New', 'User'];
+          const firstName = nameParts[0] ? nameParts[0].charAt(0).toUpperCase() + nameParts[0].slice(1) : 'New';
+          const lastName = nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() + nameParts[1].slice(1) : 'User';
+          
+          await setDoc(parentProfileDocRef, {
+            id: newUser.uid,
+            email: newUser.email,
+            firstName: firstName,
+            lastName: lastName,
+          });
+
+          // After creating the user and profile, the useEffect hook will handle redirection.
         } catch (signUpError: any) {
           toast({
             variant: "destructive",
@@ -107,13 +127,12 @@ export default function LoginPage() {
   
   // If a user is already logged in, redirect them away from the login page.
   useEffect(() => {
-    if (user) {
+    if (!isUserLoading && user) {
       // This will redirect to the correct dashboard after a page refresh.
       // The specific logic inside the layouts will handle if it's a parent or champion.
-      // For now, a simple push to a generic path is sufficient, letting layouts handle the rest.
       router.push('/dashboard');
     }
-  }, [user, router]);
+  }, [isUserLoading, user, router]);
 
   // If we are still determining the auth state OR if a user exists and we are about to redirect, show a loader.
   if (isUserLoading || user) {
