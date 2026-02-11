@@ -13,6 +13,9 @@ import { signOut } from 'firebase/auth';
 import { useEffect } from 'react';
 import { doc } from 'firebase/firestore';
 import type { Champion } from '@/app/dashboard/champions/page';
+import { useTheme } from '@/app/context/ThemeContext';
+import { themes } from '@/lib/themes';
+
 
 export default function ChampionLayout({
   children,
@@ -24,6 +27,10 @@ export default function ChampionLayout({
   const auth = useAuth();
   const firestore = useFirestore();
   const { user, isUserLoading } = useUser();
+  const { theme } = useTheme();
+
+  const currentTheme = themes.find((t) => t.className === theme);
+  const mainStyle = currentTheme ? { backgroundImage: currentTheme.gradient } : {};
 
   const championId = typeof params.id === 'string' ? params.id : '';
   
@@ -45,7 +52,9 @@ export default function ChampionLayout({
   }, [isUserLoading, user, router, championId]);
 
   const handleLogout = async () => {
-    await signOut(auth);
+    if (auth) {
+      await signOut(auth);
+    }
     router.push('/');
   };
 
@@ -122,7 +131,7 @@ export default function ChampionLayout({
                     Log Out
                 </Button>
             </header>
-            <main className="flex-1 overflow-auto p-4 lg:p-6">
+            <main style={mainStyle} className="flex-1 overflow-auto p-4 lg:p-6">
                 {children}
             </main>
             <Toaster />

@@ -9,6 +9,9 @@ import { Nav } from "@/app/components/Nav";
 import { UserNav } from "@/app/components/UserNav";
 import { ScheduleProvider } from "@/app/context/ScheduleContext";
 import { Loader2 } from 'lucide-react';
+import { useTheme } from '@/app/context/ThemeContext';
+import { themes } from '@/lib/themes';
+
 
 // Based on ParentProfile in backend.json
 export type UserProfile = {
@@ -27,6 +30,10 @@ export default function DashboardLayout({
   const { user, isUserLoading } = useUser();
   const router = useRouter();
   const firestore = useFirestore();
+  const { theme } = useTheme();
+
+  const currentTheme = themes.find((t) => t.className === theme);
+  const mainStyle = currentTheme ? { backgroundImage: currentTheme.gradient } : {};
 
   // Check if the currently logged-in user has a profile in the 'users' (parent) collection.
   const parentProfileDocRef = useMemoFirebase(() => {
@@ -78,7 +85,7 @@ export default function DashboardLayout({
                 <SidebarTrigger className="md:hidden mr-auto" />
                 <UserNav />
               </header>
-              <main className="flex-1 overflow-auto p-4 lg:p-6">
+              <main style={mainStyle} className="flex-1 overflow-auto p-4 lg:p-6">
                 {children}
               </main>
             </SidebarInset>
