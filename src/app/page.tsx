@@ -61,7 +61,7 @@ export default function LoginPage() {
                       <Input id="child-username" type="text" placeholder="your-username" required />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="child-pin">4-Digit PIN</Label>
+                      <Label htmlFor="child-pin">4 Digit Parent Pin</Label>
                       <Input id="child-pin" type="password" inputMode="numeric" maxLength={4} placeholder="••••" required />
                     </div>
                   </div>
