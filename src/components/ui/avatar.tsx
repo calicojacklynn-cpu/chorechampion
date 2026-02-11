@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import * as AvatarPrimitive from "@radix-ui/react-avatar"
+import Image, { type ImageProps } from 'next/image';
 
 import { cn } from "@/lib/utils"
 
@@ -21,16 +22,32 @@ const Avatar = React.forwardRef<
 Avatar.displayName = AvatarPrimitive.Root.displayName
 
 const AvatarImage = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Image>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Image
-    ref={ref}
-    className={cn("aspect-square h-full w-full", className)}
-    {...props}
-  />
-))
-AvatarImage.displayName = AvatarPrimitive.Image.displayName
+  React.ElementRef<typeof Image>,
+  Omit<ImageProps, 'src'> & { src?: string | undefined | null }
+>(({ className, src, alt, ...props }, ref) => {
+  const [hasError, setHasError] = React.useState(!src);
+
+  React.useEffect(() => {
+    setHasError(!src);
+  }, [src]);
+
+  if (hasError) {
+    return null;
+  }
+
+  return (
+    <Image
+      ref={ref}
+      src={src || ''}
+      alt={alt || ''}
+      fill
+      className={cn("object-cover", className)}
+      onError={() => setHasError(true)}
+      {...props}
+    />
+  );
+});
+AvatarImage.displayName = "AvatarImage"
 
 const AvatarFallback = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
