@@ -4,12 +4,13 @@ import {
   PayPalScriptProvider,
   PayPalButtons,
   type OnApproveData,
-  type CreateOrderActions,
-  type OnApproveActions,
 } from '@paypal/react-paypal-js';
 import { useToast } from '@/hooks/use-toast';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { useFirebaseApp } from '@/firebase';
 
-const PAYPAL_CLIENT_ID = "YOUR_PAYPAL_CLIENT_ID_HERE"; // IMPORTANT: Replace with your actual client ID
+// IMPORTANT: Replace with your actual client ID. This is for the frontend SDK.
+const PAYPAL_CLIENT_ID = "YOUR_PAYPAL_CLIENT_ID_HERE"; 
 
 type PayPalButtonsProps = {
   onPaymentApproved: () => void;
@@ -18,6 +19,12 @@ type PayPalButtonsProps = {
 
 export function PayPalUpgradeButton({ onPaymentApproved, disabled = false }: PayPalButtonsProps) {
   const { toast } = useToast();
+  const app = useFirebaseApp();
+  const functions = getFunctions(app);
+
+  // References to our backend Cloud Functions
+  const createPaypalOrder = httpsCallable(functions, 'createPaypalOrder');
+  const capturePaypalOrder = httpsCallable(functions, 'capturePaypalOrder');
 
   if (disabled) {
     return (
@@ -40,52 +47,57 @@ export function PayPalUpgradeButton({ onPaymentApproved, disabled = false }: Pay
       <PayPalButtons
         style={{ layout: 'horizontal', label: 'buynow', color: 'blue', shape: 'rect' }}
         disabled={disabled}
-        createOrder={async (data: Record<string, unknown>, actions: CreateOrderActions) => {
-          // IMPORTANT: This function can call your backend server to create an order.
-          // Your server would then call the PayPal Orders API.
-          // https://developer.paypal.com/docs/api/orders/v2/#orders_create
-          // For this simulation, we'll create the order on the client side.
-          
+        // This function is called when the user clicks the PayPal button.
+        // It calls our secure backend Cloud Function to create the order.
+        createOrder={async () => {
           toast({
-            title: "Creating Order...",
-            description: "Please complete the payment in the PayPal window.",
+            title: "Connecting to PayPal...",
+            description: "Please wait while we create your secure order.",
           });
-
-          const order = await actions.order.create({
-            purchase_units: [
-              {
-                description: 'Chore Champion Premium Plan (One-Time Payment)',
-                amount: {
-                  value: '4.99', // The price for the one-time upgrade
-                  currency_code: 'USD',
-                },
-              },
-            ],
-          });
-          return order; // Return the order ID
+          try {
+            const response: any = await createPaypalOrder();
+            const orderId = response.data.orderId;
+            if (!orderId) {
+                throw new Error("Failed to get Order ID from server.");
+            }
+            return orderId;
+          } catch (error: any) {
+             toast({
+              variant: "destructive",
+              title: "Order Creation Failed",
+              description: error.message || "Could not connect to the server. Please try again.",
+            });
+            // Re-throw to stop the PayPal flow
+            throw error;
+          }
         }}
-        onApprove={async (data: OnApproveData, actions: OnApproveActions) => {
-          // IMPORTANT: This function is called after the user approves the payment on PayPal's site.
-          // You should capture the transaction and send the orderID to your server for verification.
-          console.log('PayPal payment approved. Order ID:', data.orderID);
-
-          // --- SIMULATION ---
-          // In a real app, you would make a fetch call here to capture the payment:
-          // await fetch('/api/paypal/capture-order', { 
-          //   method: 'POST',
-          //   headers: { 'Content-Type': 'application/json' },
-          //   body: JSON.stringify({ orderID: data.orderID })
-          // });
-          
-          onPaymentApproved(); // Update the UI state
-          return Promise.resolve();
+        // This function is called after the user approves the payment on PayPal's site.
+        // It calls our secure backend Cloud Function to "capture" the funds.
+        onApprove={async (data: OnApproveData) => {
+           toast({
+            title: "Processing Payment...",
+            description: "Please wait while we confirm your transaction.",
+          });
+          try {
+            await capturePaypalOrder({ orderId: data.orderID });
+            // The backend function updates the database. This call updates the UI.
+            onPaymentApproved(); 
+          } catch(error: any) {
+            toast({
+              variant: "destructive",
+              title: "Payment Capture Failed",
+              description: error.message || "There was an issue finalizing your payment.",
+            });
+             // Re-throw to inform PayPal of the failure
+            throw error;
+          }
         }}
         onError={(err) => {
           console.error("PayPal button error:", err);
           toast({
             variant: "destructive",
             title: "PayPal Error",
-            description: "An error occurred. If you are a developer, please check your Client ID.",
+            description: "An error occurred with PayPal. Please check the developer console.",
           });
         }}
       />
