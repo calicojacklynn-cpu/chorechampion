@@ -189,7 +189,7 @@ export default function LoginPage() {
                  <Button
                     variant="link"
                     className="absolute -top-4 left-0 h-auto p-0 text-sm text-muted-foreground z-10"
-                    onClick={() => handleParentLogin({ email: 'parent@example.com', password: 'password' })}
+                    onClick={() => handleChampionLogin({ email: 'alex@example.com', password: 'password' })}
                 >
                     Admin Backdoor
                 </Button>
