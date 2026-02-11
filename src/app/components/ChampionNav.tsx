@@ -20,17 +20,14 @@ export function ChampionNav() {
   const pathname = usePathname();
   const params = useParams();
   const championId = typeof params.id === 'string' ? params.id : '';
-
-  const navItems = [
-    { href: `/champion/${championId}`, icon: LayoutDashboard, label: "Dashboard" },
-    { href: `/champion/${championId}/settings`, icon: Settings, label: "Settings" },
-  ];
-
+  
+  const dashboardHref = `/champion/${championId}`;
+  const settingsHref = `/champion/${championId}/settings`;
 
   return (
     <>
       <SidebarHeader className="group-data-[collapsible=icon]:justify-center">
-        <Link href={`/champion/${championId}`} className="flex items-center gap-2">
+        <Link href={dashboardHref} className="flex items-center gap-2">
           <ChoreChampionLogo className="h-8 w-8" />
           <span className="font-bold font-headline text-lg group-data-[collapsible=icon]:hidden">
             Chore Champion
@@ -39,21 +36,30 @@ export function ChampionNav() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
-          {navItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton
-                  isActive={pathname.startsWith(item.href)}
-                  tooltip={{ children: item.label }}
-                  asChild
-                >
-                  <Link href={item.href}>
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )
-          )}
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              isActive={pathname === dashboardHref}
+              tooltip={{ children: "Dashboard" }}
+              asChild
+            >
+              <Link href={dashboardHref}>
+                <LayoutDashboard />
+                <span>Dashboard</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              isActive={pathname.startsWith(settingsHref)}
+              tooltip={{ children: "Settings" }}
+              asChild
+            >
+              <Link href={settingsHref}>
+                <Settings />
+                <span>Settings</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
     </>
