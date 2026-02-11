@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  ListTodo,
-  Gift,
   Calendar,
   Settings,
   ChevronDown,
@@ -36,8 +34,6 @@ export function ChampionNav() {
 
   const navItems = [
     { href: `/champion/${championId}`, icon: LayoutDashboard, label: "Dashboard" },
-    { href: `/champion/${championId}/chores`, icon: ListTodo, label: "Chores" },
-    { href: `/champion/${championId}/rewards`, icon: Gift, label: "Rewards" },
     { href: `/champion/${championId}/calendar`, icon: Calendar, label: "Calendar" },
     { href: `/champion/${championId}/broadcast`, icon: Megaphone, label: "Broadcasts" },
     {
