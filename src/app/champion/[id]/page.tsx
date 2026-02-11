@@ -21,16 +21,11 @@ import {
 } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Star, Trophy, CheckCircle2 } from 'lucide-react';
+import { Star, Trophy, CheckCircle2, Loader2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 // MOCK DATA - in a real app, this would be fetched based on the champion's ID
-const championsData = [
-  { id: "alex", name: "Alex", points: 125 },
-  { id: "bella", name: "Bella", points: 85 },
-];
-
 const allChores = [
     { id: 'chore-1', name: 'Water the plants', points: 5, assignedTo: 'alex', status: 'pending' },
     { id: 'chore-2', name: 'Set the dinner table', points: 3, assignedTo: 'bella', status: 'pending' },
@@ -47,14 +42,15 @@ const allRewards = [
 
 
 export default function ChampionDashboardPage() {
-    const params = useParams();
     const { toast } = useToast();
-    const { user } = useUser();
-    const championId = user?.uid;
+    const { user, isUserLoading } = useUser();
     
-    // This is still mock data. Replace with Firestore data fetching.
-    const champion = championId ? { id: championId, name: user?.displayName || 'Champion', points: 125 } : null;
-    const chores = allChores.filter(c => c.assignedTo === 'alex'); // Hardcoded until we fetch real data
+    // Construct champion object from the authenticated user. Points are still mock.
+    const champion = user ? { id: user.uid, name: user.displayName || 'Champion', points: 125 } : null;
+    
+    // This is still mock data. Filtered by 'alex' to show something. 
+    // In a real app, this would fetch chores for the logged in championId.
+    const chores = allChores.filter(c => c.assignedTo === 'alex'); 
     const rewards = allRewards;
 
     const handleClaimReward = (reward: typeof allRewards[0]) => {
@@ -73,8 +69,12 @@ export default function ChampionDashboardPage() {
         }
     };
 
-    if (!champion) {
-        return <p>Loading champion dashboard...</p>;
+    if (isUserLoading || !champion) {
+        return (
+            <div className="flex h-full items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+        );
     }
 
     return (

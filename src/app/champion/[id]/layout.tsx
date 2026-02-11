@@ -12,22 +12,6 @@ import { useUser, useAuth } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { useEffect } from 'react';
 
-// Mock data for champions
-const championsData = [
-  {
-    id: "alex",
-    name: "Alex",
-    avatarUrl: "",
-    points: 125,
-  },
-  {
-    id: "bella",
-    name: "Bella",
-    avatarUrl: "",
-    points: 85,
-  },
-];
-
 export default function ChampionLayout({
   children,
 }: {
@@ -44,17 +28,28 @@ export default function ChampionLayout({
     if (!isUserLoading && !user) {
       router.push('/');
     }
-  }, [isUserLoading, user, router]);
+    // If a user is logged in but their ID doesn't match the URL, redirect them.
+    if (!isUserLoading && user && user.uid !== championId) {
+        router.push(`/champion/${user.uid}`);
+    }
+  }, [isUserLoading, user, router, championId]);
   
-  // In a real app, this would be fetched from Firestore
-  const champion = championsData.find(c => c.id === 'alex'); // Hardcoded for now until data fetching is in place
+  // Construct the champion object from the authenticated user.
+  // In a real app, this would be fetched from Firestore, but this works for now.
+  const champion = user ? {
+    id: user.uid,
+    name: user.displayName || 'Champion',
+    avatarUrl: user.photoURL || '',
+    points: 125, // Mock points, as we don't have this in auth user object
+  } : null;
 
   const handleLogout = async () => {
     await signOut(auth);
     router.push('/');
   };
 
-  if (isUserLoading || !user || !champion) {
+  // If loading, or if the user is not the champion of this page, show a loader.
+  if (isUserLoading || !user || !champion || user.uid !== championId) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -76,8 +71,8 @@ export default function ChampionLayout({
                     <span className="text-sm text-muted-foreground">Points</span>
                 </div>
                 <Avatar className="h-10 w-10 border">
-                    <AvatarImage src={user.photoURL || champion.avatarUrl || undefined} alt={champion.name} />
-                    <AvatarFallback>{user.displayName?.charAt(0) || champion.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={champion.avatarUrl || undefined} alt={champion.name} />
+                    <AvatarFallback>{champion.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <Button variant="outline" size="sm" onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4"/>
