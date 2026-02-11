@@ -27,6 +27,7 @@ import { Upload } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Admin } from "./page";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -49,28 +50,25 @@ export function EditAdminDialog({
 }: EditAdminDialogProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Find the initial avatar URL from placeholder images if it exists
-  const initialAvatar = PlaceHolderImages.find(p => p.id === admin.avatarId);
-  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: admin.name,
-      email: admin.email,
-      avatarUrl: initialAvatar?.imageUrl || "",
+      name: "",
+      email: "",
+      avatarUrl: "",
     },
   });
 
   useEffect(() => {
-    if (admin) {
-      const currentAvatar = PlaceHolderImages.find(p => p.id === admin.avatarId);
+    if (admin && isOpen) {
+      const currentAvatar = admin.avatarUrl || "";
       form.reset({
         name: admin.name,
         email: admin.email,
-        avatarUrl: currentAvatar?.imageUrl || "",
+        avatarUrl: currentAvatar,
       });
     }
-  }, [admin, form]);
+  }, [admin, isOpen, form]);
 
   const avatarUrl = form.watch("avatarUrl");
 
@@ -88,18 +86,18 @@ export function EditAdminDialog({
   }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Note: We're not actually updating the avatarId, just the display URL for this mock.
-    // In a real app you would upload the image and get a new URL.
     onSave({
       ...admin,
       ...values,
+      avatarUrl: values.avatarUrl || '',
     });
+    onOpenChange(false);
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[425px] p-0">
+        <DialogHeader className="p-6 pb-0">
           <DialogTitle>Edit Admin</DialogTitle>
           <DialogDescription>
             Update the details for {admin.name}.
@@ -108,39 +106,37 @@ export function EditAdminDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 py-4"
+            className="space-y-0"
           >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Display Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. Adam" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. adam@example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <ScrollArea className="h-auto max-h-[65vh]">
+              <div className="space-y-4 py-4 px-6">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Display Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. Adam" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. adam@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="avatarUrl"
-              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Avatar</FormLabel>
                   <div className="flex justify-center py-2">
@@ -167,12 +163,19 @@ export function EditAdminDialog({
                     className="hidden"
                     accept="image/png, image/jpeg, image/gif, image/webp"
                   />
-                  <FormMessage />
+                  <FormField
+                    control={form.control}
+                    name="avatarUrl"
+                    render={() => <FormMessage />}
+                  />
                 </FormItem>
-              )}
-            />
+              </div>
+            </ScrollArea>
 
-            <DialogFooter>
+            <DialogFooter className="border-t p-6">
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                Cancel
+              </Button>
               <Button type="submit">Save Changes</Button>
             </DialogFooter>
           </form>

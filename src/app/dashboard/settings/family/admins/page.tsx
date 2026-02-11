@@ -33,13 +33,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export type Admin = {
   id: string;
   name: string;
   email: string;
-  avatarId: string;
+  avatarUrl?: string;
 };
 
 const initialAdmins: Admin[] = [
@@ -47,7 +46,7 @@ const initialAdmins: Admin[] = [
     id: "parent-1",
     name: "Parent",
     email: "parent@example.com",
-    avatarId: "user-avatar-parent",
+    avatarUrl: "",
   },
 ];
 
@@ -65,7 +64,7 @@ export default function AdminsPage() {
     const newAdmin: Admin = {
       ...newAdminData,
       id: `admin-${Date.now()}`,
-      avatarId: "", // Default avatar can be handled by fallback
+      avatarUrl: "", 
     };
     setAdmins((prev) => [newAdmin, ...prev]);
     toast({
@@ -143,16 +142,14 @@ export default function AdminsPage() {
             <TableBody>
               {admins.length > 0 ? (
                 admins.map((admin) => {
-                    const adminAvatar = PlaceHolderImages.find(p => p.id === admin.avatarId);
                     return (
                     <TableRow key={admin.id}>
                       <TableCell className="hidden sm:table-cell">
                         <Avatar className="h-12 w-12 border">
                           <AvatarImage
-                            src={adminAvatar?.imageUrl}
+                            src={admin.avatarUrl}
                             alt={admin.name}
                             className="object-cover"
-                            data-ai-hint="person face"
                           />
                           <AvatarFallback>
                             {admin.name.charAt(0)}

@@ -60,7 +60,7 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
 
   useEffect(() => {
     // Reset the form with the new reward's data whenever the reward prop changes.
-    if (reward) {
+    if (reward && isOpen) {
       form.reset({
         name: reward.name,
         description: reward.description,
@@ -68,7 +68,7 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
         imageUrl: reward.imageUrl || "",
       });
     }
-  }, [reward, form]);
+  }, [reward, isOpen, form]);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -89,21 +89,22 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
       description: values.description || "",
       imageUrl: values.imageUrl || ""
     });
+    onOpenChange(false);
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[425px] p-0">
+        <DialogHeader className="p-6 pb-0">
           <DialogTitle>Edit Reward</DialogTitle>
           <DialogDescription>
             Update the details for this reward.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <ScrollArea className="h-[60vh] pr-6">
-              <div className="space-y-4 py-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-0">
+            <ScrollArea className="h-auto max-h-[65vh]">
+              <div className="space-y-4 py-4 px-6">
                 <FormField
                   control={form.control}
                   name="name"
@@ -124,7 +125,7 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
                     <FormItem>
                       <FormLabel>Description (Optional)</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Describe the reward..." {...field} />
+                        <Textarea placeholder="Describe the reward..." {...field} value={field.value || ''} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -183,7 +184,10 @@ export function EditRewardDialog({ reward, isOpen, onOpenChange, onSave }: EditR
               </div>
             </ScrollArea>
 
-            <DialogFooter className="pt-4">
+            <DialogFooter className="border-t p-6">
+               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                Cancel
+              </Button>
               <Button type="submit">Save Changes</Button>
             </DialogFooter>
           </form>
