@@ -14,63 +14,57 @@
     },
     {
       "id": "champion-avatar-1",
-      "description": "A cartoon chibi superhero avatar.",
-      "imageUrl": "https://picsum.photos/seed/chibi1/200/200",
-      "imageHint": "chibi superhero"
+      "description": "A spider-man superhero figurine.",
+      "imageUrl": "https://images.unsplash.com/photo-1569003339405-ea396a5a8a90?q=80&w=200&h=200&fit=crop",
+      "imageHint": "superhero toy"
     },
     {
       "id": "champion-avatar-2",
-      "description": "A cartoon chibi superhero avatar.",
-      "imageUrl": "https://picsum.photos/seed/chibi2/200/200",
-      "imageHint": "chibi superhero"
+      "description": "A hulk superhero figurine.",
+      "imageUrl": "https://images.unsplash.com/photo-1534723328310-e82dad3ee43f?q=80&w=200&h=200&fit=crop",
+      "imageHint": "superhero toy"
     },
     {
       "id": "champion-avatar-3",
-      "description": "A cartoon chibi superhero avatar.",
-      "imageUrl": "https://picsum.photos/seed/chibi3/200/200",
-      "imageHint": "chibi superhero"
+      "description": "An iron man superhero figurine.",
+      "imageUrl": "https://images.unsplash.com/photo-1612036782180-6f0b6cd84627?q=80&w=200&h=200&fit=crop",
+      "imageHint": "superhero toy"
     },
     {
       "id": "champion-avatar-4",
-      "description": "A cartoon chibi superhero avatar.",
-      "imageUrl": "https://picsum.photos/seed/chibi4/200/200",
-      "imageHint": "chibi superhero"
+      "description": "A captain america superhero figurine.",
+      "imageUrl": "https://images.unsplash.com/photo-1608889175123-e225c874205b?q=80&w=200&h=200&fit=crop",
+      "imageHint": "superhero toy"
     },
     {
       "id": "champion-avatar-5",
-      "description": "A cartoon chibi superhero avatar.",
-      "imageUrl": "https://picsum.photos/seed/chibi5/200/200",
-      "imageHint": "chibi superhero"
+      "description": "A batman superhero figurine.",
+      "imageUrl": "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?q=80&w=200&h=200&fit=crop",
+      "imageHint": "superhero toy"
     },
     {
       "id": "champion-avatar-6",
-      "description": "A cartoon chibi superhero avatar.",
-      "imageUrl": "https://picsum.photos/seed/chibi6/200/200",
-      "imageHint": "chibi superhero"
+      "description": "A superman superhero figurine.",
+      "imageUrl": "https://images.unsplash.com/photo-1531259652412-28c9b39c9041?q=80&w=200&h=200&fit=crop",
+      "imageHint": "superhero toy"
     },
     {
       "id": "champion-avatar-7",
-      "description": "A cartoon chibi superhero avatar.",
-      "imageUrl": "https://picsum.photos/seed/chibi7/200/200",
-      "imageHint": "chibi superhero"
+      "description": "A wonder woman superhero figurine.",
+      "imageUrl": "https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=200&h=200&fit=crop",
+      "imageHint": "superhero toy"
     },
     {
       "id": "champion-avatar-8",
-      "description": "A cartoon chibi superhero avatar.",
-      "imageUrl": "https://picsum.photos/seed/chibi8/200/200",
-      "imageHint": "chibi superhero"
+      "description": "A spider-man superhero figurine.",
+      "imageUrl": "https://images.unsplash.com/photo-1635805737704-5ca23b363a82?q=80&w=200&h=200&fit=crop",
+      "imageHint": "superhero toy"
     },
     {
       "id": "champion-avatar-9",
-      "description": "A cartoon chibi superhero avatar.",
-      "imageUrl": "https://picsum.photos/seed/chibi9/200/200",
-      "imageHint": "chibi superhero"
-    },
-    {
-      "id": "champion-avatar-10",
-      "description": "A cartoon chibi superhero avatar.",
-      "imageUrl": "https://picsum.photos/seed/chibi10/200/200",
-      "imageHint": "chibi superhero"
+      "description": "A collection of superhero figurines.",
+      "imageUrl": "https://images.unsplash.com/photo-1611604548018-d56bf0e56141?q=80&w=200&h=200&fit=crop",
+      "imageHint": "superhero toy"
     },
     {
       "id": "reward-movie",
