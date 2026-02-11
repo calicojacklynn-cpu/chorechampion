@@ -31,6 +31,7 @@ import type { Champion } from "./page";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
+  username: z.string().min(3, "Username must be at least 3 characters.").regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores."),
   avatarUrl: z.string().optional(),
 });
 
@@ -52,6 +53,7 @@ export function EditChampionDialog({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      username: "",
       avatarUrl: "",
     },
   });
@@ -62,6 +64,7 @@ export function EditChampionDialog({
     if (isOpen && champion) {
       form.reset({
         name: champion.name,
+        username: champion.username || '',
         avatarUrl: champion.avatarUrl || "",
       });
     }
@@ -105,7 +108,7 @@ export function EditChampionDialog({
                         name="name"
                         render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Display Name</FormLabel>
+                            <FormLabel>Child's name</FormLabel>
                             <FormControl>
                             <Input placeholder="e.g. Alex" {...field} />
                             </FormControl>
@@ -116,8 +119,22 @@ export function EditChampionDialog({
 
                     <FormField
                         control={form.control}
-                        name="avatarUrl"
+                        name="username"
                         render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Child's username</FormLabel>
+                            <FormControl>
+                            <Input placeholder="e.g. alex_the_great" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="avatarUrl"
+                        render={() => (
                             <FormItem>
                                 <FormLabel>Avatar</FormLabel>
                                 <div className="flex justify-center py-2">

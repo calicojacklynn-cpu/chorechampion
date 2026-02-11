@@ -40,6 +40,7 @@ import { firebaseConfig } from "@/firebase/config";
 export type Champion = {
   id: string;
   name: string;
+  username: string;
   email: string;
   avatarUrl?: string;
   points: number;
@@ -51,6 +52,7 @@ const initialChampions: Champion[] = [
   {
     id: "alex",
     name: "Alex",
+    username: "alex_the_great",
     email: "alex@example.com",
     avatarUrl: "",
     points: 125,
@@ -59,6 +61,7 @@ const initialChampions: Champion[] = [
   {
     id: "bella",
     name: "Bella",
+    username: "bella_the_brave",
     email: "bella@example.com",
     avatarUrl: "",
     points: 85,
@@ -96,6 +99,7 @@ export default function ChampionsPage() {
       const newChampion: Champion = {
         id: newUserId,
         name: newChampionData.name,
+        username: newChampionData.name.toLowerCase().replace(/\s/g, ''),
         email: newChampionData.email,
         avatarUrl: "",
         points: 0,
