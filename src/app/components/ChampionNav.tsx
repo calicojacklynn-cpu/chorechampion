@@ -5,7 +5,14 @@ import { useParams, usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Settings,
+  ChevronDown,
 } from "lucide-react";
+
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 import {
   SidebarHeader,
@@ -13,6 +20,9 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarContent,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
 import { ChoreChampionLogo } from "./ChoreChampionLogo";
 
@@ -23,6 +33,12 @@ export function ChampionNav() {
   
   const dashboardHref = `/champion/${championId}`;
   const settingsHref = `/champion/${championId}/settings`;
+  const notificationsHref = `/champion/${championId}/settings/notifications`;
+
+  const settingsChildren = [
+      { href: settingsHref, label: "Account" },
+      { href: notificationsHref, label: "Notifications" },
+  ];
 
   return (
     <>
@@ -48,18 +64,42 @@ export function ChampionNav() {
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              isActive={pathname.startsWith(settingsHref)}
-              tooltip={{ children: "Settings" }}
-              asChild
-            >
-              <Link href={settingsHref}>
-                <Settings />
-                <span>Settings</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          <Collapsible
+            asChild
+            defaultOpen={pathname.startsWith(settingsHref)}
+          >
+            <SidebarMenuItem>
+              <CollapsibleTrigger asChild>
+                <SidebarMenuButton
+                  isActive={pathname.startsWith(settingsHref) && !settingsChildren.some(c => c.href === pathname)}
+                  tooltip={{ children: "Settings" }}
+                  className="w-full justify-start group"
+                >
+                  <div className="flex w-full items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Settings />
+                      <span>Settings</span>
+                    </div>
+                    <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                  </div>
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {settingsChildren.map((child) => (
+                    <SidebarMenuSubItem key={child.href}>
+                      <SidebarMenuSubButton
+                        asChild
+                        isActive={pathname === child.href}
+                      >
+                        <Link href={child.href}>{child.label}</Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </SidebarMenuItem>
+          </Collapsible>
         </SidebarMenu>
       </SidebarContent>
     </>
