@@ -15,55 +15,55 @@
     {
       "id": "champion-avatar-1",
       "description": "A blue avatar with a superhero emoji.",
-      "imageUrl": "https://placehold.co/200x200/89CFF0/062338?text=🦸",
+      "imageUrl": "https://placehold.co/200x200/89CFF0/062338?text=%F0%9F%A6%B8",
       "imageHint": "superhero emoji"
     },
     {
       "id": "champion-avatar-2",
       "description": "A yellow avatar with a villain emoji.",
-      "imageUrl": "https://placehold.co/200x200/F4D03F/4A3C0B?text=🦹",
+      "imageUrl": "https://placehold.co/200x200/F4D03F/4A3C0B?text=%F0%9F%A6%B9",
       "imageHint": "villain emoji"
     },
     {
       "id": "champion-avatar-3",
       "description": "A red avatar with a rocket emoji.",
-      "imageUrl": "https://placehold.co/200x200/F87171/FAFAFA?text=🚀",
+      "imageUrl": "https://placehold.co/200x200/F87171/FAFAFA?text=%F0%9F%9A%80",
       "imageHint": "rocket emoji"
     },
     {
       "id": "champion-avatar-4",
       "description": "A dark blue avatar with a sparkle emoji.",
-      "imageUrl": "https://placehold.co/200x200/062338/FAFAFA?text=✨",
+      "imageUrl": "https://placehold.co/200x200/062338/FAFAFA?text=%E2%9C%A8",
       "imageHint": "sparkle emoji"
     },
     {
       "id": "champion-avatar-5",
       "description": "A green avatar with a collision emoji.",
-      "imageUrl": "https://placehold.co/200x200/4ade80/14532d?text=💥",
+      "imageUrl": "https://placehold.co/200x200/4ade80/14532d?text=%F0%9F%92%A5",
       "imageHint": "collision emoji"
     },
     {
       "id": "champion-avatar-6",
       "description": "An orange avatar with a robot arm emoji.",
-      "imageUrl": "https://placehold.co/200x200/fb923c/9a3412?text=🦾",
+      "imageUrl": "https://placehold.co/200x200/fb923c/9a3412?text=%F0%9F%A4%96",
       "imageHint": "robot emoji"
     },
     {
       "id": "champion-avatar-7",
       "description": "A purple avatar with a brain emoji.",
-      "imageUrl": "https://placehold.co/200x200/c084fc/581c87?text=🧠",
+      "imageUrl": "https://placehold.co/200x200/c084fc/581c87?text=%F0%9F%A7%A0",
       "imageHint": "brain emoji"
     },
     {
       "id": "champion-avatar-8",
       "description": "A teal avatar with a lightning emoji.",
-      "imageUrl": "https://placehold.co/200x200/2dd4bf/115e59?text=⚡️",
+      "imageUrl": "https://placehold.co/200x200/2dd4bf/115e59?text=%E2%9A%A1",
       "imageHint": "lightning emoji"
     },
     {
       "id": "champion-avatar-9",
       "description": "A pink avatar with an anatomical heart emoji.",
-      "imageUrl": "https://placehold.co/200x200/f472b6/9d174d?text=🫀",
+      "imageUrl": "https://placehold.co/200x200/f472b6/9d174d?text=%F0%9F%AB%80",
       "imageHint": "heart emoji"
     },
     {
