@@ -3,7 +3,7 @@
     {
       "id": "login-hero",
       "description": "A happy family doing chores together in a clean living room.",
-      "imageUrl": "https://images.unsplash.com/photo-1611818831327-de3982fe1420?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmYW1pbHklMjBsaXZpbmdyb29tfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1629042306558-7d1e15cc02fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxmYW1pbHklMjBsaXZpbmdyb29tfGVufDB8fHx8MTc3MDc2OTEyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "family livingroom"
     },
     {
@@ -14,80 +14,80 @@
     },
     {
       "id": "champion-avatar-1",
-      "description": "A blue avatar with a shield symbol.",
-      "imageUrl": "https://placehold.co/200x200/89CFF0/062338?text=%F0%9F%9B%A1%EF%B8%8F",
-      "imageHint": "shield symbol"
+      "description": "A blue avatar with a superhero emoji.",
+      "imageUrl": "https://placehold.co/200x200/89CFF0/062338?text=🦸",
+      "imageHint": "superhero emoji"
     },
     {
       "id": "champion-avatar-2",
-      "description": "A yellow avatar with a star symbol.",
-      "imageUrl": "https://placehold.co/200x200/F4D03F/4A3C0B?text=%E2%AD%90%EF%B8%8F",
-      "imageHint": "star symbol"
+      "description": "A yellow avatar with a villain emoji.",
+      "imageUrl": "https://placehold.co/200x200/F4D03F/4A3C0B?text=🦹",
+      "imageHint": "villain emoji"
     },
     {
       "id": "champion-avatar-3",
-      "description": "A red avatar with a lightning bolt symbol.",
-      "imageUrl": "https://placehold.co/200x200/F87171/FAFAFA?text=%E2%9A%A1%EF%B8%8F",
-      "imageHint": "lightning symbol"
+      "description": "A red avatar with a rocket emoji.",
+      "imageUrl": "https://placehold.co/200x200/F87171/FAFAFA?text=🚀",
+      "imageHint": "rocket emoji"
     },
     {
       "id": "champion-avatar-4",
-      "description": "A dark blue avatar with a comet symbol.",
-      "imageUrl": "https://placehold.co/200x200/062338/FAFAFA?text=%E2%98%84%EF%B8%8F",
-      "imageHint": "comet symbol"
+      "description": "A dark blue avatar with a sparkle emoji.",
+      "imageUrl": "https://placehold.co/200x200/062338/FAFAFA?text=✨",
+      "imageHint": "sparkle emoji"
     },
     {
       "id": "champion-avatar-5",
-      "description": "A green avatar with an atom symbol.",
-      "imageUrl": "https://placehold.co/200x200/4ade80/14532d?text=%E2%9A%9B%EF%B8%8F",
-      "imageHint": "atom symbol"
+      "description": "A green avatar with a collision emoji.",
+      "imageUrl": "https://placehold.co/200x200/4ade80/14532d?text=💥",
+      "imageHint": "collision emoji"
     },
     {
       "id": "champion-avatar-6",
-      "description": "An orange avatar with a fist symbol.",
-      "imageUrl": "https://placehold.co/200x200/fb923c/9a3412?text=%E2%9C%8A",
-      "imageHint": "fist symbol"
+      "description": "An orange avatar with a robot arm emoji.",
+      "imageUrl": "https://placehold.co/200x200/fb923c/9a3412?text=🦾",
+      "imageHint": "robot emoji"
     },
     {
       "id": "champion-avatar-7",
-      "description": "A purple avatar with a spiral symbol.",
-      "imageUrl": "https://placehold.co/200x200/c084fc/581c87?text=%F0%9F%8C%80",
-      "imageHint": "spiral symbol"
+      "description": "A purple avatar with a brain emoji.",
+      "imageUrl": "https://placehold.co/200x200/c084fc/581c87?text=🧠",
+      "imageHint": "brain emoji"
     },
     {
       "id": "champion-avatar-8",
-      "description": "A teal avatar with a crossed swords symbol.",
-      "imageUrl": "https://placehold.co/200x200/2dd4bf/115e59?text=%E2%9A%94%EF%B8%8F",
-      "imageHint": "swords symbol"
+      "description": "A teal avatar with a lightning emoji.",
+      "imageUrl": "https://placehold.co/200x200/2dd4bf/115e59?text=⚡️",
+      "imageHint": "lightning emoji"
     },
     {
       "id": "champion-avatar-9",
-      "description": "A pink avatar with a heart on fire symbol.",
-      "imageUrl": "https://placehold.co/200x200/f472b6/9d174d?text=%E2%9D%A4%EF%B8%8F%E2%80%8D%F0%9F%94%A5",
-      "imageHint": "fire heart"
+      "description": "A pink avatar with an anatomical heart emoji.",
+      "imageUrl": "https://placehold.co/200x200/f472b6/9d174d?text=🫀",
+      "imageHint": "heart emoji"
     },
     {
       "id": "reward-movie",
       "description": "Popcorn and a movie ticket.",
-      "imageUrl": "https://images.unsplash.com/photo-1620177088258-c84147ee601f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwb3Bjb3JuJTIwbW92aWV8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1770597105062-648a2fbfa052?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxwb3Bjb3JuJTIwbW92aWV8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "popcorn movie"
     },
     {
       "id": "reward-icecream",
       "description": "Colorful scoops of ice cream in a cone.",
-      "imageUrl": "https://images.unsplash.com/photo-1629385701021-fcd568a743e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxpY2UlMjBjcmVhbXxlbnwwfHx8fDE3NzA3MjYzMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1562790879-dfde82829db0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxpY2UlMjBjcmVhbXxlbnwwfHx8fDE3NzA3MjYzMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "ice cream"
     },
     {
       "id": "reward-lego",
       "description": "A colorful structure made of toy bricks.",
-      "imageUrl": "https://images.unsplash.com/photo-1535572290543-960a8046f5af?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx0b3klMjBibG9ja3N8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1636314229901-61b1c1da1675?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx0b3klMjBibG9ja3N8ZW58MHx8fHwxNzcwNjY0NjA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "toy blocks"
     },
     {
       "id": "reward-screentime",
       "description": "A person using a tablet computer.",
-      "imageUrl": "https://images.unsplash.com/photo-1649151139875-ae8ea07082e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx0YWJsZXQlMjBzY3JlZW58ZW58MHx8fHwxNzcwNzY5MTIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1740637977676-c8040b41dc7a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx0YWJsZXQlMjBzY3JlZW58ZW58MHx8fHwxNzcwNzY5MTIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "tablet screen"
     }
   ]
