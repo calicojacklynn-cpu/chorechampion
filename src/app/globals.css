@@ -209,7 +209,7 @@
     --input: 220 50% 25%;
     --ring: 210 90% 70%;
     --sidebar-background: transparent;
-    --sidebar-foreground: 0 0% 0%;
+    --sidebar-foreground: 210 20% 90%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -398,36 +398,4 @@
     height: 200%;
     opacity: 0;
   }
-}
-
-html.theme-ocean [data-sidebar="sidebar"] {
-  color: hsl(var(--sidebar-foreground));
-}
-
-html.theme-ocean [data-sidebar="sidebar"] span {
-  color: hsl(var(--sidebar-foreground));
-}
-
-html.theme-ocean [data-sidebar="sidebar"] svg {
-  color: hsl(var(--sidebar-foreground));
-}
-
-html.theme-ocean [data-sidebar="sidebar"] a:hover span,
-html.theme-ocean [data-sidebar="sidebar"] button:hover span {
-  color: hsl(var(--sidebar-accent-foreground));
-}
-
-html.theme-ocean [data-sidebar="sidebar"] a:hover svg,
-html.theme-ocean [data-sidebar="sidebar"] button:hover svg {
-  color: hsl(var(--sidebar-accent-foreground));
-}
-
-html.theme-ocean [data-sidebar="sidebar"] a[data-active="true"] span,
-html.theme-ocean [data-sidebar="sidebar"] button[data-active="true"] span {
-  color: hsl(var(--sidebar-accent-foreground));
-}
-
-html.theme-ocean [data-sidebar="sidebar"] a[data-active="true"] svg,
-html.theme-ocean [data-sidebar="sidebar"] button[data-active="true"] svg {
-  color: hsl(var(--sidebar-accent-foreground));
 }
