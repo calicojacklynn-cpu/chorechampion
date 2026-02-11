@@ -58,7 +58,7 @@ export function Nav() {
       <SidebarHeader className="group-data-[collapsible=icon]:justify-center">
         <Link href="/dashboard" className="flex items-center gap-2">
           <ChoreChampionLogo className="h-8 w-8" />
-          <span className="font-bold font-headline text-lg group-data-[collapsible=icon]:hidden">
+          <span className="font-bold font-headline text-lg group-data-[collapsible=icon]:hidden text-sidebar-foreground">
             Chore Champion
           </span>
         </Link>
