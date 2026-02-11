@@ -60,19 +60,53 @@ export default function ChampionLayout({
       </div>
     );
   }
-
-  // If there is no authenticated user, or the champion document doesn't exist,
-  // or the logged-in user doesn't match the page, show a loader/error state.
-  if (!user || !champion || user.uid !== championId) {
+  
+  // After loading, if the user isn't authenticated or doesn't match the URL param,
+  // this is a fallback for the useEffect redirect.
+  if (!user || user.uid !== championId) {
+    // The useEffect hook should have already redirected, but this is a safeguard.
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
-            <p className="text-lg font-semibold">Loading Champion...</p>
-            <p className="text-sm text-muted-foreground">Or you may not have permission to view this page.</p>
+            <p className="text-lg font-semibold">Access Denied</p>
+            <p className="text-sm text-muted-foreground">Redirecting...</p>
         </div>
       </div>
     );
   }
+
+  // After loading, if the authenticated user is correct, but their profile document doesn't exist in Firestore.
+  // This happens when a champion logs in for the first time before a parent has created their profile.
+  if (user && !champion) {
+    return (
+        <div className="flex h-screen items-center justify-center p-4">
+            <div className="text-center max-w-md p-6 border rounded-lg shadow-sm bg-card">
+                <h1 className="text-xl font-bold font-headline mb-2">Welcome, Champion!</h1>
+                <p className="text-lg font-semibold mb-4">Your Account is Almost Ready</p>
+                <p className="text-sm text-muted-foreground mb-6">
+                    Your login has been created, but your champion profile is waiting to be set up by a parent. Please ask them to log in to their dashboard and add you as a champion to complete the process.
+                </p>
+                <Button onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4"/>
+                    Log Out
+                </Button>
+            </div>
+      </div>
+    );
+  }
+
+  // This case should theoretically be covered by the above conditions, but it's a final safeguard.
+  if (!champion) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+            <p className="text-lg font-semibold">An unexpected error occurred.</p>
+            <p className="text-sm text-muted-foreground">Could not load champion profile.</p>
+        </div>
+      </div>
+    );
+  }
+  
 
   return (
     <SidebarProvider>
