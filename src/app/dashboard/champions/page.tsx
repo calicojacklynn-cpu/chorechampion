@@ -34,7 +34,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useAuth, firebaseConfig } from "@/firebase";
+import { useAuth } from "@/firebase";
+import { firebaseConfig } from "@/firebase/config";
 
 export type Champion = {
   id: string;
