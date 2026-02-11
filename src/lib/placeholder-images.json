@@ -9,62 +9,62 @@
     {
       "id": "user-avatar-parent",
       "description": "Avatar for parent user.",
-      "imageUrl": "https://images.unsplash.com/photo-1521146764736-56c929d59c83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwZXJzb24lMjBmYWNlfGVufDB8fHx8MTc3MDY1MTEzMXww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "person face"
+      "imageUrl": "https://placehold.co/200x200/062338/89CFF0?text=P",
+      "imageHint": "letter P"
     },
     {
       "id": "champion-avatar-1",
-      "description": "A spider-man superhero figurine.",
-      "imageUrl": "https://images.unsplash.com/photo-1569003339405-ea396a5a8a90?q=80&w=200&h=200&fit=crop",
-      "imageHint": "superhero toy"
+      "description": "A yellow placeholder avatar with the letter S.",
+      "imageUrl": "https://placehold.co/200x200/F4D03F/4A3C0B?text=S",
+      "imageHint": "letter S"
     },
     {
       "id": "champion-avatar-2",
-      "description": "A hulk superhero figurine.",
-      "imageUrl": "https://images.unsplash.com/photo-1534723328310-e82dad3ee43f?q=80&w=200&h=200&fit=crop",
-      "imageHint": "superhero toy"
+      "description": "A blue placeholder avatar with the letter H.",
+      "imageUrl": "https://placehold.co/200x200/89CFF0/062338?text=H",
+      "imageHint": "letter H"
     },
     {
       "id": "champion-avatar-3",
-      "description": "An iron man superhero figurine.",
-      "imageUrl": "https://images.unsplash.com/photo-1612036782180-6f0b6cd84627?q=80&w=200&h=200&fit=crop",
-      "imageHint": "superhero toy"
+      "description": "A red placeholder avatar with the letter P.",
+      "imageUrl": "https://placehold.co/200x200/F87171/FAFAFA?text=P",
+      "imageHint": "letter P"
     },
     {
       "id": "champion-avatar-4",
-      "description": "A captain america superhero figurine.",
-      "imageUrl": "https://images.unsplash.com/photo-1608889175123-e225c874205b?q=80&w=200&h=200&fit=crop",
-      "imageHint": "superhero toy"
+      "description": "A dark brown placeholder avatar with the letter C.",
+      "imageUrl": "https://placehold.co/200x200/4A3C0B/F4D03F?text=C",
+      "imageHint": "letter C"
     },
     {
       "id": "champion-avatar-5",
-      "description": "A batman superhero figurine.",
-      "imageUrl": "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?q=80&w=200&h=200&fit=crop",
-      "imageHint": "superhero toy"
+      "description": "A dark blue placeholder avatar with the letter X.",
+      "imageUrl": "https://placehold.co/200x200/062338/89CFF0?text=X",
+      "imageHint": "letter X"
     },
     {
       "id": "champion-avatar-6",
-      "description": "A superman superhero figurine.",
-      "imageUrl": "https://images.unsplash.com/photo-1531259652412-28c9b39c9041?q=80&w=200&h=200&fit=crop",
-      "imageHint": "superhero toy"
+      "description": "A yellow placeholder avatar with the letter A.",
+      "imageUrl": "https://placehold.co/200x200/F4D03F/4A3C0B?text=A",
+      "imageHint": "letter A"
     },
     {
       "id": "champion-avatar-7",
-      "description": "A wonder woman superhero figurine.",
-      "imageUrl": "https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=200&h=200&fit=crop",
-      "imageHint": "superhero toy"
+      "description": "A blue placeholder avatar with the letter B.",
+      "imageUrl": "https://placehold.co/200x200/89CFF0/062338?text=B",
+      "imageHint": "letter B"
     },
     {
       "id": "champion-avatar-8",
-      "description": "A spider-man superhero figurine.",
-      "imageUrl": "https://images.unsplash.com/photo-1635805737704-5ca23b363a82?q=80&w=200&h=200&fit=crop",
-      "imageHint": "superhero toy"
+      "description": "A red placeholder avatar with the letter Z.",
+      "imageUrl": "https://placehold.co/200x200/F87171/FAFAFA?text=Z",
+      "imageHint": "letter Z"
     },
     {
       "id": "champion-avatar-9",
-      "description": "A collection of superhero figurines.",
-      "imageUrl": "https://images.unsplash.com/photo-1611604548018-d56bf0e56141?q=80&w=200&h=200&fit=crop",
-      "imageHint": "superhero toy"
+      "description": "A yellow placeholder avatar with a star symbol.",
+      "imageUrl": "https://placehold.co/200x200/F4D03F/4A3C0B?text=%E2%98%85",
+      "imageHint": "star symbol"
     },
     {
       "id": "reward-movie",
