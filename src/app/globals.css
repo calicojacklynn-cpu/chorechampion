@@ -358,4 +358,7 @@
   }
 }
 
+html.theme-ocean [data-sidebar="sidebar"] {
+    color: hsl(var(--sidebar-foreground));
+}
     
