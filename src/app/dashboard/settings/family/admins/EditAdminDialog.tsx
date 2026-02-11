@@ -96,8 +96,8 @@ export function EditAdminDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px] p-0">
-        <DialogHeader className="p-6 pb-0">
+      <DialogContent className="sm:max-w-[425px] flex flex-col max-h-[90vh] p-0">
+        <DialogHeader className="p-6 pb-4 flex-shrink-0">
           <DialogTitle>Edit Admin</DialogTitle>
           <DialogDescription>
             Update the details for {admin.name}.
@@ -106,10 +106,10 @@ export function EditAdminDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-0"
+            className="flex-1 flex flex-col min-h-0"
           >
-            <ScrollArea className="h-auto max-h-[65vh]">
-              <div className="space-y-4 py-4 px-6">
+            <ScrollArea className="flex-1 p-6">
+              <div className="space-y-4">
                 <FormField
                   control={form.control}
                   name="name"
@@ -172,7 +172,7 @@ export function EditAdminDialog({
               </div>
             </ScrollArea>
 
-            <DialogFooter className="border-t p-6">
+            <DialogFooter className="p-6 border-t flex-shrink-0">
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>
