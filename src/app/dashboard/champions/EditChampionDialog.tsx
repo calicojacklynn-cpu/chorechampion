@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,12 +28,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Champion } from "./page";
 
-// Zod schema for form validation
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
+  avatarUrl: z.string().optional(),
 });
 
-// Component props
 type EditChampionDialogProps = {
   champion: Champion;
   isOpen: boolean;
@@ -46,24 +46,37 @@ export function EditChampionDialog({
   onOpenChange,
   onSave,
 }: EditChampionDialogProps) {
-
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      avatarUrl: "",
     },
   });
 
-  // Reset form fields when the dialog is opened or the champion prop changes
+  const avatarUrl = form.watch("avatarUrl");
+
   useEffect(() => {
     if (isOpen && champion) {
       form.reset({
         name: champion.name,
+        avatarUrl: champion.avatarUrl || "",
       });
     }
   }, [isOpen, champion, form]);
 
-  // Handle form submission
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        form.setValue("avatarUrl", reader.result as string, { shouldValidate: true });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     onSave({
       ...champion,
@@ -74,7 +87,7 @@ export function EditChampionDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md grid grid-rows-[auto_1fr_auto] p-0">
+      <DialogContent className="sm:max-w-md grid grid-rows-[auto_1fr_auto] p-0 max-h-[90vh]">
         <DialogHeader className="p-6 pb-4 border-b">
           <DialogTitle>Edit Champion</DialogTitle>
           <DialogDescription>
@@ -82,35 +95,61 @@ export function EditChampionDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="h-full overflow-y-auto px-6">
-          <Form {...form}>
-            <form id="edit-champion-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Display Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g. Alex" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        <ScrollArea className="h-full overflow-y-auto">
+            <div className="px-6">
+                <Form {...form}>
+                    <form id="edit-champion-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-6">
+                    <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Display Name</FormLabel>
+                            <FormControl>
+                            <Input placeholder="e.g. Alex" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
 
-              <FormItem>
-                <FormLabel>Avatar</FormLabel>
-                <div className="flex justify-center py-2">
-                  <Avatar className="h-24 w-24 border-2 border-primary">
-                    <AvatarImage src={champion?.avatarUrl} alt="Avatar preview" />
-                    <AvatarFallback>{champion?.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                </div>
-                <p className="text-sm text-muted-foreground">Avatar can be updated by the champion in their own settings.</p>
-              </FormItem>
-            </form>
-          </Form>
+                    <FormField
+                        control={form.control}
+                        name="avatarUrl"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Avatar</FormLabel>
+                                <div className="flex justify-center py-2">
+                                <Avatar className="h-24 w-24 border-2 border-primary">
+                                    <AvatarImage src={avatarUrl} alt="Avatar preview" />
+                                    <AvatarFallback>{champion?.name.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                </div>
+                                 <FormControl>
+                                    <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="w-full"
+                                    onClick={() => fileInputRef.current?.click()}
+                                    >
+                                    <Upload className="mr-2 h-4 w-4" />
+                                    Upload from Device
+                                    </Button>
+                                </FormControl>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    onChange={handleFileChange}
+                                    className="hidden"
+                                    accept="image/png, image/jpeg, image/gif, image/webp"
+                                />
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    </form>
+                </Form>
+            </div>
         </ScrollArea>
 
         <DialogFooter className="p-6 border-t">
