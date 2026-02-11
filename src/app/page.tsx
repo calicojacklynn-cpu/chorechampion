@@ -45,7 +45,7 @@ export default function LoginPage() {
 
   const championForm = useForm<z.infer<typeof championLoginSchema>>({
     resolver: zodResolver(championLoginSchema),
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: 'alex@example.com', password: 'password' },
   });
 
   useEffect(() => {
@@ -182,7 +182,7 @@ export default function LoginPage() {
                             <FormItem>
                               <Label>Email</Label>
                               <FormControl>
-                                <Input type="email" placeholder="champion@example.com" {...field} />
+                                <Input type="email" placeholder="alex@example.com" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
