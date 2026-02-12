@@ -131,7 +131,7 @@ export default function CalendarPage() {
             {headerTitle}
           </CardTitle>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => setCurrentDate(new Date())}>Today</Button>
+            <Button variant="default" size="sm" onClick={() => setCurrentDate(new Date())}>Today</Button>
             <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'monthly' | 'weekly')} className="w-auto">
               <TabsList className="h-9 p-1">
                   <TabsTrigger value="monthly" className="h-7 px-3 text-xs">Month</TabsTrigger>
