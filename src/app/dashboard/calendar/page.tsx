@@ -127,17 +127,17 @@ export default function CalendarPage() {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between p-4 border-b">
-          <CardTitle className="text-xl font-semibold w-64">
-            {headerTitle}
-          </CardTitle>
+          <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'monthly' | 'weekly')} className="w-auto">
+            <TabsList className="h-9 p-1 bg-secondary text-secondary-foreground">
+                <TabsTrigger value="monthly" className="h-7 px-3 text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Month</TabsTrigger>
+                <TabsTrigger value="weekly" className="h-7 px-3 text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Week</TabsTrigger>
+            </TabsList>
+          </Tabs>
           <div className="flex items-center gap-2">
             <Button variant="default" size="sm" onClick={() => setCurrentDate(new Date())}>Today</Button>
-            <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'monthly' | 'weekly')} className="w-auto">
-              <TabsList className="h-9 p-1 bg-secondary text-secondary-foreground">
-                  <TabsTrigger value="monthly" className="h-7 px-3 text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Month</TabsTrigger>
-                  <TabsTrigger value="weekly" className="h-7 px-3 text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Week</TabsTrigger>
-              </TabsList>
-            </Tabs>
+            <CardTitle className="text-xl font-semibold">
+              {headerTitle}
+            </CardTitle>
             <Button variant="default" size="icon-sm" onClick={prev}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
