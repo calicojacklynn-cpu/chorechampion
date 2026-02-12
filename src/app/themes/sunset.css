@@ -2,7 +2,7 @@
     --radius: 1.5rem;
     --background: 25 95% 8%;
     --foreground: 45 60% 95%;
-    --card: 35 90% 80%;
+    --card: 30 100% 97%;
     --card-foreground: 25 85% 15%;
     --popover: 25 85% 12%;
     --popover-foreground: 45 60% 95%;
@@ -16,7 +16,7 @@
     --accent-foreground: 50 95% 15%;
     --destructive: 0 70% 45%;
     --destructive-foreground: 0 0% 95%;
-    --border: 25 70% 25%;
+    --border: 30 100% 90%;
     --input: 25 70% 25%;
     --ring: 35 95% 55%;
     --sidebar-background: 0 0% 100%;
@@ -27,7 +27,7 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(45, 100%, 60%);
+    --gradient-from: hsl(50, 100%, 60%);
     --gradient-mid: hsl(35, 100%, 55%);
     --gradient-to: hsl(10, 90%, 50%);
 }
