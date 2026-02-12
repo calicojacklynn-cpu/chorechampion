@@ -4,6 +4,7 @@
 
 @layer base {
   :root, .light {
+    --radius: 1.5rem;
     --background: 0 0% 100%;
     --foreground: 240 10% 10%;
     --card: 0 0% 100%;
@@ -31,11 +32,12 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(0 0% 100%);
-    --gradient-to: hsl(240 5% 96%);
+    --gradient-from: hsl(210 100% 98%);
+    --gradient-to: hsl(210 100% 92%);
   }
 
   .dark {
+    --radius: 1.5rem;
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
     --card: 222 47% 18%;
@@ -69,6 +71,7 @@
 
   /* Slate Theme (Dark) */
   .slate {
+    --radius: 1.5rem;
     --background: 220 13% 18%;
     --foreground: 220 14% 80%;
     --card: 220 13% 24%;
@@ -102,6 +105,7 @@
 
   /* Rose Theme (Light) */
   .rose {
+    --radius: 1.5rem;
     --background: 355 100% 99%;
     --foreground: 350 60% 25%;
     --card: 0 0% 100%;
@@ -135,6 +139,7 @@
   
   /* Ocean Theme (Dark) */
   .ocean {
+    --radius: 1.5rem;
     --background: 205 50% 14%;
     --foreground: 190 70% 92%;
     --card: 205 40% 22%;
@@ -168,6 +173,7 @@
 
   /* Sage Theme (Light) */
   .sage {
+    --radius: 1.5rem;
     --background: 140 40% 98%;
     --foreground: 140 25% 25%;
     --card: 0 0% 100%;
@@ -201,6 +207,7 @@
   
   /* Candy Theme (Light) */
   .candy {
+    --radius: 1.5rem;
     --background: 300 100% 99%;
     --foreground: 280 50% 30%;
     --card: 0 0% 100%;
@@ -234,6 +241,7 @@
 
   /* Sunset Theme (Dark) */
   .sunset {
+    --radius: 1.5rem;
     --background: 25 20% 12%;
     --foreground: 30 80% 90%;
     --card: 20 40% 22%;
