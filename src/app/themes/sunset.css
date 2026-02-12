@@ -11,8 +11,8 @@
     --popover: 40 100% 68%;
     --popover-foreground: 0 0% 0%;
 
-    /* Primary (User Chat Bubble) - A vibrant yellow */
-    --primary: 48 96% 50%;
+    /* Primary (Parent Chat Bubble) */
+    --primary: 35 90% 65%;
     --primary-foreground: 0 0% 0%;
 
     /* Secondary (Action Buttons) */
@@ -23,7 +23,7 @@
     --muted: 30 10% 94%;
     --muted-foreground: 0 0% 0%;
 
-    /* Accent (Stars) - A pure, bright yellow */
+    /* Accent (Stars & Avatars) - A pure, bright yellow */
     --accent: 48 96% 50%;
     --accent-foreground: 0 0% 0%;
 

@@ -12,6 +12,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useFirestore, useDoc, useMemoFirebase, useUser } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import type { Champion } from '@/app/dashboard/champions/page';
+import { cn } from '@/lib/utils';
 
 type Message = {
   id: string;
@@ -134,6 +135,7 @@ export default function ChampionBroadcastPage() {
         <CardContent className="flex-1 p-6 space-y-6 overflow-y-auto">
           {messages.map((message) => {
             const isSelf = champion && message.senderId === champion.id;
+            const isParent = message.senderId === 'parent';
 
             const avatarPlaceholder = message.avatarId
               ? PlaceHolderImages.find((p) => p.id === message.avatarId)
@@ -150,7 +152,7 @@ export default function ChampionBroadcastPage() {
                 {!isSelf && (
                   <Avatar className="h-10 w-10 border-2 border-black">
                     <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
-                    <AvatarFallback className="bg-secondary text-secondary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
+                    <AvatarFallback className={cn(isParent ? "bg-accent text-accent-foreground" : "bg-secondary text-secondary-foreground")}>{message.senderName.charAt(0)}</AvatarFallback>
                   </Avatar>
                 )}
                 <div
