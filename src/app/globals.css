@@ -32,8 +32,9 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(190, 100%, 95%);
-    --gradient-to: hsl(210, 100%, 95%);
+    --gradient-from: hsl(200, 100%, 95%);
+    --gradient-mid: hsl(250, 100%, 97%);
+    --gradient-to: hsl(330, 100%, 98%);
   }
 
   .dark {
@@ -65,8 +66,9 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(222, 47%, 15%);
-    --gradient-to: hsl(260, 50%, 12%);
+    --gradient-from: hsl(260, 60%, 15%);
+    --gradient-mid: hsl(300, 70%, 25%);
+    --gradient-to: hsl(25, 60%, 20%);
   }
 
   /* Slate Theme (Dark) */
@@ -99,8 +101,9 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(220, 13%, 22%);
-    --gradient-to: hsl(215, 20%, 16%);
+    --gradient-from: hsl(180, 20%, 20%);
+    --gradient-mid: hsl(200, 30%, 30%);
+    --gradient-to: hsl(220, 15%, 45%);
   }
 
   /* Rose Theme (Light) */
@@ -133,8 +136,9 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(350, 100%, 97%);
-    --gradient-to: hsl(330, 100%, 95%);
+    --gradient-from: hsl(350, 100%, 96%);
+    --gradient-mid: hsl(340, 90%, 90%);
+    --gradient-to: hsl(10, 100%, 92%);
   }
   
   /* Ocean Theme (Dark) */
@@ -167,8 +171,9 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(195, 60%, 18%);
-    --gradient-to: hsl(180, 50%, 12%);
+    --gradient-from: hsl(210, 60%, 15%);
+    --gradient-mid: hsl(190, 70%, 30%);
+    --gradient-to: hsl(170, 50%, 50%);
   }
 
   /* Sage Theme (Light) */
@@ -201,8 +206,9 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(120, 40%, 96%);
-    --gradient-to: hsl(90, 50%, 92%);
+    --gradient-from: hsl(120, 30%, 96%);
+    --gradient-mid: hsl(140, 25%, 90%);
+    --gradient-to: hsl(90, 30%, 94%);
   }
   
   /* Candy Theme (Light) */
@@ -235,8 +241,9 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(280, 100%, 96%);
-    --gradient-to: hsl(330, 100%, 96%);
+    --gradient-from: hsl(330, 100%, 95%);
+    --gradient-mid: hsl(270, 100%, 96%);
+    --gradient-to: hsl(200, 100%, 95%);
   }
 
   /* Sunset Theme (Dark) */
@@ -269,8 +276,9 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(25, 60%, 20%);
-    --gradient-to: hsl(350, 50%, 15%);
+    --gradient-from: hsl(25, 30%, 15%);
+    --gradient-mid: hsl(15, 70%, 30%);
+    --gradient-to: hsl(320, 50%, 25%);
   }
 }
 

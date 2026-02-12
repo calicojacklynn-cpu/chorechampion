@@ -10,7 +10,7 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        'gradient-theme': 'linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to))',
+        'gradient-theme': 'linear-gradient(to bottom right, var(--gradient-from), var(--gradient-mid), var(--gradient-to))',
       },
       fontFamily: {
         body: ['PT Sans', 'sans-serif'],
