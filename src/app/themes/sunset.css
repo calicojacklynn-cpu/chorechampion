@@ -2,13 +2,13 @@
     --radius: 1.5rem;
     --background: 25 95% 8%;
     --foreground: 0 0% 0%;
-    --card: 40 100% 70%;
+    --card: hsl(40, 100%, 70%);
     --card-foreground: 0 0% 0%;
     --popover: 25 85% 12%;
     --popover-foreground: 0 0% 0%;
     --primary: 35 95% 55%;
     --primary-foreground: 0 0% 0%;
-    --secondary: 40 100% 70%;
+    --secondary: hsl(40, 100%, 70%);
     --secondary-foreground: 0 0% 0%;
     --muted: 25 70% 20%;
     --muted-foreground: 0 0% 0%;
@@ -17,7 +17,7 @@
     --destructive: 0 70% 45%;
     --destructive-foreground: 0 0% 0%;
     --border: 35 90% 75%;
-    --input: 25 70% 25%;
+    --input: 0 0% 100%;
     --ring: 35 95% 55%;
     --gradient-from: hsl(45, 100%, 60%);
     --gradient-mid: hsl(30, 100%, 55%);
