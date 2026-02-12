@@ -162,7 +162,7 @@ export default function AdminsPage() {
                       <TableCell>{admin.email}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
-                           <Button variant="outline" size="sm" onClick={() => openEditDialog(admin)}>
+                           <Button variant="default" size="icon-sm" onClick={() => openEditDialog(admin)}>
                              <Edit className="h-3.5 w-3.5" />
                            </Button>
                            <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(admin)}>
