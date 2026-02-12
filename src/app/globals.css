@@ -32,11 +32,11 @@
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
     --gradient-from: hsl(0 0% 100%);
-    --gradient-to: hsl(220 13% 91%);
+    --gradient-to: hsl(240 5% 96%);
   }
 
   .dark {
-    --background: 222 47% 18%;
+    --background: 222 47% 11%;
     --foreground: 210 40% 98%;
     --card: 222 47% 18%;
     --card-foreground: 210 40% 98%;
@@ -64,7 +64,7 @@
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
     --gradient-from: hsl(222 47% 11%);
-    --gradient-to: hsl(222 84% 5%);
+    --gradient-to: hsl(210 40% 5%);
   }
 
   /* Slate Theme (Dark) */
@@ -96,8 +96,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(222 47% 11%);
-    --gradient-to: hsl(222 47% 18%);
+    --gradient-from: hsl(220 13% 20%);
+    --gradient-to: hsl(220 13% 10%);
   }
 
   /* Rose Theme (Light) */
@@ -129,8 +129,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(355 100% 99%);
-    --gradient-to: hsl(355 78% 97%);
+    --gradient-from: hsl(350 100% 98%);
+    --gradient-to: hsl(350 100% 92%);
   }
   
   /* Ocean Theme (Dark) */
@@ -162,8 +162,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(222 47% 11%);
-    --gradient-to: hsl(196 84% 13%);
+    --gradient-from: hsl(205 50% 20%);
+    --gradient-to: hsl(190 60% 10%);
   }
 
   /* Sage Theme (Light) */
@@ -195,8 +195,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(144 71% 98%);
-    --gradient-to: hsl(135 65% 94%);
+    --gradient-from: hsl(140 30% 96%);
+    --gradient-to: hsl(150 40% 88%);
   }
   
   /* Candy Theme (Light) */
@@ -228,8 +228,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(283 100% 99%);
-    --gradient-to: hsl(286 100% 97%);
+    --gradient-from: hsl(300 100% 98%);
+    --gradient-to: hsl(320 90% 92%);
   }
 
   /* Sunset Theme (Dark) */
@@ -261,8 +261,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(32 89% 27%);
-    --gradient-to: hsl(359 89% 14%);
+    --gradient-from: hsl(30 80% 30%);
+    --gradient-to: hsl(10 70% 20%);
   }
 }
 
