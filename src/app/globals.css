@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root, .light {
     --background: 240 10% 98%;
     --foreground: 240 10% 10%;
     --card: 0 0% 100%;
@@ -23,7 +23,6 @@
     --border: 240 5% 90%;
     --input: 240 5% 90%;
     --ring: 190 80% 60%;
-    --radius: 0.5rem;
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 10% 10%;
     --sidebar-primary: hsl(var(--primary));
@@ -62,6 +61,192 @@
     --sidebar-accent-foreground: hsl(var(--primary));
     --sidebar-border: hsl(var(--border));
     --sidebar-ring: hsl(var(--ring));
+  }
+
+  /* Slate Theme (Dark) */
+  .slate {
+    --background: 220 13% 18%; /* Dark Slate Blue */
+    --foreground: 220 14% 90%;
+    --card: 220 13% 24%;
+    --card-foreground: 220 14% 90%;
+    --popover: 220 13% 24%;
+    --popover-foreground: 220 14% 90%;
+    --primary: 210 40% 96.1%; /* Bright Blue for accents */
+    --primary-foreground: 210 40% 9.8%;
+    --secondary: 220 13% 30%;
+    --secondary-foreground: 220 14% 90%;
+    --muted: 220 13% 30%;
+    --muted-foreground: 220 9% 65%;
+    --accent: 260 60% 70%; /* Lavender */
+    --accent-foreground: 260 60% 10%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 13% 30%;
+    --input: 220 13% 30%;
+    --ring: 210 40% 96.1%;
+    --sidebar-background: 220 13% 24%;
+    --sidebar-foreground: 220 14% 90%;
+    --sidebar-primary: 210 40% 96.1%;
+    --sidebar-primary-foreground: 210 40% 9.8%;
+    --sidebar-accent: hsl(var(--primary) / 0.1);
+    --sidebar-accent-foreground: 210 40% 96.1%;
+    --sidebar-border: 220 13% 30%;
+    --sidebar-ring: 210 40% 96.1%;
+  }
+
+  /* Rose Theme (Light) */
+  .rose {
+    --background: 350 100% 98%; /* Very light pink */
+    --foreground: 350 60% 25%;
+    --card: 0 0% 100%;
+    --card-foreground: 350 60% 25%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 350 60% 25%;
+    --primary: 346 76% 59%; /* Hot Pink */
+    --primary-foreground: 355 100% 97%;
+    --secondary: 350 100% 94%;
+    --secondary-foreground: 346 76% 40%;
+    --muted: 350 100% 94%;
+    --muted-foreground: 350 40% 60%;
+    --accent: 290 80% 60%; /* Vibrant Purple */
+    --accent-foreground: 290 80% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 350 100% 92%;
+    --input: 350 100% 92%;
+    --ring: 346 76% 59%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 350 60% 25%;
+    --sidebar-primary: 346 76% 59%;
+    --sidebar-primary-foreground: 355 100% 97%;
+    --sidebar-accent: hsl(var(--primary) / 0.1);
+    --sidebar-accent-foreground: 346 76% 59%;
+    --sidebar-border: 350 100% 92%;
+    --sidebar-ring: 346 76% 59%;
+  }
+  
+  /* Ocean Theme (Dark) */
+  .ocean {
+    --background: 210 45% 15%; /* Deep Ocean Blue */
+    --foreground: 190 70% 92%;
+    --card: 205 40% 22%;
+    --card-foreground: 190 70% 92%;
+    --popover: 205 40% 22%;
+    --popover-foreground: 190 70% 92%;
+    --primary: 180 80% 60%; /* Bright Cyan */
+    --primary-foreground: 180 80% 10%;
+    --secondary: 200 40% 28%;
+    --secondary-foreground: 190 70% 92%;
+    --muted: 200 40% 28%;
+    --muted-foreground: 190 40% 70%;
+    --accent: 40 90% 65%; /* Coral Orange */
+    --accent-foreground: 40 90% 15%;
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 0 0% 95%;
+    --border: 200 40% 28%;
+    --input: 200 40% 28%;
+    --ring: 180 80% 60%;
+    --sidebar-background: 205 40% 22%;
+    --sidebar-foreground: 190 70% 92%;
+    --sidebar-primary: 180 80% 60%;
+    --sidebar-primary-foreground: 180 80% 10%;
+    --sidebar-accent: hsl(var(--primary) / 0.1);
+    --sidebar-accent-foreground: 180 80% 60%;
+    --sidebar-border: 200 40% 28%;
+    --sidebar-ring: 180 80% 60%;
+  }
+
+  /* Sage Theme (Light) */
+  .sage {
+    --background: 140 30% 97%; /* Very Light Sage Green */
+    --foreground: 140 25% 25%;
+    --card: 0 0% 100%;
+    --card-foreground: 140 25% 25%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 140 25% 25%;
+    --primary: 150 55% 45%; /* Deep Sage Green */
+    --primary-foreground: 150 55% 95%;
+    --secondary: 140 30% 94%;
+    --secondary-foreground: 150 55% 30%;
+    --muted: 140 30% 94%;
+    --muted-foreground: 140 20% 60%;
+    --accent: 100 40% 60%; /* Muted Lime */
+    --accent-foreground: 100 40% 15%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 140 30% 91%;
+    --input: 140 30% 91%;
+    --ring: 150 55% 45%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 140 25% 25%;
+    --sidebar-primary: 150 55% 45%;
+    --sidebar-primary-foreground: 150 55% 95%;
+    --sidebar-accent: hsl(var(--primary) / 0.1);
+    --sidebar-accent-foreground: 150 55% 45%;
+    --sidebar-border: 140 30% 91%;
+    --sidebar-ring: 150 55% 45%;
+  }
+  
+  /* Candy Theme (Light) */
+  .candy {
+    --background: 300 100% 98%; /* Light Lavender */
+    --foreground: 280 50% 30%;
+    --card: 0 0% 100%;
+    --card-foreground: 280 50% 30%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 280 50% 30%;
+    --primary: 320 90% 60%; /* Bright Pink */
+    --primary-foreground: 320 90% 98%;
+    --secondary: 300 100% 95%;
+    --secondary-foreground: 320 90% 40%;
+    --muted: 300 100% 95%;
+    --muted-foreground: 280 30% 65%;
+    --accent: 190 90% 55%; /* Bright Cyan */
+    --accent-foreground: 190 90% 15%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 300 100% 93%;
+    --input: 300 100% 93%;
+    --ring: 320 90% 60%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 280 50% 30%;
+    --sidebar-primary: 320 90% 60%;
+    --sidebar-primary-foreground: 320 90% 98%;
+    --sidebar-accent: hsl(var(--primary) / 0.1);
+    --sidebar-accent-foreground: 320 90% 60%;
+    --sidebar-border: 300 100% 93%;
+    --sidebar-ring: 320 90% 60%;
+  }
+
+  /* Sunset Theme (Dark) */
+  .sunset {
+    --background: 25 50% 15%; /* Dark Brown */
+    --foreground: 30 80% 90%;
+    --card: 20 40% 22%;
+    --card-foreground: 30 80% 90%;
+    --popover: 20 40% 22%;
+    --popover-foreground: 30 80% 90%;
+    --primary: 20 95% 60%; /* Bright Orange */
+    --primary-foreground: 20 95% 10%;
+    --secondary: 15 40% 28%;
+    --secondary-foreground: 30 80% 90%;
+    --muted: 15 40% 28%;
+    --muted-foreground: 30 40% 70%;
+    --accent: 310 70% 65%; /* Magenta */
+    --accent-foreground: 310 70% 15%;
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 0 0% 95%;
+    --border: 15 40% 28%;
+    --input: 15 40% 28%;
+    --ring: 20 95% 60%;
+    --sidebar-background: 20 40% 22%;
+    --sidebar-foreground: 30 80% 90%;
+    --sidebar-primary: 20 95% 60%;
+    --sidebar-primary-foreground: 20 95% 10%;
+    --sidebar-accent: hsl(var(--primary) / 0.1);
+    --sidebar-accent-foreground: 20 95% 60%;
+    --sidebar-border: 15 40% 28%;
+    --sidebar-ring: 20 95% 60%;
   }
 }
 
