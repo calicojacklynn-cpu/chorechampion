@@ -11,9 +11,9 @@
   html.theme-default {
     --background: 210 90% 98%;
     --foreground: 210 10% 15%;
-    --card: 205 100% 96%;
+    --card: 210 80% 90%;
     --card-foreground: 210 10% 10%;
-    --popover: 205 100% 96%;
+    --popover: 210 80% 90%;
     --popover-foreground: 210 10% 10%;
     --primary: 190 80% 55%;
     --primary-foreground: 210 10% 15%;
