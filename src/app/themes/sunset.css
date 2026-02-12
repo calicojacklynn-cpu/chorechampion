@@ -1,38 +1,27 @@
 .sunset {
     --radius: 1.5rem;
-    --background: 30 50% 98%;           /* Very light warm gray/off-white */
-    --foreground: 24 10% 20%;           /* Dark brown/gray text */
-    
-    --card: 0 0% 100%;                  /* White card background */
-    --card-foreground: 24 10% 20%;      /* Dark text on card */
-    
+    --background: 30 50% 98%;
+    --foreground: 24 10% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 24 10% 20%;
     --popover: 0 0% 100%;
     --popover-foreground: 24 10% 20%;
-    
-    --primary: 24 80% 55%;              /* Medium-dark orange for user's chat bubble */
-    --primary-foreground: 30 50% 98%;   /* Light text on primary bubble */
-    
-    --secondary: 35 90% 60%;            /* Brighter orange for buttons */
-    --secondary-foreground: 0 0% 0%;    /* Black text on secondary buttons */
-    
-    --muted: 30 10% 94%;                /* Light gray for other chat bubbles */
-    --muted-foreground: 24 10% 20%;     /* Dark text on muted bubbles */
-
-    --accent: 48 96% 50%;               /* Bright yellow for stars */
-    --accent-foreground: 0 0% 0%;       /* Black */
-    
+    --primary: 35 90% 60%; /* Bright Orange */
+    --primary-foreground: 24 10% 10%; /* Very dark brown, almost black */
+    --secondary: 35 90% 60%; /* Bright Orange */
+    --secondary-foreground: 24 10% 10%; /* Very dark brown, almost black */
+    --muted: 30 10% 94%; /* Light gray for other chat bubbles */
+    --muted-foreground: 24 10% 45%; /* A mid-dark gray for placeholder text etc. */
+    --accent: 48 96% 50%;
+    --accent-foreground: 0 0% 0%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    
-    --border: 30 10% 90%;               /* Light gray border */
+    --border: 30 10% 90%;
     --input: 0 0% 100%;
     --ring: 35 90% 60%;
-
     --gradient-from: hsl(30, 50%, 92%);
     --gradient-mid: hsl(30, 50%, 94%);
     --gradient-to: hsl(30, 50%, 96%);
-
-    /* Sidebar styles - keep as is for now */
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 10% 10%;
     --sidebar-primary: 240 10% 10%;

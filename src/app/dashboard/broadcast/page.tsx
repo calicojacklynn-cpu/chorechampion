@@ -119,7 +119,7 @@ export default function BroadcastPage() {
                   className={`max-w-md rounded-xl px-4 py-3 ${
                     isParent
                       ? 'bg-primary text-primary-foreground rounded-tl-none'
-                      : 'bg-muted text-muted-foreground rounded-tr-none'
+                      : 'bg-muted text-foreground rounded-tr-none'
                   }`}
                 >
                   <p className={'font-bold text-sm mb-1'}>{message.senderName}</p>
@@ -154,7 +154,7 @@ export default function BroadcastPage() {
                 }
               }}
             />
-            <Button onClick={handleSendMessage} size="icon" className="shrink-0">
+            <Button onClick={handleSendMessage} size="icon" className="shrink-0" variant="default">
               <Send className="h-4 w-4" />
               <span className="sr-only">Send</span>
             </Button>
