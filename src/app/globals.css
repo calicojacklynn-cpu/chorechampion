@@ -12,7 +12,7 @@
     --popover-foreground: 240 10% 10%;
     --primary: 210 90% 60%;
     --primary-foreground: 210 90% 10%;
-    --secondary: 240 5% 96%;
+    --secondary: 0 0% 100%;
     --secondary-foreground: 240 10% 10%;
     --muted: 240 5% 96%;
     --muted-foreground: 240 5% 65%;
@@ -44,7 +44,7 @@
     --popover-foreground: 210 40% 98%;
     --primary: 210 90% 60%;
     --primary-foreground: 210 90% 10%;
-    --secondary: 222 47% 25%;
+    --secondary: 222 47% 18%;
     --secondary-foreground: 210 40% 98%;
     --muted: 216 34% 17%;
     --muted-foreground: 215 20% 65%;
@@ -69,19 +69,19 @@
 
   /* Slate Theme (Dark) */
   .slate {
-    --background: 220 13% 24%;
-    --foreground: 220 14% 90%;
+    --background: 220 13% 18%;
+    --foreground: 220 14% 80%;
     --card: 220 13% 24%;
     --card-foreground: 220 14% 90%;
     --popover: 220 13% 24%;
     --popover-foreground: 220 14% 90%;
-    --primary: 210 40% 96.1%; /* Bright Blue for accents */
+    --primary: 210 40% 96.1%;
     --primary-foreground: 210 40% 9.8%;
-    --secondary: 220 13% 30%;
+    --secondary: 220 13% 24%;
     --secondary-foreground: 220 14% 90%;
     --muted: 220 13% 30%;
     --muted-foreground: 220 9% 65%;
-    --accent: 260 60% 70%; /* Lavender */
+    --accent: 260 60% 70%;
     --accent-foreground: 260 60% 10%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
@@ -96,25 +96,25 @@
     --sidebar-accent-foreground: 210 40% 96.1%;
     --sidebar-border: 220 13% 30%;
     --sidebar-ring: 210 40% 96.1%;
-    --gradient-from: hsl(222 47% 18%);
-    --gradient-to: hsl(222 47% 11%);
+    --gradient-from: hsl(222 47% 11%);
+    --gradient-to: hsl(222 47% 18%);
   }
 
   /* Rose Theme (Light) */
   .rose {
-    --background: 0 0% 100%;
+    --background: 355 100% 99%;
     --foreground: 350 60% 25%;
     --card: 0 0% 100%;
     --card-foreground: 350 60% 25%;
     --popover: 0 0% 100%;
     --popover-foreground: 350 60% 25%;
-    --primary: 346 76% 59%; /* Hot Pink */
+    --primary: 346 76% 59%;
     --primary-foreground: 355 100% 97%;
     --secondary: 0 0% 100%;
     --secondary-foreground: 346 76% 40%;
     --muted: 350 100% 94%;
     --muted-foreground: 350 40% 60%;
-    --accent: 290 80% 60%; /* Vibrant Purple */
+    --accent: 290 80% 60%;
     --accent-foreground: 290 80% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -135,19 +135,19 @@
   
   /* Ocean Theme (Dark) */
   .ocean {
-    --background: 205 40% 22%;
+    --background: 205 50% 14%;
     --foreground: 190 70% 92%;
     --card: 205 40% 22%;
     --card-foreground: 190 70% 92%;
     --popover: 205 40% 22%;
     --popover-foreground: 190 70% 92%;
-    --primary: 180 80% 60%; /* Bright Cyan */
+    --primary: 180 80% 60%;
     --primary-foreground: 180 80% 10%;
     --secondary: 205 40% 22%;
     --secondary-foreground: 190 70% 92%;
     --muted: 200 40% 28%;
     --muted-foreground: 190 40% 70%;
-    --accent: 40 90% 65%; /* Coral Orange */
+    --accent: 40 90% 65%;
     --accent-foreground: 40 90% 15%;
     --destructive: 0 70% 45%;
     --destructive-foreground: 0 0% 95%;
@@ -168,19 +168,19 @@
 
   /* Sage Theme (Light) */
   .sage {
-    --background: 0 0% 100%;
+    --background: 140 40% 98%;
     --foreground: 140 25% 25%;
     --card: 0 0% 100%;
     --card-foreground: 140 25% 25%;
     --popover: 0 0% 100%;
     --popover-foreground: 140 25% 25%;
-    --primary: 150 55% 45%; /* Deep Sage Green */
+    --primary: 150 55% 45%;
     --primary-foreground: 150 55% 95%;
     --secondary: 0 0% 100%;
     --secondary-foreground: 150 55% 30%;
     --muted: 140 30% 94%;
     --muted-foreground: 140 20% 60%;
-    --accent: 100 40% 60%; /* Muted Lime */
+    --accent: 100 40% 60%;
     --accent-foreground: 100 40% 15%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -201,19 +201,19 @@
   
   /* Candy Theme (Light) */
   .candy {
-    --background: 0 0% 100%;
+    --background: 300 100% 99%;
     --foreground: 280 50% 30%;
     --card: 0 0% 100%;
     --card-foreground: 280 50% 30%;
     --popover: 0 0% 100%;
     --popover-foreground: 280 50% 30%;
-    --primary: 320 90% 60%; /* Bright Pink */
+    --primary: 320 90% 60%;
     --primary-foreground: 320 90% 98%;
     --secondary: 0 0% 100%;
     --secondary-foreground: 320 90% 40%;
     --muted: 300 100% 95%;
     --muted-foreground: 280 30% 65%;
-    --accent: 190 90% 55%; /* Bright Cyan */
+    --accent: 190 90% 55%;
     --accent-foreground: 190 90% 15%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -234,19 +234,19 @@
 
   /* Sunset Theme (Dark) */
   .sunset {
-    --background: 20 40% 22%;
+    --background: 25 20% 12%;
     --foreground: 30 80% 90%;
     --card: 20 40% 22%;
     --card-foreground: 30 80% 90%;
     --popover: 20 40% 22%;
     --popover-foreground: 30 80% 90%;
-    --primary: 20 95% 60%; /* Bright Orange */
+    --primary: 20 95% 60%;
     --primary-foreground: 20 95% 10%;
     --secondary: 20 40% 22%;
     --secondary-foreground: 30 80% 90%;
     --muted: 15 40% 28%;
     --muted-foreground: 30 40% 70%;
-    --accent: 310 70% 65%; /* Magenta */
+    --accent: 310 70% 65%;
     --accent-foreground: 310 70% 15%;
     --destructive: 0 70% 45%;
     --destructive-foreground: 0 0% 95%;

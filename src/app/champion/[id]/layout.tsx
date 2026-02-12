@@ -108,7 +108,7 @@ export default function ChampionLayout({
         <Sidebar variant="inset" collapsible="icon">
           <ChampionNav />
         </Sidebar>
-        <SidebarInset className={cn("bg-gradient-theme")}>
+        <SidebarInset>
             <header className="flex h-16 items-center justify-end gap-4 border-b-0 backdrop-blur-sm px-4 sticky top-0 z-30 lg:px-6 bg-transparent">
                 <SidebarTrigger className="md:hidden mr-auto" />
                 <div className="flex items-center gap-2">
