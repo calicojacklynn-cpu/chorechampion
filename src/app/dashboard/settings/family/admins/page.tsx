@@ -145,7 +145,7 @@ export default function AdminsPage() {
                     return (
                     <TableRow key={admin.id}>
                       <TableCell className="hidden sm:table-cell">
-                        <Avatar className="h-12 w-12 border">
+                        <Avatar className="h-12 w-12 border-2 border-black">
                           <AvatarImage
                             src={admin.avatarUrl}
                             alt={admin.name}

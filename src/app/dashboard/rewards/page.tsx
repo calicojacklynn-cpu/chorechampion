@@ -187,7 +187,7 @@ export default function RewardsPage() {
                 return (
                   <Card key={champion.id} className="flex flex-col">
                     <CardHeader className="flex flex-row items-center gap-4">
-                      <Avatar className="h-16 w-16 border-2 border-primary bg-secondary">
+                      <Avatar className="h-16 w-16 border-2 border-black bg-secondary">
                         <AvatarImage src={champion.avatarUrl} alt={champion.name} className="object-cover" />
                         <AvatarFallback className="text-xl bg-secondary text-secondary-foreground">{champion.name.charAt(0)}</AvatarFallback>
                       </Avatar>
@@ -207,7 +207,7 @@ export default function RewardsPage() {
                       <p className="text-xs text-right mt-1 text-muted-foreground">{champion.points} / {champion.pointsToNextReward} pts</p>
                     </CardContent>
                     <div className="p-6 pt-0">
-                      <Button className="w-full" onClick={() => openClaimedDialog(champion)}>View Claimed Rewards</Button>
+                      <Button variant="default" className="w-full" onClick={() => openClaimedDialog(champion)}>View Claimed Rewards</Button>
                     </div>
                   </Card>
                 );
@@ -252,7 +252,7 @@ export default function RewardsPage() {
                             </Badge>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <Button size="icon" className="h-7 w-7" onClick={() => openEditDialog(reward)}>
+                            <Button variant="default" size="icon" className="h-7 w-7" onClick={() => openEditDialog(reward)}>
                                 <Edit className="h-3 w-3" />
                                 <span className="sr-only">Edit</span>
                             </Button>

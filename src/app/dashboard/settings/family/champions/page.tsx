@@ -203,7 +203,7 @@ export default function ChampionsPage() {
                 champions.map((champion) => (
                     <TableRow key={champion.id}>
                       <TableCell className="hidden sm:table-cell">
-                        <Avatar className="h-12 w-12 border">
+                        <Avatar className="h-12 w-12 border-2 border-black">
                            <AvatarImage
                               src={champion.avatarUrl}
                               alt={champion.name}

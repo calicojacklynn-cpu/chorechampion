@@ -116,7 +116,7 @@ export default function ChampionLayout({
                     <span className="font-bold text-xl text-foreground">{champion.points}</span>
                     <span className="text-sm text-foreground">Points</span>
                 </div>
-                <Avatar className="h-10 w-10 border">
+                <Avatar className="h-10 w-10 border-2 border-black">
                     <AvatarImage src={champion.avatarUrl || undefined} alt={champion.name} />
                     <AvatarFallback className="bg-secondary text-secondary-foreground">{champion.name.charAt(0)}</AvatarFallback>
                 </Avatar>
