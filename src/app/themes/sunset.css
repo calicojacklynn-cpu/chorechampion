@@ -1,21 +1,19 @@
 .sunset {
     --radius: 1.5rem;
     --background: 25 95% 8%;
-    --foreground: 0 0% 0%;
+    --foreground: 0 0% 100%;
     --card: 40 100% 70%;
     --card-foreground: 0 0% 0%;
     --popover: 25 85% 12%;
-    --popover-foreground: 0 0% 0%;
-    --primary: 35 90% 60%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 30 80% 50%;
     --primary-foreground: 0 0% 0%;
-    --secondary: 35 90% 60%;
+    --secondary: 30 80% 50%;
     --secondary-foreground: 0 0% 0%;
-    --muted: 25 70% 20%;
-    --muted-foreground: 0 0% 0%;
-    --accent: 51 100% 50%;
+    --accent: 48 96% 50%;
     --accent-foreground: 0 0% 0%;
     --destructive: 0 70% 45%;
-    --destructive-foreground: 0 0% 0%;
+    --destructive-foreground: 0 0% 100%;
     --border: 35 90% 55%;
     --input: 0 0% 100%;
     --gradient-from: hsl(45, 100%, 60%);
