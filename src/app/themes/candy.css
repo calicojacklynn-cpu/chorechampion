@@ -1,0 +1,33 @@
+.candy {
+    --radius: 1.5rem;
+    --background: 300 100% 99%;
+    --foreground: 280 50% 30%;
+    --card: 0 0% 100%;
+    --card-foreground: 280 50% 30%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 280 50% 30%;
+    --primary: 320 90% 60%;
+    --primary-foreground: 320 90% 98%;
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 320 90% 40%;
+    --muted: 300 100% 95%;
+    --muted-foreground: 280 30% 65%;
+    --accent: 190 90% 55%;
+    --accent-foreground: 190 90% 15%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 300 100% 93%;
+    --input: 300 100% 93%;
+    --ring: 320 90% 60%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 10% 10%;
+    --sidebar-primary: 240 10% 10%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 5% 96%;
+    --sidebar-accent-foreground: 240 10% 10%;
+    --sidebar-border: 240 5% 90%;
+    --sidebar-ring: hsl(var(--ring));
+    --gradient-from: hsl(330, 100%, 97%);
+    --gradient-mid: hsl(270, 100%, 96%);
+    --gradient-to: hsl(200, 100%, 97%);
+}
