@@ -14,56 +14,56 @@ export const themes: Theme[] = [
   {
     name: 'Slate',
     className: 'theme-slate',
-    gradient: 'linear-gradient(to right, hsl(220 25% 50%), hsl(210 30% 80%))',
+    gradient: 'linear-gradient(to right, hsl(220 25% 50%), hsl(210 30% 20%))',
   },
   {
     name: 'Sky',
     className: 'theme-sky',
-    gradient: 'linear-gradient(to right, hsl(190 100% 60%), hsl(210 80% 80%))',
+    gradient: 'linear-gradient(to right, hsl(190 100% 40%), hsl(210 80% 70%))',
   },
   {
     name: 'Rose',
     className: 'theme-rose',
-    gradient: 'linear-gradient(to right, hsl(340 90% 80%), hsl(355 80% 75%))',
+    gradient: 'linear-gradient(to right, hsl(340 80% 65%), hsl(355 90% 85%))',
   },
   {
     name: 'Mint',
     className: 'theme-mint',
-    gradient: 'linear-gradient(to right, hsl(150 80% 60%), hsl(175 70% 75%))',
+    gradient: 'linear-gradient(to right, hsl(150 80% 40%), hsl(175 70% 70%))',
   },
    {
     name: 'Sunrise',
     className: 'theme-sunrise',
-    gradient: 'linear-gradient(to right, hsl(50 100% 70%), hsl(25 95% 60%))',
+    gradient: 'linear-gradient(to right, hsl(50 100% 60%), hsl(25 95% 50%))',
   },
   {
     name: 'Ocean',
     className: 'theme-ocean',
-    gradient: 'linear-gradient(to right, hsl(220 90% 50%), hsl(200 70% 35%))',
+    gradient: 'linear-gradient(to right, hsl(220 90% 40%), hsl(200 70% 25%))',
   },
   {
     name: 'Sunset',
     className: 'theme-sunset',
-    gradient: 'linear-gradient(to right, hsl(30 100% 65%), hsl(350 90% 60%))',
+    gradient: 'linear-gradient(to right, hsl(30 100% 55%), hsl(350 90% 50%))',
   },
   {
     name: 'Forest',
     className: 'theme-forest',
-    gradient: 'linear-gradient(to right, hsl(120 70% 40%), hsl(100 45% 60%))',
+    gradient: 'linear-gradient(to right, hsl(120 70% 30%), hsl(100 45% 50%))',
   },
   {
     name: 'Royal',
     className: 'theme-royal',
-    gradient: 'linear-gradient(to right, hsl(270 80% 60%), hsl(240 60% 45%))',
+    gradient: 'linear-gradient(to right, hsl(270 80% 50%), hsl(240 60% 35%))',
   },
   {
     name: 'Candy',
     className: 'theme-candy',
-    gradient: 'linear-gradient(to right, hsl(330 100% 75%), hsl(180 90% 60%))',
+    gradient: 'linear-gradient(to right, hsl(330 100% 65%), hsl(180 90% 50%))',
   },
   {
     name: 'Sage',
     className: 'theme-sage',
-    gradient: 'linear-gradient(to right, hsl(90 45% 70%), hsl(110 35% 50%))',
+    gradient: 'linear-gradient(to right, hsl(90 45% 60%), hsl(110 35% 40%))',
   },
 ];
