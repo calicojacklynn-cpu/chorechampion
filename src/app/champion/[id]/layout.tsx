@@ -13,8 +13,6 @@ import { signOut } from 'firebase/auth';
 import { useEffect } from 'react';
 import { doc } from 'firebase/firestore';
 import type { Champion } from '@/app/dashboard/champions/page';
-import { useTheme } from '@/app/context/ThemeContext';
-import { themes } from '@/lib/themes';
 
 
 export default function ChampionLayout({
@@ -27,10 +25,6 @@ export default function ChampionLayout({
   const auth = useAuth();
   const firestore = useFirestore();
   const { user, isUserLoading } = useUser();
-  const { theme } = useTheme();
-
-  const currentTheme = themes.find((t) => t.className === theme);
-  const bodyStyle = currentTheme ? { backgroundImage: currentTheme.gradient } : {};
 
   const championId = typeof params.id === 'string' ? params.id : '';
   
@@ -108,36 +102,33 @@ export default function ChampionLayout({
     );
   }
   
-
   return (
-    <div style={bodyStyle}>
-      <SidebarProvider>
-          <Sidebar variant="inset" collapsible="icon">
-            <ChampionNav />
-          </Sidebar>
-          <SidebarInset>
-              <header className="flex h-16 items-center justify-end gap-4 border-b-0 backdrop-blur-sm px-4 sticky top-0 z-30 lg:px-6 bg-transparent">
-                  <SidebarTrigger className="md:hidden mr-auto" />
-                  <div className="flex items-center gap-2">
-                      <Star className="w-6 h-6 text-accent fill-accent" />
-                      <span className="font-bold text-xl text-foreground">{champion.points}</span>
-                      <span className="text-sm text-foreground">Points</span>
-                  </div>
-                  <Avatar className="h-10 w-10 border">
-                      <AvatarImage src={champion.avatarUrl || undefined} alt={champion.name} />
-                      <AvatarFallback>{champion.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <Button variant="secondary" size="sm" onClick={handleLogout}>
-                      <LogOut className="mr-2 h-4 w-4"/>
-                      Log Out
-                  </Button>
-              </header>
-              <main className="flex-1 overflow-auto p-4 lg:p-6">
-                  {children}
-              </main>
-              <Toaster />
-          </SidebarInset>
-      </SidebarProvider>
-    </div>
+    <SidebarProvider>
+        <Sidebar variant="inset" collapsible="icon">
+          <ChampionNav />
+        </Sidebar>
+        <SidebarInset>
+            <header className="flex h-16 items-center justify-end gap-4 border-b-0 backdrop-blur-sm px-4 sticky top-0 z-30 lg:px-6 bg-transparent">
+                <SidebarTrigger className="md:hidden mr-auto" />
+                <div className="flex items-center gap-2">
+                    <Star className="w-6 h-6 text-accent fill-accent" />
+                    <span className="font-bold text-xl text-foreground">{champion.points}</span>
+                    <span className="text-sm text-foreground">Points</span>
+                </div>
+                <Avatar className="h-10 w-10 border">
+                    <AvatarImage src={champion.avatarUrl || undefined} alt={champion.name} />
+                    <AvatarFallback>{champion.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <Button variant="secondary" size="sm" onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4"/>
+                    Log Out
+                </Button>
+            </header>
+            <main className="flex-1 overflow-auto p-4 lg:p-6">
+                {children}
+            </main>
+            <Toaster />
+        </SidebarInset>
+    </SidebarProvider>
   );
 }
