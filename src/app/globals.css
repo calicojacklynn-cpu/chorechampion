@@ -57,8 +57,8 @@
     --border: 220 10% 80%;
     --input: 220 10% 80%;
     --ring: 210 90% 70%;
-    --sidebar-background: transparent;
-    --sidebar-foreground: 210 20% 90%;
+    --sidebar-background: 220 15% 94%;
+    --sidebar-foreground: 220 15% 10%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
