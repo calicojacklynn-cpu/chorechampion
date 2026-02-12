@@ -133,7 +133,7 @@ export default function CalendarPage() {
           <div className="flex items-center gap-2">
             <Button variant="default" size="sm" onClick={() => setCurrentDate(new Date())}>Today</Button>
             <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'monthly' | 'weekly')} className="w-auto">
-              <TabsList className="h-9 p-1 bg-secondary border border-black text-secondary-foreground">
+              <TabsList className="h-9 p-1 bg-secondary text-secondary-foreground">
                   <TabsTrigger value="monthly" className="h-7 px-3 text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Month</TabsTrigger>
                   <TabsTrigger value="weekly" className="h-7 px-3 text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Week</TabsTrigger>
               </TabsList>
@@ -163,7 +163,7 @@ export default function CalendarPage() {
                 key={day.toString()}
                 className={cn(
                   "p-2 border-r border-b flex flex-col overflow-hidden",
-                  viewMode === 'weekly' ? 'h-[calc(100vh-24rem)]' : 'h-44',
+                  viewMode === 'weekly' ? 'h-[calc(100vh-20rem)]' : 'h-44',
                   viewMode === 'monthly' && !isSameMonth(day, currentDate) && "bg-muted/50 text-muted-foreground"
                 )}
               >
