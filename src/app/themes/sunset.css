@@ -1,27 +1,47 @@
 .sunset {
     --radius: 1.5rem;
-    --background: 30 50% 98%;
-    --foreground: 24 10% 20%;
+
+    /* Base Colors */
+    --background: 30 50% 98%; /* Very light, warm off-white */
+    --foreground: 24 10% 20%; /* Dark, warm gray for text */
+
+    /* Cards and Popovers */
     --card: 0 0% 100%;
     --card-foreground: 24 10% 20%;
     --popover: 0 0% 100%;
     --popover-foreground: 24 10% 20%;
-    --primary: 30 80% 55%; /* Rich, medium-dark orange for user chat bubbles */
-    --primary-foreground: 0 0% 100%; /* White text on dark orange bubbles */
-    --secondary: 35 90% 60%; /* Bright orange for action buttons */
-    --secondary-foreground: 24 10% 10%; /* Dark text for bright orange buttons */
-    --muted: 30 10% 94%; /* Light gray for other chat bubbles */
-    --muted-foreground: 24 10% 45%; /* A mid-dark gray for placeholder text etc. */
-    --accent: 48 96% 50%; /* Bright Yellow */
-    --accent-foreground: 0 0% 0%; /* Black text on accent */
+
+    /* Primary (User Chat Bubble) */
+    --primary: 30 80% 55%; /* Rich, medium-dark orange */
+    --primary-foreground: 0 0% 100%; /* White text for contrast */
+
+    /* Secondary (Action Buttons) */
+    --secondary: 35 90% 60%; /* Vibrant orange for buttons */
+    --secondary-foreground: 24 10% 10%; /* Dark text for contrast on buttons */
+
+    /* Muted (Other Chat Bubbles, etc.) */
+    --muted: 30 10% 94%; /* Soft, light gray */
+    --muted-foreground: 24 10% 45%; /* Mid-dark gray for placeholder text */
+
+    /* Accent (Stars) */
+    --accent: 48 96% 50%; /* Bright, pure yellow */
+    --accent-foreground: 0 0% 0%; /* Black text on yellow */
+
+    /* Destructive */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
+
+    /* Other UI Elements */
     --border: 30 10% 90%;
     --input: 0 0% 100%;
-    --ring: 35 90% 60%;
-    --gradient-from: hsl(30, 50%, 92%);
-    --gradient-mid: hsl(30, 50%, 94%);
-    --gradient-to: hsl(30, 50%, 96%);
+    --ring: 35 90% 60%; /* Match action button color */
+
+    /* Background Gradient */
+    --gradient-from: hsl(50, 100%, 85%); /* Light vibrant yellow */
+    --gradient-mid: hsl(35, 100%, 80%); /* Light vibrant orange */
+    --gradient-to: hsl(20, 100%, 75%); /* Light vibrant peachy-orange */
+
+    /* Sidebar */
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 10% 10%;
     --sidebar-primary: 240 10% 10%;
