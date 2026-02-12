@@ -2,7 +2,7 @@
     --radius: 1.5rem;
     --background: 25 95% 8%;
     --foreground: 45 60% 95%;
-    --card: 30 100% 97%;
+    --card: 35 100% 85%;
     --card-foreground: 25 85% 15%;
     --popover: 25 85% 12%;
     --popover-foreground: 45 60% 95%;
@@ -16,7 +16,7 @@
     --accent-foreground: 50 95% 15%;
     --destructive: 0 70% 45%;
     --destructive-foreground: 0 0% 95%;
-    --border: 30 100% 90%;
+    --border: 35 100% 90%;
     --input: 25 70% 25%;
     --ring: 35 95% 55%;
     --sidebar-background: 0 0% 100%;
