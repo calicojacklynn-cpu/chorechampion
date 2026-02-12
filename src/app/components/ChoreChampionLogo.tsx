@@ -10,16 +10,10 @@ export function ChoreChampionLogo(props: SVGProps<SVGSVGElement>) {
       {...props}
       className={cn(props.className)}
     >
-      <defs>
-        <linearGradient id="shield-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#4dabf7" />
-          <stop offset="100%" stopColor="#1c7ed6" />
-        </linearGradient>
-      </defs>
       <path
         d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
-        fill="url(#shield-gradient)"
-        stroke="#1864ab"
+        fill="hsl(var(--primary))"
+        stroke="hsl(var(--border))"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
