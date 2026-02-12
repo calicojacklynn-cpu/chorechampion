@@ -12,14 +12,14 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/app/context/ThemeContext";
 
 const themes = [
-  { name: 'light', label: 'Default Light', gradient: 'linear-gradient(to bottom right, #f1f5f9, #dbeafe)' },
-  { name: 'dark', label: 'Default Dark', gradient: 'linear-gradient(to bottom right, #1e293b, #334155)' },
-  { name: 'slate', label: 'Slate', gradient: 'linear-gradient(to bottom right, #334155, #475569)' },
-  { name: 'rose', label: 'Rose', gradient: 'linear-gradient(to bottom right, #fda4af, #f472b6)' },
-  { name: 'ocean', label: 'Ocean', gradient: 'linear-gradient(to bottom right, #7dd3fc, #38bdf8)' },
-  { name: 'sage', label: 'Sage', gradient: 'linear-gradient(to bottom right, #86efac, #4ade80)' },
-  { name: 'candy', label: 'Candy', gradient: 'linear-gradient(to bottom right, #f0abfc, #e879f9)' },
-  { name: 'sunset', label: 'Sunset', gradient: 'linear-gradient(to bottom right, #fb923c, #f97316)' },
+  { name: 'light', label: 'Default Light', gradient: 'linear-gradient(to bottom right, hsl(60, 100%, 95%), hsl(195, 100%, 95%), hsl(240, 100%, 95%))' },
+  { name: 'dark', label: 'Default Dark', gradient: 'linear-gradient(to bottom right, hsl(222, 47%, 11%), hsl(260, 50%, 15%), hsl(280, 40%, 12%))' },
+  { name: 'slate', label: 'Slate', gradient: 'linear-gradient(to bottom right, hsl(220, 13%, 18%), hsl(215, 25%, 27%), hsl(210, 30%, 20%))' },
+  { name: 'rose', label: 'Rose', gradient: 'linear-gradient(to bottom right, hsl(350, 100%, 98%), hsl(0, 100%, 96%), hsl(340, 100%, 98%))' },
+  { name: 'ocean', label: 'Ocean', gradient: 'linear-gradient(to bottom right, hsl(210, 60%, 15%), hsl(190, 70%, 25%), hsl(180, 50%, 15%))' },
+  { name: 'sage', label: 'Sage', gradient: 'linear-gradient(to bottom right, hsl(120, 40%, 96%), hsl(140, 50%, 92%), hsl(130, 45%, 94%))' },
+  { name: 'candy', label: 'Candy', gradient: 'linear-gradient(to bottom right, hsl(330, 100%, 97%), hsl(270, 100%, 96%), hsl(200, 100%, 97%))' },
+  { name: 'sunset', label: 'Sunset', gradient: 'linear-gradient(to bottom right, hsl(30, 80%, 30%), hsl(330, 60%, 25%), hsl(260, 60%, 20%))' },
 ] as const;
 
 
