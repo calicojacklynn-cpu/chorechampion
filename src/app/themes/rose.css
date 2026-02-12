@@ -1,11 +1,11 @@
 .rose {
     --radius: 1.5rem;
     --background: 355 100% 99%;
-    --foreground: 350 60% 25%;
+    --foreground: 240 10% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 350 60% 25%;
+    --card-foreground: 240 10% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 350 60% 25%;
+    --popover-foreground: 240 10% 10%;
     --primary: 346 76% 59%;
     --primary-foreground: 355 100% 97%;
     --secondary: 0 0% 100%;

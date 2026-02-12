@@ -1,11 +1,11 @@
 .sage {
     --radius: 1.5rem;
     --background: 140 40% 98%;
-    --foreground: 140 25% 25%;
+    --foreground: 240 10% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 140 25% 25%;
+    --card-foreground: 240 10% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 140 25% 25%;
+    --popover-foreground: 240 10% 10%;
     --primary: 150 55% 45%;
     --primary-foreground: 150 55% 95%;
     --secondary: 0 0% 100%;
