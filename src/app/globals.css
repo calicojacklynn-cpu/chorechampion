@@ -249,25 +249,25 @@
   /* Sunset Theme (Dark) */
   .sunset {
     --radius: 1.5rem;
-    --background: 30 90% 10%; /* Dark Orange-brown */
-    --foreground: 45 60% 95%; /* Pale Yellow-white */
-    --card: 30 50% 15%;
+    --background: 25 95% 8%;
+    --foreground: 45 60% 95%;
+    --card: 25 85% 12%;
     --card-foreground: 45 60% 95%;
-    --popover: 30 50% 15%;
+    --popover: 25 85% 12%;
     --popover-foreground: 45 60% 95%;
-    --primary: 30 95% 55%; /* Vibrant Orange */
-    --primary-foreground: 30 95% 10%;
-    --secondary: 30 50% 15%;
+    --primary: 35 95% 55%;
+    --primary-foreground: 35 95% 10%;
+    --secondary: 25 85% 12%;
     --secondary-foreground: 45 60% 95%;
-    --muted: 30 30% 25%;
+    --muted: 25 70% 20%;
     --muted-foreground: 40 40% 70%;
-    --accent: 50 95% 60%; /* Bright Yellow */
+    --accent: 50 100% 60%;
     --accent-foreground: 50 95% 15%;
     --destructive: 0 70% 45%;
     --destructive-foreground: 0 0% 95%;
-    --border: 30 30% 30%;
-    --input: 30 30% 30%;
-    --ring: 30 95% 55%;
+    --border: 25 70% 25%;
+    --input: 25 70% 25%;
+    --ring: 35 95% 55%;
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 10% 10%;
     --sidebar-primary: 240 10% 10%;
