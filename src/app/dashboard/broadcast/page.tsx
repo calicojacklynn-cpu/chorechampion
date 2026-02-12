@@ -107,7 +107,7 @@ export default function BroadcastPage() {
             return (
               <div
                 key={message.id}
-                className={`flex items-start gap-4 ${!isParent ? 'justify-end' : ''}`}
+                className={`flex items-start gap-4 ${isParent ? '' : 'justify-end'}`}
               >
                 {isParent && (
                   <Avatar className="h-10 w-10 border-2 border-black">
@@ -119,12 +119,12 @@ export default function BroadcastPage() {
                   className={`max-w-md rounded-xl px-4 py-3 ${
                     isParent
                       ? 'bg-primary text-primary-foreground rounded-tl-none'
-                      : 'bg-muted text-foreground rounded-tr-none'
+                      : 'bg-muted text-muted-foreground rounded-tr-none'
                   }`}
                 >
                   <p className={'font-bold text-sm mb-1'}>{message.senderName}</p>
                   <p>{message.text}</p>
-                   <p className={`text-xs mt-2 opacity-70 ${!isParent ? 'text-right' : 'text-left'}`}>
+                   <p className={`text-xs mt-2 opacity-70 ${isParent ? 'text-left' : 'text-right'}`}>
                     {message.timestamp}
                   </p>
                 </div>

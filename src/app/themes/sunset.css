@@ -3,16 +3,16 @@
     --background: 30 50% 98%;           /* Very light warm gray/off-white */
     --foreground: 24 10% 20%;           /* Dark brown/gray text */
     
-    --card: 0 0% 100%;                  /* White card background for the chat area */
+    --card: 0 0% 100%;                  /* White card background */
     --card-foreground: 24 10% 20%;      /* Dark text on card */
     
     --popover: 0 0% 100%;
     --popover-foreground: 24 10% 20%;
     
-    --primary: 24 80% 55%;              /* Medium-dark orange for main chat bubble */
+    --primary: 24 80% 55%;              /* Medium-dark orange for user's chat bubble */
     --primary-foreground: 30 50% 98%;   /* Light text on primary bubble */
     
-    --secondary: 35 90% 60%;            /* Keep vibrant orange for other buttons */
+    --secondary: 35 90% 60%;            /* Brighter orange for buttons */
     --secondary-foreground: 0 0% 0%;    /* Black text on secondary buttons */
     
     --muted: 30 10% 94%;                /* Light gray for other chat bubbles */
@@ -26,7 +26,7 @@
     
     --border: 30 10% 90%;               /* Light gray border */
     --input: 0 0% 100%;
-    --ring: 24 80% 55%;
+    --ring: 35 90% 60%;
 
     --gradient-from: hsl(30, 50%, 92%);
     --gradient-mid: hsl(30, 50%, 94%);
