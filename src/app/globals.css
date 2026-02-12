@@ -40,16 +40,16 @@
   html.theme-slate {
     --background: 220 15% 15%;
     --foreground: 210 20% 90%;
-    --card: 220 15% 85%;
+    --card: 220 15% 75%;
     --card-foreground: 220 15% 15%;
-    --popover: 220 15% 85%;
+    --popover: 220 15% 75%;
     --popover-foreground: 220 15% 15%;
     --primary: 210 90% 60%;
     --primary-foreground: 210 90% 10%;
-    --secondary: 220 15% 90%;
-    --secondary-foreground: 220 15% 10%;
-    --muted: 220 13% 96%;
-    --muted-foreground: 220 10% 40%;
+    --secondary: 220 15% 25%;
+    --secondary-foreground: 210 20% 90%;
+    --muted: 220 15% 25%;
+    --muted-foreground: 210 20% 60%;
     --accent: 45 90% 55%;
     --accent-foreground: 45 95% 15%;
     --destructive: 0 70% 50%;
