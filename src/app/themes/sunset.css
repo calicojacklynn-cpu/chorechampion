@@ -3,13 +3,13 @@
 
     /* Base Colors - Light background with dark, readable text */
     --background: 30 100% 98%;
-    --foreground: 24 10% 20%;
+    --foreground: 0 0% 0%;
 
     /* Cards and Popovers */
     --card: 40 90% 68%;
-    --card-foreground: 24 10% 20%;
+    --card-foreground: 0 0% 0%;
     --popover: 40 90% 68%;
-    --popover-foreground: 24 10% 20%;
+    --popover-foreground: 0 0% 0%;
 
     /* Primary (User Chat Bubble) - A strong, vibrant orange */
     --primary: 25 85% 55%;
@@ -17,15 +17,15 @@
 
     /* Secondary (Action Buttons) */
     --secondary: 35 90% 65%;
-    --secondary-foreground: 24 10% 20%;
+    --secondary-foreground: 0 0% 0%;
 
     /* Muted (Other Chat Bubbles, etc.) */
     --muted: 30 10% 94%;
-    --muted-foreground: 24 10% 45%;
+    --muted-foreground: 0 0% 0%;
 
     /* Accent (Stars) - A pure, bright yellow */
     --accent: 48 96% 50%;
-    --accent-foreground: 24 10% 20%;
+    --accent-foreground: 0 0% 0%;
 
     /* Destructive */
     --destructive: 0 84% 60%;
@@ -43,11 +43,11 @@
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 240 10% 10%;
-    --sidebar-primary: 240 10% 10%;
+    --sidebar-foreground: 0 0% 0%;
+    --sidebar-primary: 0 0% 0%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 5% 96%;
-    --sidebar-accent-foreground: 240 10% 10%;
+    --sidebar-accent-foreground: 0 0% 0%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
 }
