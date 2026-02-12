@@ -42,21 +42,6 @@ export const themes: Theme[] = [
     gradient: 'linear-gradient(to right, hsl(220 90% 40%), hsl(200 70% 25%))',
   },
   {
-    name: 'Sunset',
-    className: 'theme-sunset',
-    gradient: 'linear-gradient(to right, hsl(30 100% 55%), hsl(350 90% 50%))',
-  },
-  {
-    name: 'Forest',
-    className: 'theme-forest',
-    gradient: 'linear-gradient(to right, hsl(120 70% 30%), hsl(100 45% 50%))',
-  },
-  {
-    name: 'Royal',
-    className: 'theme-royal',
-    gradient: 'linear-gradient(to right, hsl(270 80% 50%), hsl(240 60% 35%))',
-  },
-  {
     name: 'Candy',
     className: 'theme-candy',
     gradient: 'linear-gradient(to right, hsl(330 100% 65%), hsl(180 90% 50%))',
