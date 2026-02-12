@@ -13,6 +13,7 @@ import { signOut } from 'firebase/auth';
 import { useEffect } from 'react';
 import { doc } from 'firebase/firestore';
 import type { Champion } from '@/app/dashboard/champions/page';
+import { cn } from '@/lib/utils';
 
 
 export default function ChampionLayout({
@@ -107,7 +108,7 @@ export default function ChampionLayout({
         <Sidebar variant="inset" collapsible="icon">
           <ChampionNav />
         </Sidebar>
-        <SidebarInset>
+        <SidebarInset className={cn("bg-gradient-theme")}>
             <header className="flex h-16 items-center justify-end gap-4 border-b-0 backdrop-blur-sm px-4 sticky top-0 z-30 lg:px-6 bg-transparent">
                 <SidebarTrigger className="md:hidden mr-auto" />
                 <div className="flex items-center gap-2">

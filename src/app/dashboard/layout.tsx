@@ -11,6 +11,7 @@ import { ScheduleProvider } from "@/app/context/ScheduleContext";
 import { Loader2, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
+import { cn } from '@/lib/utils';
 
 
 export default function DashboardLayout({
@@ -79,7 +80,7 @@ export default function DashboardLayout({
         <Sidebar variant="inset" collapsible="icon">
           <Nav />
         </Sidebar>
-        <SidebarInset>
+        <SidebarInset className={cn("bg-gradient-theme")}>
           <header className="flex h-16 items-center justify-end gap-4 border-b backdrop-blur-sm px-4 sticky top-0 z-30 lg:px-6">
             <SidebarTrigger className="md:hidden mr-auto" />
             <UserNav />
