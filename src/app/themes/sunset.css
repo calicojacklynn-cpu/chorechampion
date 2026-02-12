@@ -2,8 +2,8 @@
     --radius: 1.5rem;
     --background: 25 95% 8%;
     --foreground: 45 60% 95%;
-    --card: 20 80% 14%;
-    --card-foreground: 30 70% 95%;
+    --card: 35 90% 80%;
+    --card-foreground: 25 85% 15%;
     --popover: 25 85% 12%;
     --popover-foreground: 45 60% 95%;
     --primary: 35 95% 55%;
@@ -27,7 +27,7 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(50, 100%, 60%);
-    --gradient-mid: hsl(30, 100%, 55%);
+    --gradient-from: hsl(45, 100%, 60%);
+    --gradient-mid: hsl(35, 100%, 55%);
     --gradient-to: hsl(10, 90%, 50%);
 }
