@@ -209,7 +209,7 @@
     --input: 220 50% 25%;
     --ring: 210 90% 70%;
     --sidebar-background: transparent;
-    --sidebar-foreground: 210 20% 90%;
+    --sidebar-foreground: 0 0% 0%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -338,28 +338,28 @@
     --sidebar-ring: hsl(var(--ring));
   }
 
-  html.theme-matrix {
-    --background: 120 100% 5%;
-    --foreground: 120 80% 70%;
-    --card: 120 50% 10%;
-    --card-foreground: 120 80% 70%;
-    --popover: 120 50% 8%;
-    --popover-foreground: 120 80% 70%;
-    --primary: 120 90% 50%;
-    --primary-foreground: 120 90% 5%;
-    --secondary: 120 50% 15%;
-    --secondary-foreground: 120 80% 70%;
-    --muted: 120 50% 15%;
-    --muted-foreground: 120 80% 50%;
-    --accent: 120 90% 50%;
-    --accent-foreground: 120 90% 5%;
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 120 50% 20%;
-    --input: 120 50% 20%;
-    --ring: 120 90% 60%;
+  html.theme-sage {
+    --background: 100 20% 97%;
+    --foreground: 100 10% 20%;
+    --card: 100 20% 100%;
+    --card-foreground: 100 10% 20%;
+    --popover: 100 20% 100%;
+    --popover-foreground: 100 10% 20%;
+    --primary: 105 30% 45%;
+    --primary-foreground: 100 20% 98%;
+    --secondary: 100 20% 94%;
+    --secondary-foreground: 100 10% 20%;
+    --muted: 100 20% 94%;
+    --muted-foreground: 100 10% 40%;
+    --accent: 45 90% 55%;
+    --accent-foreground: 45 95% 15%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 100 15% 85%;
+    --input: 100 15% 85%;
+    --ring: 105 30% 55%;
     --sidebar-background: transparent;
-    --sidebar-foreground: 120 80% 70%;
+    --sidebar-foreground: 100 10% 20%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -384,6 +384,9 @@
     background-color: hsl(var(--primary));
     animation: speech-pulse 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
     animation-delay: calc(var(--bubble-index) * 200ms);
+  }
+  [data-sidebar="sidebar"] {
+    @apply text-sidebar-foreground;
   }
 }
 
