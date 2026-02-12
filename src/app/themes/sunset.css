@@ -1,9 +1,9 @@
 .sunset {
     --radius: 1.5rem;
 
-    /* Base Colors */
-    --background: 30 50% 98%; /* Very light, warm off-white */
-    --foreground: 24 10% 20%; /* Dark, warm gray for text */
+    /* Base Colors - Light background with dark, readable text */
+    --background: 30 100% 98%;
+    --foreground: 24 10% 20%;
 
     /* Cards and Popovers */
     --card: 0 0% 100%;
@@ -11,21 +11,21 @@
     --popover: 0 0% 100%;
     --popover-foreground: 24 10% 20%;
 
-    /* Primary (User Chat Bubble) - Brighter */
-    --primary: 30 90% 60%; 
+    /* Primary (User Chat Bubble) - A strong, vibrant orange */
+    --primary: 28 100% 62%; 
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary (Action Buttons) - More Vibrant */
-    --secondary: 35 95% 65%;
-    --secondary-foreground: 24 10% 10%;
+    /* Secondary (Action Buttons) - Matching the vibrant orange */
+    --secondary: 28 100% 62%;
+    --secondary-foreground: 0 0% 100%;
 
     /* Muted (Other Chat Bubbles, etc.) */
-    --muted: 30 10% 94%; /* Soft, light gray */
-    --muted-foreground: 24 10% 45%; /* Mid-dark gray for placeholder text */
+    --muted: 30 10% 94%;
+    --muted-foreground: 24 10% 45%;
 
-    /* Accent (Stars) - Already bright yellow */
+    /* Accent (Stars) - A pure, bright yellow */
     --accent: 48 96% 50%;
-    --accent-foreground: 0 0% 0%; /* Black text on yellow */
+    --accent-foreground: 24 10% 20%;
 
     /* Destructive */
     --destructive: 0 84% 60%;
@@ -34,12 +34,12 @@
     /* Other UI Elements */
     --border: 30 10% 90%;
     --input: 0 0% 100%;
-    --ring: 35 95% 65%; /* Match action button color */
+    --ring: 28 100% 62%; 
 
-    /* Background Gradient - Brighter and more vibrant */
-    --gradient-from: hsl(50, 100%, 90%); /* Brighter yellow */
-    --gradient-mid: hsl(35, 100%, 85%);  /* Brighter orange */
-    --gradient-to: hsl(25, 100%, 80%);  /* Brighter peachy-orange */
+    /* Background Gradient - MORE VIBRANT and less pastel */
+    --gradient-from: hsl(45, 100%, 85%);
+    --gradient-mid: hsl(30, 100%, 80%);
+    --gradient-to: hsl(15, 100%, 75%);
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
