@@ -11,20 +11,20 @@
     --popover: 0 0% 100%;
     --popover-foreground: 24 10% 20%;
 
-    /* Primary (User Chat Bubble) */
-    --primary: 30 80% 55%; /* Rich, medium-dark orange */
-    --primary-foreground: 0 0% 100%; /* White text for contrast */
+    /* Primary (User Chat Bubble) - Brighter */
+    --primary: 30 90% 60%; 
+    --primary-foreground: 0 0% 100%;
 
-    /* Secondary (Action Buttons) */
-    --secondary: 35 90% 60%; /* Vibrant orange for buttons */
-    --secondary-foreground: 24 10% 10%; /* Dark text for contrast on buttons */
+    /* Secondary (Action Buttons) - More Vibrant */
+    --secondary: 35 95% 65%;
+    --secondary-foreground: 24 10% 10%;
 
     /* Muted (Other Chat Bubbles, etc.) */
     --muted: 30 10% 94%; /* Soft, light gray */
     --muted-foreground: 24 10% 45%; /* Mid-dark gray for placeholder text */
 
-    /* Accent (Stars) */
-    --accent: 48 96% 50%; /* Bright, pure yellow */
+    /* Accent (Stars) - Already bright yellow */
+    --accent: 48 96% 50%;
     --accent-foreground: 0 0% 0%; /* Black text on yellow */
 
     /* Destructive */
@@ -34,12 +34,12 @@
     /* Other UI Elements */
     --border: 30 10% 90%;
     --input: 0 0% 100%;
-    --ring: 35 90% 60%; /* Match action button color */
+    --ring: 35 95% 65%; /* Match action button color */
 
-    /* Background Gradient */
-    --gradient-from: hsl(50, 100%, 85%); /* Light vibrant yellow */
-    --gradient-mid: hsl(35, 100%, 80%); /* Light vibrant orange */
-    --gradient-to: hsl(20, 100%, 75%); /* Light vibrant peachy-orange */
+    /* Background Gradient - Brighter and more vibrant */
+    --gradient-from: hsl(50, 100%, 90%); /* Brighter yellow */
+    --gradient-mid: hsl(35, 100%, 85%);  /* Brighter orange */
+    --gradient-to: hsl(25, 100%, 80%);  /* Brighter peachy-orange */
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
