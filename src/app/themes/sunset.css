@@ -6,9 +6,9 @@
     --foreground: 24 10% 20%;
 
     /* Cards and Popovers */
-    --card: 0 0% 100%;
+    --card: 45 100% 96%;
     --card-foreground: 24 10% 20%;
-    --popover: 0 0% 100%;
+    --popover: 45 100% 96%;
     --popover-foreground: 24 10% 20%;
 
     /* Primary (User Chat Bubble) - A strong, vibrant orange */
