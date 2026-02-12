@@ -27,8 +27,8 @@
     --border: 210 30% 88%;
     --input: 210 30% 88%;
     --ring: 190 80% 60%;
-    --sidebar-background: transparent;
-    --sidebar-foreground: 210 10% 15%;
+    --sidebar-background: 210 80% 85%;
+    --sidebar-foreground: 210 10% 10%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -87,8 +87,8 @@
     --border: 200 30% 80%;
     --input: 200 30% 80%;
     --ring: 190 80% 60%;
-    --sidebar-background: transparent;
-    --sidebar-foreground: 210 10% 23%;
+    --sidebar-background: 200 30% 90%;
+    --sidebar-foreground: 210 10% 10%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -117,8 +117,8 @@
     --border: 350 60% 90%;
     --input: 350 60% 90%;
     --ring: 340 80% 80%;
-    --sidebar-background: transparent;
-    --sidebar-foreground: 340 10% 15%;
+    --sidebar-background: 350 80% 96%;
+    --sidebar-foreground: 340 10% 10%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -147,8 +147,8 @@
     --border: 150 30% 80%;
     --input: 150 30% 80%;
     --ring: 160 70% 55%;
-    --sidebar-background: transparent;
-    --sidebar-foreground: 160 10% 23%;
+    --sidebar-background: 150 30% 92%;
+    --sidebar-foreground: 160 10% 10%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -177,8 +177,8 @@
     --border: 40 50% 80%;
     --input: 40 50% 80%;
     --ring: 30 80% 70%;
-    --sidebar-background: transparent;
-    --sidebar-foreground: 30 10% 23%;
+    --sidebar-background: 40 50% 92%;
+    --sidebar-foreground: 30 10% 10%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -207,8 +207,8 @@
     --border: 220 30% 30%;
     --input: 220 30% 30%;
     --ring: 210 90% 70%;
-    --sidebar-background: transparent;
-    --sidebar-foreground: 210 20% 90%;
+    --sidebar-background: 220 20% 94%;
+    --sidebar-foreground: 220 50% 10%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -237,8 +237,8 @@
     --border: 20 20% 32%;
     --input: 20 20% 32%;
     --ring: 30 90% 70%;
-    --sidebar-background: transparent;
-    --sidebar-foreground: 20 5% 92%;
+    --sidebar-background: 20 10% 95%;
+    --sidebar-foreground: 20 20% 12%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -267,8 +267,8 @@
     --border: 120 25% 30%;
     --input: 120 25% 30%;
     --ring: 100 80% 70%;
-    --sidebar-background: transparent;
-    --sidebar-foreground: 110 10% 90%;
+    --sidebar-background: 120 10% 94%;
+    --sidebar-foreground: 120 25% 10%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -297,8 +297,8 @@
     --border: 260 30% 35%;
     --input: 260 30% 35%;
     --ring: 250 70% 75%;
-    --sidebar-background: transparent;
-    --sidebar-foreground: 250 15% 90%;
+    --sidebar-background: 260 15% 95%;
+    --sidebar-foreground: 260 30% 15%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -327,7 +327,7 @@
     --border: 0 0% 90%;
     --input: 0 0% 90%;
     --ring: 340 90% 75%;
-    --sidebar-background: transparent;
+    --sidebar-background: 340 100% 97%;
     --sidebar-foreground: 240 10% 10%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
@@ -357,8 +357,8 @@
     --border: 100 15% 85%;
     --input: 100 15% 85%;
     --ring: 105 30% 55%;
-    --sidebar-background: transparent;
-    --sidebar-foreground: 100 10% 20%;
+    --sidebar-background: 100 15% 92%;
+    --sidebar-foreground: 100 10% 10%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
