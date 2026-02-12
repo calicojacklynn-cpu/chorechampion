@@ -152,7 +152,7 @@ export default function ChampionBroadcastPage() {
                 {!isSelf && (
                   <Avatar className="h-10 w-10 border-2 border-black">
                     <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
-                    <AvatarFallback className={cn(isParent ? "bg-accent text-accent-foreground" : "bg-secondary text-secondary-foreground")}>{message.senderName.charAt(0)}</AvatarFallback>
+                    <AvatarFallback className="bg-secondary text-secondary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
                   </Avatar>
                 )}
                 <div
