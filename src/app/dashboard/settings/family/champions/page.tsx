@@ -208,7 +208,7 @@ export default function ChampionsPage() {
                               src={champion.avatarUrl}
                               alt={champion.name}
                             />
-                          <AvatarFallback>
+                          <AvatarFallback className="bg-secondary text-secondary-foreground">
                             {champion.name.charAt(0)}
                           </AvatarFallback>
                         </Avatar>

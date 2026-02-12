@@ -150,7 +150,7 @@ export default function ChampionBroadcastPage() {
                 {!isSelf && (
                   <Avatar className="h-10 w-10 border">
                     <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
-                    <AvatarFallback>{message.senderName.charAt(0)}</AvatarFallback>
+                    <AvatarFallback className="bg-secondary text-secondary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
                   </Avatar>
                 )}
                 <div
@@ -173,7 +173,7 @@ export default function ChampionBroadcastPage() {
                 {isSelf && (
                   <Avatar className="h-10 w-10 border">
                     <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
-                    <AvatarFallback>{message.senderName.charAt(0)}</AvatarFallback>
+                    <AvatarFallback className="bg-secondary text-secondary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
                   </Avatar>
                 )}
               </div>

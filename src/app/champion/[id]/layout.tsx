@@ -118,7 +118,7 @@ export default function ChampionLayout({
                 </div>
                 <Avatar className="h-10 w-10 border">
                     <AvatarImage src={champion.avatarUrl || undefined} alt={champion.name} />
-                    <AvatarFallback>{champion.name.charAt(0)}</AvatarFallback>
+                    <AvatarFallback className="bg-secondary text-secondary-foreground">{champion.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <Button variant="secondary" size="sm" onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4"/>
