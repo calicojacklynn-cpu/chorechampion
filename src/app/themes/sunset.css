@@ -6,13 +6,13 @@
     --foreground: 24 10% 20%;
 
     /* Cards and Popovers */
-    --card: 40 85% 85%;
+    --card: 35 90% 80%;
     --card-foreground: 24 10% 20%;
-    --popover: 40 85% 85%;
+    --popover: 35 90% 80%;
     --popover-foreground: 24 10% 20%;
 
     /* Primary (User Chat Bubble) - A strong, vibrant orange */
-    --primary: 30 100% 60%;
+    --primary: 35 85% 55%;
     --primary-foreground: 0 0% 100%;
 
     /* Secondary (Action Buttons) - A light orange */
