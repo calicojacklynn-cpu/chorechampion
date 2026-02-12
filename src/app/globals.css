@@ -32,8 +32,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(210 100% 98%);
-    --gradient-to: hsl(210 100% 92%);
+    --gradient-from: hsl(190, 100%, 95%);
+    --gradient-to: hsl(210, 100%, 95%);
   }
 
   .dark {
@@ -65,8 +65,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(222 47% 11%);
-    --gradient-to: hsl(210 40% 5%);
+    --gradient-from: hsl(222, 47%, 15%);
+    --gradient-to: hsl(260, 50%, 12%);
   }
 
   /* Slate Theme (Dark) */
@@ -99,8 +99,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(220 13% 20%);
-    --gradient-to: hsl(220 13% 10%);
+    --gradient-from: hsl(220, 13%, 22%);
+    --gradient-to: hsl(215, 20%, 16%);
   }
 
   /* Rose Theme (Light) */
@@ -133,8 +133,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(350 100% 98%);
-    --gradient-to: hsl(350 100% 92%);
+    --gradient-from: hsl(350, 100%, 97%);
+    --gradient-to: hsl(330, 100%, 95%);
   }
   
   /* Ocean Theme (Dark) */
@@ -167,8 +167,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(205 50% 20%);
-    --gradient-to: hsl(190 60% 10%);
+    --gradient-from: hsl(195, 60%, 18%);
+    --gradient-to: hsl(180, 50%, 12%);
   }
 
   /* Sage Theme (Light) */
@@ -201,8 +201,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(140 30% 96%);
-    --gradient-to: hsl(150 40% 88%);
+    --gradient-from: hsl(120, 40%, 96%);
+    --gradient-to: hsl(90, 50%, 92%);
   }
   
   /* Candy Theme (Light) */
@@ -235,8 +235,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(300 100% 98%);
-    --gradient-to: hsl(320 90% 92%);
+    --gradient-from: hsl(280, 100%, 96%);
+    --gradient-to: hsl(330, 100%, 96%);
   }
 
   /* Sunset Theme (Dark) */
@@ -269,8 +269,8 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(30 80% 30%);
-    --gradient-to: hsl(10 70% 20%);
+    --gradient-from: hsl(25, 60%, 20%);
+    --gradient-to: hsl(350, 50%, 15%);
   }
 }
 
