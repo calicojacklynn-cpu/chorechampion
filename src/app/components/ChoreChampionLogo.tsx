@@ -30,5 +30,3 @@ export function ChoreChampionLogo(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-
-    
