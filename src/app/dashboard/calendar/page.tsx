@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -100,10 +101,10 @@ export default function CalendarPage() {
             {format(currentDate, "MMMM yyyy")}
           </CardTitle>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" onClick={prevMonth}>
+            <Button variant="default" size="icon-sm" onClick={prevMonth}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="icon" onClick={nextMonth}>
+            <Button variant="default" size="icon-sm" onClick={nextMonth}>
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
