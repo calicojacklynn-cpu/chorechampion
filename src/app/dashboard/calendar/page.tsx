@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   format,
   startOfMonth,
@@ -27,19 +27,49 @@ import {
 import { cn } from "@/lib/utils";
 import { AddEventDialog } from "./AddEventDialog";
 import { AiAddEventDialog } from "./AiAddEventDialog";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [viewMode, setViewMode] = useState<'monthly' | 'weekly'>('monthly');
   const { schedule, events } = useSchedule();
 
-  const firstDayOfMonth = startOfMonth(currentDate);
-  const lastDayOfMonth = endOfMonth(currentDate);
-  const startDate = startOfWeek(firstDayOfMonth);
-  const endDate = endOfWeek(lastDayOfMonth);
-  const days = eachDayOfInterval({ start: startDate, end: endDate });
+  const next = () => {
+    setCurrentDate(add(currentDate, viewMode === 'monthly' ? { months: 1 } : { weeks: 1 }));
+  };
 
-  const nextMonth = () => setCurrentDate(add(currentDate, { months: 1 }));
-  const prevMonth = () => setCurrentDate(sub(currentDate, { months: 1 }));
+  const prev = () => {
+    setCurrentDate(sub(currentDate, viewMode === 'monthly' ? { months: 1 } : { weeks: 1 }));
+  };
+
+  const days = useMemo(() => {
+    if (viewMode === 'monthly') {
+      const firstDayOfMonth = startOfMonth(currentDate);
+      const lastDayOfMonth = endOfMonth(currentDate);
+      const startDate = startOfWeek(firstDayOfMonth);
+      const endDate = endOfWeek(lastDayOfMonth);
+      return eachDayOfInterval({ start: startDate, end: endDate });
+    } else { // weekly view
+      const startDate = startOfWeek(currentDate);
+      const endDate = endOfWeek(currentDate);
+      return eachDayOfInterval({ start: startDate, end: endDate });
+    }
+  }, [currentDate, viewMode]);
+
+  const headerTitle = useMemo(() => {
+    if (viewMode === 'monthly') {
+      return format(currentDate, "MMMM yyyy");
+    } else {
+      const weekStart = startOfWeek(currentDate);
+      const weekEnd = endOfWeek(currentDate);
+      if (isSameMonth(weekStart, weekEnd)) {
+        return `${format(weekStart, 'MMMM d')} - ${format(weekEnd, 'd, yyyy')}`;
+      } else {
+        return `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d, yyyy')}`;
+      }
+    }
+  }, [currentDate, viewMode]);
+
 
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -97,14 +127,21 @@ export default function CalendarPage() {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between p-4 border-b">
-          <CardTitle className="text-xl font-semibold">
-            {format(currentDate, "MMMM yyyy")}
+          <CardTitle className="text-xl font-semibold w-64">
+            {headerTitle}
           </CardTitle>
           <div className="flex items-center gap-2">
-            <Button variant="default" size="icon-sm" onClick={prevMonth}>
+            <Button variant="outline" size="sm" onClick={() => setCurrentDate(new Date())}>Today</Button>
+            <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'monthly' | 'weekly')} className="w-auto">
+              <TabsList className="h-9 p-1">
+                  <TabsTrigger value="monthly" className="h-7 px-3 text-xs">Month</TabsTrigger>
+                  <TabsTrigger value="weekly" className="h-7 px-3 text-xs">Week</TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <Button variant="default" size="icon-sm" onClick={prev}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <Button variant="default" size="icon-sm" onClick={nextMonth}>
+            <Button variant="default" size="icon-sm" onClick={next}>
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
@@ -125,9 +162,9 @@ export default function CalendarPage() {
               <div
                 key={day.toString()}
                 className={cn(
-                  "h-44 p-2 border-r border-b flex flex-col overflow-hidden",
-                  !isSameMonth(day, currentDate) &&
-                    "bg-muted/50 text-muted-foreground"
+                  "p-2 border-r border-b flex flex-col overflow-hidden",
+                  viewMode === 'weekly' ? 'h-[calc(100vh-24rem)]' : 'h-44',
+                  viewMode === 'monthly' && !isSameMonth(day, currentDate) && "bg-muted/50 text-muted-foreground"
                 )}
               >
                 <time
