@@ -12,14 +12,14 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/app/context/ThemeContext";
 
 const themes = [
-  { name: 'light', label: 'Default Light', gradient: 'linear-gradient(to bottom right, #FFFFFF, #f1f5f9)', card: '#ffffff', primary: '#3b82f6' },
-  { name: 'dark', label: 'Default Dark', gradient: 'linear-gradient(to bottom right, #0f172a, #020617)', card: '#1e293b', primary: '#38bdf8' },
-  { name: 'slate', label: 'Slate', gradient: 'linear-gradient(to bottom right, #1e293b, #0f172a)', card: '#292d3e', primary: '#a6accd' },
-  { name: 'rose', label: 'Rose', gradient: 'linear-gradient(to bottom right, #fff1f2, #ffe4e6)', card: '#ffffff', primary: '#f43f5e' },
-  { name: 'ocean', label: 'Ocean', gradient: 'linear-gradient(to bottom right, #0f172a, #083344)', card: '#1e293b', primary: '#06b6d4' },
-  { name: 'sage', label: 'Sage', gradient: 'linear-gradient(to bottom right, #f0fdf4, #dcfce7)', card: '#ffffff', primary: '#22c55e' },
-  { name: 'candy', label: 'Candy', gradient: 'linear-gradient(to bottom right, #fdf4ff, #fae8ff)', card: '#ffffff', primary: '#ec4899' },
-  { name: 'sunset', label: 'Sunset', gradient: 'linear-gradient(to bottom right, #78350f, #450a0a)', card: '#412d25', primary: '#f97316' },
+  { name: 'light', label: 'Default Light', gradient: 'linear-gradient(to bottom right, #f1f5f9, #dbeafe)' },
+  { name: 'dark', label: 'Default Dark', gradient: 'linear-gradient(to bottom right, #1e293b, #334155)' },
+  { name: 'slate', label: 'Slate', gradient: 'linear-gradient(to bottom right, #334155, #475569)' },
+  { name: 'rose', label: 'Rose', gradient: 'linear-gradient(to bottom right, #fda4af, #f472b6)' },
+  { name: 'ocean', label: 'Ocean', gradient: 'linear-gradient(to bottom right, #7dd3fc, #38bdf8)' },
+  { name: 'sage', label: 'Sage', gradient: 'linear-gradient(to bottom right, #86efac, #4ade80)' },
+  { name: 'candy', label: 'Candy', gradient: 'linear-gradient(to bottom right, #f0abfc, #e879f9)' },
+  { name: 'sunset', label: 'Sunset', gradient: 'linear-gradient(to bottom right, #fb923c, #f97316)' },
 ] as const;
 
 
@@ -53,19 +53,16 @@ export default function ThemesPage() {
                 >
                   <div
                     className={cn(
-                      "rounded-md border-2 p-1 transition-all",
+                      "rounded-lg border-2 p-1 transition-all",
                       isActive ? "border-primary" : "border-transparent"
                     )}
                   >
-                    <div className="flex items-center gap-2 rounded-md p-2" style={{background: theme.gradient}}>
-                      <div className="w-10 h-16 rounded-md" style={{backgroundColor: theme.card}}/>
-                      <div className="flex-1 space-y-1.5">
-                        <div className="w-full h-2.5 rounded-sm" style={{backgroundColor: theme.primary}}/>
-                        <div className="w-4/5 h-2.5 rounded-sm opacity-50" style={{backgroundColor: theme.primary}}/>
-                      </div>
-                    </div>
+                    <div
+                      className="h-20 w-full rounded-md"
+                      style={{ background: theme.gradient }}
+                    />
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center gap-2">
                      <span className="text-sm font-medium">{theme.label}</span>
                      {isActive && <Check className="h-4 w-4 text-primary" />}
                   </div>
