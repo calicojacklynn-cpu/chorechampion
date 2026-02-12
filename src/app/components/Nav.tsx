@@ -45,6 +45,7 @@ const navItems = [
       { href: "/dashboard/settings/family", label: "Family" },
       { href: "/dashboard/settings/subscription", label: "Subscription" },
       { href: "/dashboard/settings/localization", label: "Localization" },
+      { href: "/dashboard/settings/themes", label: "Themes" },
     ],
   },
 ];
