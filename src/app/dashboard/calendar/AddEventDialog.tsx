@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -87,7 +88,7 @@ export function AddEventDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button variant="default">
           <PlusCircle className="mr-2 h-4 w-4" />
           Add Event
         </Button>
@@ -222,7 +223,7 @@ export function AddEventDialog() {
 
 
             <DialogFooter>
-              <Button type="submit">Add to Calendar</Button>
+              <Button variant="default" type="submit">Add to Calendar</Button>
             </DialogFooter>
           </form>
         </Form>

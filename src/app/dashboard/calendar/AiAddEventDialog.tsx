@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -74,7 +75,7 @@ export function AiAddEventDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button variant="default">
           <Sparkles className="mr-2 h-4 w-4" />
           AI Add Event
         </Button>
@@ -100,7 +101,7 @@ export function AiAddEventDialog() {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleSubmit} disabled={isAiRunning} className="w-full">
+          <Button variant="default" onClick={handleSubmit} disabled={isAiRunning} className="w-full">
             {isAiRunning ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
