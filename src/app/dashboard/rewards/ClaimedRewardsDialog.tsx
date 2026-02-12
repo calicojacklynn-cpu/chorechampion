@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Dialog,
@@ -66,7 +66,7 @@ export function ClaimedRewardsDialog({ champion, isOpen, onOpenChange }: Claimed
                                 <TableCell className="font-medium">{reward.rewardName}</TableCell>
                                 <TableCell>
                                      <Badge variant="secondary" className="w-fit">
-                                        <Star className="w-3 h-3 mr-1 text-accent fill-accent" />
+                                        <Star className="w-3 h-3 mr-1 text-accent fill-accent stroke-black" />
                                         {reward.points}
                                     </Badge>
                                 </TableCell>
