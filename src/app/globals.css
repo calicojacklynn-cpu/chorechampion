@@ -15,7 +15,7 @@
     --card-foreground: 210 10% 15%;
     --popover: 200 30% 100%;
     --popover-foreground: 210 10% 15%;
-    --primary: 210 90% 55%;
+    --primary: 210 90% 60%;
     --primary-foreground: 0 0% 100%;
     --secondary: 200 30% 90%;
     --secondary-foreground: 210 10% 15%;
@@ -41,9 +41,9 @@
   html.theme-slate {
     --background: 220 15% 15%;
     --foreground: 210 20% 90%;
-    --card: 220 15% 20%;
+    --card: 220 15% 25%;
     --card-foreground: 210 20% 90%;
-    --popover: 220 15% 18%;
+    --popover: 220 15% 25%;
     --popover-foreground: 210 20% 90%;
     --primary: 210 90% 60%;
     --primary-foreground: 210 90% 10%;
@@ -75,7 +75,7 @@
     --card-foreground: 210 10% 23%;
     --popover: 200 30% 100%;
     --popover-foreground: 210 10% 23%;
-    --primary: 190 80% 50%;
+    --primary: 190 80% 55%;
     --primary-foreground: 0 0% 100%;
     --secondary: 200 30% 90%;
     --secondary-foreground: 210 10% 23%;
@@ -99,13 +99,13 @@
   }
 
   html.theme-rose {
-    --background: 350 60% 97%;
+    --background: 350 100% 99%;
     --foreground: 340 10% 15%;
     --card: 350 60% 100%;
     --card-foreground: 340 10% 15%;
     --popover: 350 60% 100%;
     --popover-foreground: 340 10% 15%;
-    --primary: 340 80% 70%;
+    --primary: 340 90% 85%;
     --primary-foreground: 0 0% 100%;
     --secondary: 350 60% 96%;
     --secondary-foreground: 340 10% 15%;
@@ -135,7 +135,7 @@
     --card-foreground: 160 10% 23%;
     --popover: 150 30% 100%;
     --popover-foreground: 160 10% 23%;
-    --primary: 160 70% 45%;
+    --primary: 160 70% 55%;
     --primary-foreground: 0 0% 100%;
     --secondary: 150 30% 90%;
     --secondary-foreground: 160 10% 23%;
@@ -165,7 +165,7 @@
     --card-foreground: 30 10% 23%;
     --popover: 40 50% 100%;
     --popover-foreground: 30 10% 23%;
-    --primary: 30 80% 60%;
+    --primary: 30 80% 65%;
     --primary-foreground: 30 80% 10%;
     --secondary: 40 50% 90%;
     --secondary-foreground: 30 10% 23%;
@@ -191,9 +191,9 @@
   html.theme-ocean {
     --background: 220 50% 10%;
     --foreground: 210 20% 90%;
-    --card: 220 50% 15%;
+    --card: 220 50% 30%;
     --card-foreground: 210 20% 90%;
-    --popover: 220 50% 12%;
+    --popover: 220 50% 30%;
     --popover-foreground: 210 20% 90%;
     --primary: 210 90% 60%;
     --primary-foreground: 210 90% 10%;
@@ -221,9 +221,9 @@
   html.theme-sunset {
     --background: 20 20% 12%;
     --foreground: 20 5% 92%;
-    --card: 20 20% 18%;
+    --card: 20 20% 25%;
     --card-foreground: 20 5% 92%;
-    --popover: 20 20% 15%;
+    --popover: 20 20% 25%;
     --popover-foreground: 20 5% 92%;
     --primary: 30 90% 60%;
     --primary-foreground: 30 90% 10%;
@@ -251,9 +251,9 @@
    html.theme-forest {
     --background: 120 25% 10%;
     --foreground: 110 10% 90%;
-    --card: 120 25% 15%;
+    --card: 120 25% 25%;
     --card-foreground: 110 10% 90%;
-    --popover: 120 25% 12%;
+    --popover: 120 25% 25%;
     --popover-foreground: 110 10% 90%;
     --primary: 100 80% 60%;
     --primary-foreground: 100 80% 10%;
@@ -281,9 +281,9 @@
   html.theme-royal {
     --background: 260 30% 15%;
     --foreground: 250 15% 90%;
-    --card: 260 30% 20%;
+    --card: 260 30% 25%;
     --card-foreground: 250 15% 90%;
-    --popover: 260 30% 18%;
+    --popover: 260 30% 25%;
     --popover-foreground: 250 15% 90%;
     --primary: 250 70% 65%;
     --primary-foreground: 250 70% 10%;
@@ -315,7 +315,7 @@
     --card-foreground: 240 10% 10%;
     --popover: 0 0% 98%;
     --popover-foreground: 240 10% 10%;
-    --primary: 340 90% 65%;
+    --primary: 340 90% 70%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 95%;
     --secondary-foreground: 240 10% 10%;
@@ -345,7 +345,7 @@
     --card-foreground: 100 10% 20%;
     --popover: 100 20% 100%;
     --popover-foreground: 100 10% 20%;
-    --primary: 105 30% 45%;
+    --primary: 105 30% 55%;
     --primary-foreground: 100 20% 98%;
     --secondary: 100 20% 94%;
     --secondary-foreground: 100 10% 20%;
