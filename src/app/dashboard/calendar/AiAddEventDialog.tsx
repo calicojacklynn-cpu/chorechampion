@@ -74,7 +74,7 @@ export function AiAddEventDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+        <Button>
           <Sparkles className="mr-2 h-4 w-4" />
           AI Add Event
         </Button>

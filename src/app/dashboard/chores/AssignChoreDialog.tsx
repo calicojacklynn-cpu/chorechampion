@@ -200,7 +200,7 @@ export function AssignChoreDialog({
               )}
             />
             <DialogFooter>
-              <Button type="submit" disabled={isAiRunning} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+              <Button type="submit" disabled={isAiRunning} className="w-full">
                 {isAiRunning ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

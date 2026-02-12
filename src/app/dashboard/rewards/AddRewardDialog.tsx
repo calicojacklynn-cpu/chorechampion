@@ -77,7 +77,7 @@ export function AddRewardDialog({ onAdd }: AddRewardDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+        <Button>
             <PlusCircle className="mr-2 h-4 w-4" />
             Add New Reward
         </Button>

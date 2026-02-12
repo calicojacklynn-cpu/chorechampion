@@ -118,7 +118,7 @@ export default function AdminsPage() {
           </div>
           <Button
             size="sm"
-            className="ml-auto gap-1 bg-accent hover:bg-accent/90 text-accent-foreground"
+            className="ml-auto gap-1"
             onClick={() => setIsAddDialogOpen(true)}
           >
             <PlusCircle className="h-3.5 w-3.5" />

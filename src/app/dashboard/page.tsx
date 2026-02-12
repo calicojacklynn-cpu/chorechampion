@@ -60,7 +60,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Star className="h-5 w-5 text-accent" />
+              <Star className="h-5 w-5 text-accent fill-accent" />
               Weekly Points
             </CardTitle>
             <CardDescription>

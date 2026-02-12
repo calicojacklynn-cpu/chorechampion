@@ -214,7 +214,7 @@ export default function LoginPage() {
                             </FormItem>
                           )}
                         />
-                        <Button type="submit" className="w-full !mt-6 bg-accent hover:bg-accent/90 text-accent-foreground" disabled={parentForm.formState.isSubmitting}>
+                        <Button type="submit" className="w-full !mt-6" disabled={parentForm.formState.isSubmitting}>
                           {parentForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                           Login or Sign Up
                         </Button>
