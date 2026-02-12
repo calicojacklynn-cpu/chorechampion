@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -57,11 +58,6 @@ export default function LocalizationSettingsPage() {
                           <SelectItem value="pst">Pacific Standard Time (PST)</SelectItem>
                       </SelectContent>
                   </Select>
-              </div>
-              <div className="space-y-2">
-                  <Label htmlFor="phonetic-dictionary">Phonetic Dictionary</Label>
-                  <p className="text-sm text-muted-foreground">Help voice-to-text recognize local names and places.</p>
-                  <Textarea id="phonetic-dictionary" placeholder="e.g., Siobhan = shiv-awn" defaultValue="Siobhan = shiv-awn" />
               </div>
           </CardContent>
           <CardFooter className="border-t px-6 py-4">
