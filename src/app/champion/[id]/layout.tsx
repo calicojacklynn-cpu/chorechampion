@@ -112,7 +112,7 @@ export default function ChampionLayout({
             <header className="flex h-16 items-center justify-end gap-4 border-b-0 backdrop-blur-sm px-4 sticky top-0 z-30 lg:px-6 bg-transparent">
                 <SidebarTrigger className="md:hidden mr-auto" />
                 <div className="flex items-center gap-2">
-                    <Star className="w-6 h-6 text-accent fill-accent" />
+                    <Star className="w-6 h-6 text-accent fill-accent stroke-black" />
                     <span className="font-bold text-xl text-foreground">{champion.points}</span>
                     <span className="text-sm text-foreground">Points</span>
                 </div>

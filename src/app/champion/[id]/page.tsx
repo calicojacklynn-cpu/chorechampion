@@ -139,7 +139,7 @@ export default function ChampionDashboardPage() {
                                         <TableCell className="font-medium">{chore.choreName}</TableCell>
                                         <TableCell>
                                             <Badge variant="secondary" className="flex items-center gap-1 w-fit">
-                                                <Star className="w-3 h-3 text-accent fill-accent" /> {chore.pointsValue}
+                                                <Star className="w-3 h-3 text-accent fill-accent stroke-black" /> {chore.pointsValue}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-right">
@@ -222,7 +222,7 @@ export default function ChampionDashboardPage() {
                                     <CardTitle className="text-lg leading-tight">{reward.name}</CardTitle>
                                     <p className="text-sm text-muted-foreground mt-1 flex-grow">{reward.description}</p>
                                     <Badge variant="secondary" className="w-fit mt-2 text-sm">
-                                        <Star className="w-3 h-3 mr-1 text-accent fill-accent" />
+                                        <Star className="w-3 h-3 mr-1 text-accent fill-accent stroke-black" />
                                         {reward.points} Points
                                     </Badge>
                                 </div>

@@ -195,17 +195,17 @@ export default function ChoresPage() {
                                           </TableCell>
                                           <TableCell className="text-center align-top">
                                               <Badge variant="secondary" className="w-fit">
-                                                  <Star className="w-3 h-3 mr-1 text-accent fill-accent" />
+                                                  <Star className="w-3 h-3 mr-1 text-accent fill-accent stroke-black" />
                                                   {chore.points}
                                               </Badge>
                                           </TableCell>
                                           <TableCell className="text-right align-top">
                                               <div className="flex flex-col items-end gap-1">
-                                                  <Button variant="default" size="icon-sm" onClick={() => openAssignDialog(chore)} title="AI Schedule Chore">
+                                                  <Button variant="primary" size="icon-sm" onClick={() => openAssignDialog(chore)} title="AI Schedule Chore">
                                                       <Wand2 className="h-4 w-4" />
                                                       <span className="sr-only">AI Schedule Chore</span>
                                                   </Button>
-                                                  <Button variant="default" size="icon-sm" onClick={() => openEditDialog(chore)} title="Edit Chore">
+                                                  <Button variant="primary" size="icon-sm" onClick={() => openEditDialog(chore)} title="Edit Chore">
                                                       <Edit className="h-4 w-4" />
                                                       <span className="sr-only">Edit Chore</span>
                                                   </Button>
@@ -238,7 +238,7 @@ export default function ChoresPage() {
                   </CardHeader>
                   <CardContent className="flex flex-wrap gap-2">
                       {presetChores.map((preset) => (
-                          <Button key={preset.name} variant="default" size="sm" onClick={() => handleAddPreset(preset)}>
+                          <Button key={preset.name} variant="primary" size="sm" onClick={() => handleAddPreset(preset)}>
                               <Plus className="mr-2 h-4 w-4" />
                               {preset.name}
                           </Button>

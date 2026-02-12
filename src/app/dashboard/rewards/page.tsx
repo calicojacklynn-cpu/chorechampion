@@ -194,7 +194,7 @@ export default function RewardsPage() {
                       <div>
                         <CardTitle>{champion.name}</CardTitle>
                         <CardDescription className="flex items-center gap-1">
-                          <Star className="w-4 h-4 text-accent fill-accent" />
+                          <Star className="w-4 h-4 text-accent fill-accent stroke-black" />
                           <span className="font-bold text-lg text-foreground">{champion.points}</span> Points
                         </CardDescription>
                       </div>
@@ -247,7 +247,7 @@ export default function RewardsPage() {
                         <div>
                             <CardTitle className="text-lg leading-tight">{reward.name}</CardTitle>
                             <Badge variant="secondary" className="w-fit mt-2 text-sm">
-                                <Star className="w-3 h-3 mr-1 text-accent fill-accent" />
+                                <Star className="w-3 h-3 mr-1 text-accent fill-accent stroke-black" />
                                 {reward.points} Points
                             </Badge>
                         </div>
