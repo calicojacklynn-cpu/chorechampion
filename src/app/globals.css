@@ -9,24 +9,24 @@
   }
   
   html.theme-default {
-    --background: 210 40% 96%;
+    --background: 200 50% 98%;
     --foreground: 210 10% 15%;
-    --card: 210 40% 100%;
+    --card: 200 30% 100%;
     --card-foreground: 210 10% 15%;
-    --popover: 210 40% 100%;
+    --popover: 200 30% 100%;
     --popover-foreground: 210 10% 15%;
     --primary: 210 90% 55%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 90%;
+    --secondary: 200 30% 90%;
     --secondary-foreground: 210 10% 15%;
-    --muted: 210 40% 90%;
+    --muted: 200 30% 90%;
     --muted-foreground: 210 10% 45%;
     --accent: 45 90% 55%;
     --accent-foreground: 45 95% 15%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 210 30% 88%;
-    --input: 210 30% 88%;
+    --border: 200 30% 88%;
+    --input: 200 30% 88%;
     --ring: 210 90% 65%;
     --sidebar-background: transparent;
     --sidebar-foreground: 210 10% 15%;
@@ -99,27 +99,27 @@
   }
 
   html.theme-rose {
-    --background: 350 40% 95%;
-    --foreground: 340 10% 23%;
-    --card: 350 40% 100%;
-    --card-foreground: 340 10% 23%;
-    --popover: 350 40% 100%;
-    --popover-foreground: 340 10% 23%;
-    --primary: 340 70% 60%;
+    --background: 350 60% 97%;
+    --foreground: 340 10% 15%;
+    --card: 350 60% 100%;
+    --card-foreground: 340 10% 15%;
+    --popover: 350 60% 100%;
+    --popover-foreground: 340 10% 15%;
+    --primary: 340 80% 70%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 350 40% 90%;
-    --secondary-foreground: 340 10% 23%;
-    --muted: 350 40% 90%;
+    --secondary: 350 60% 96%;
+    --secondary-foreground: 340 10% 15%;
+    --muted: 350 60% 96%;
     --muted-foreground: 340 10% 45%;
     --accent: 45 90% 55%;
     --accent-foreground: 45 95% 15%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 350 40% 80%;
-    --input: 350 40% 80%;
-    --ring: 340 70% 70%;
+    --border: 350 60% 90%;
+    --input: 350 60% 90%;
+    --ring: 340 80% 80%;
     --sidebar-background: transparent;
-    --sidebar-foreground: 340 10% 23%;
+    --sidebar-foreground: 340 10% 15%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -209,7 +209,7 @@
     --input: 220 50% 25%;
     --ring: 210 90% 70%;
     --sidebar-background: transparent;
-    --sidebar-foreground: 0 0% 10%;
+    --sidebar-foreground: 0 0% 0%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
     --sidebar-accent: hsl(var(--primary) / 0.1);
@@ -385,8 +385,8 @@
     animation: speech-pulse 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
     animation-delay: calc(var(--bubble-index) * 200ms);
   }
-  [data-sidebar="sidebar"] {
-    @apply text-sidebar-foreground;
+  html.theme-ocean [data-sidebar="sidebar"] {
+      color: hsl(var(--sidebar-foreground));
   }
 }
 
@@ -401,7 +401,4 @@
     height: 200%;
     opacity: 0;
   }
-}
-html.theme-ocean [data-sidebar="sidebar"] {
-    color: hsl(var(--sidebar-foreground));
 }
