@@ -21,8 +21,8 @@ export function ChoreChampionLogo(props: SVGProps<SVGSVGElement>) {
       />
       <path
         d="M12 15l-3.09 2.25 1.18-3.8L7 11.41l3.8-.34L12 7.5l1.2 3.57 3.8-.34-3.09 2.04 1.18 3.8L12 15z"
-        fill="#FFC700"
-        stroke="#FFC700"
+        fill="hsl(var(--accent))"
+        stroke="hsl(var(--accent))"
         strokeWidth="1"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -30,3 +30,5 @@ export function ChoreChampionLogo(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+    
