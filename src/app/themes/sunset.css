@@ -12,11 +12,11 @@
     --popover-foreground: 24 10% 20%;
 
     /* Primary (User Chat Bubble) - A strong, vibrant orange */
-    --primary: 28 100% 62%; 
+    --primary: 28 100% 55%; 
     --primary-foreground: 0 0% 100%;
 
     /* Secondary (Action Buttons) - Matching the vibrant orange */
-    --secondary: 28 100% 62%;
+    --secondary: 28 100% 55%;
     --secondary-foreground: 0 0% 100%;
 
     /* Muted (Other Chat Bubbles, etc.) */
@@ -34,7 +34,7 @@
     /* Other UI Elements */
     --border: 30 10% 90%;
     --input: 0 0% 100%;
-    --ring: 28 100% 62%; 
+    --ring: 28 100% 55%; 
 
     /* Background Gradient - Medium, vibrant colors */
     --gradient-from: hsl(45, 95%, 75%);
