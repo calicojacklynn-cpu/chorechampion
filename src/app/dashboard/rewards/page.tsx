@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -168,7 +169,7 @@ export default function RewardsPage() {
         {/* Page Header */}
         <div>
           <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
-              <Trophy className="h-8 w-8 text-accent"/>
+              <Trophy className="h-8 w-8 text-primary"/>
               Rewards & Recognition
           </h1>
           <p className="text-muted-foreground">
@@ -206,7 +207,7 @@ export default function RewardsPage() {
                       <p className="text-xs text-right mt-1 text-muted-foreground">{champion.points} / {champion.pointsToNextReward} pts</p>
                     </CardContent>
                     <div className="p-6 pt-0">
-                      <Button variant="outline" className="w-full" onClick={() => openClaimedDialog(champion)}>View Claimed Rewards</Button>
+                      <Button variant="default" className="w-full" onClick={() => openClaimedDialog(champion)}>View Claimed Rewards</Button>
                     </div>
                   </Card>
                 );
@@ -251,7 +252,7 @@ export default function RewardsPage() {
                             </Badge>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => openEditDialog(reward)}>
+                            <Button variant="default" size="icon" className="h-7 w-7" onClick={() => openEditDialog(reward)}>
                                 <Edit className="h-3 w-3" />
                                 <span className="sr-only">Edit</span>
                             </Button>
