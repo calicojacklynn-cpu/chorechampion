@@ -36,10 +36,10 @@
     --input: 0 0% 100%;
     --ring: 28 100% 62%; 
 
-    /* Background Gradient - MORE VIBRANT and less pastel */
-    --gradient-from: hsl(45, 100%, 85%);
-    --gradient-mid: hsl(30, 100%, 80%);
-    --gradient-to: hsl(15, 100%, 75%);
+    /* Background Gradient - Medium, vibrant colors */
+    --gradient-from: hsl(45, 95%, 65%);
+    --gradient-mid: hsl(30, 100%, 60%);
+    --gradient-to: hsl(15, 100%, 55%);
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
