@@ -6,17 +6,17 @@
     --foreground: 24 10% 20%;
 
     /* Cards and Popovers */
-    --card: 30 95% 78%;
+    --card: 35 90% 65%;
     --card-foreground: 24 10% 20%;
-    --popover: 30 95% 78%;
+    --popover: 35 90% 65%;
     --popover-foreground: 24 10% 20%;
 
     /* Primary (User Chat Bubble) - A strong, vibrant orange */
-    --primary: 28 100% 55%; 
+    --primary: 35 100% 50%;
     --primary-foreground: 0 0% 100%;
 
     /* Secondary (Action Buttons) - Matching the vibrant orange */
-    --secondary: 28 100% 55%;
+    --secondary: 35 100% 50%;
     --secondary-foreground: 0 0% 100%;
 
     /* Muted (Other Chat Bubbles, etc.) */
@@ -34,12 +34,12 @@
     /* Other UI Elements */
     --border: 30 10% 90%;
     --input: 0 0% 100%;
-    --ring: 28 100% 55%; 
+    --ring: 35 100% 50%; 
 
     /* Background Gradient - Medium, vibrant colors */
-    --gradient-from: hsl(45, 95%, 75%);
-    --gradient-mid: hsl(30, 100%, 70%);
-    --gradient-to: hsl(15, 100%, 65%);
+    --gradient-from: hsl(45, 95%, 65%);
+    --gradient-mid: hsl(30, 100%, 60%);
+    --gradient-to: hsl(15, 100%, 55%);
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
