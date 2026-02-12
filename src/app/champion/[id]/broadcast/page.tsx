@@ -154,7 +154,7 @@ export default function ChampionBroadcastPage() {
                   </Avatar>
                 )}
                 <div
-                  className={`max-w-md rounded-xl px-4 py-3 ${
+                  className={`max-w-md rounded-xl px-4 py-3 border border-black ${
                     isSelf
                       ? 'bg-primary text-primary-foreground rounded-br-none'
                       : 'bg-muted text-foreground rounded-bl-none'

@@ -11,9 +11,9 @@
     --popover: 40 100% 68%;
     --popover-foreground: 0 0% 0%;
 
-    /* Primary (User Chat Bubble) - A strong, vibrant orange */
-    --primary: 25 85% 55%;
-    --primary-foreground: 0 0% 100%;
+    /* Primary (User Chat Bubble) - A vibrant yellow */
+    --primary: 48 96% 50%;
+    --primary-foreground: 0 0% 0%;
 
     /* Secondary (Action Buttons) */
     --secondary: 35 90% 65%;

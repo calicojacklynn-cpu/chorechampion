@@ -116,7 +116,7 @@ export default function BroadcastPage() {
                   </Avatar>
                 )}
                 <div
-                  className={`max-w-md rounded-xl px-4 py-3 ${
+                  className={`max-w-md rounded-xl px-4 py-3 border border-black ${
                     isParent
                       ? 'bg-primary text-primary-foreground rounded-tl-none'
                       : 'bg-muted text-foreground rounded-tr-none'
