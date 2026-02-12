@@ -4,14 +4,14 @@
 
 @layer base {
   :root, .light {
-    --background: 240 10% 98%;
+    --background: 0 0% 100%;
     --foreground: 240 10% 10%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 10%;
-    --primary: 190 80% 55%;
-    --primary-foreground: 190 80% 10%;
+    --primary: 210 90% 60%;
+    --primary-foreground: 210 90% 10%;
     --secondary: 240 5% 96%;
     --secondary-foreground: 240 10% 10%;
     --muted: 240 5% 96%;
@@ -22,7 +22,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 5% 90%;
     --input: 240 5% 90%;
-    --ring: 190 80% 60%;
+    --ring: 210 90% 70%;
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 10% 10%;
     --sidebar-primary: hsl(var(--primary));
@@ -31,10 +31,12 @@
     --sidebar-accent-foreground: hsl(var(--primary));
     --sidebar-border: hsl(var(--border));
     --sidebar-ring: hsl(var(--ring));
+    --gradient-from: hsl(0 0% 100%);
+    --gradient-to: hsl(220 13% 91%);
   }
 
   .dark {
-    --background: 222 47% 11%;
+    --background: 222 47% 18%;
     --foreground: 210 40% 98%;
     --card: 222 47% 18%;
     --card-foreground: 210 40% 98%;
@@ -61,11 +63,13 @@
     --sidebar-accent-foreground: hsl(var(--primary));
     --sidebar-border: hsl(var(--border));
     --sidebar-ring: hsl(var(--ring));
+    --gradient-from: hsl(222 47% 11%);
+    --gradient-to: hsl(222 84% 5%);
   }
 
   /* Slate Theme (Dark) */
   .slate {
-    --background: 220 13% 18%; /* Dark Slate Blue */
+    --background: 220 13% 24%;
     --foreground: 220 14% 90%;
     --card: 220 13% 24%;
     --card-foreground: 220 14% 90%;
@@ -92,11 +96,13 @@
     --sidebar-accent-foreground: 210 40% 96.1%;
     --sidebar-border: 220 13% 30%;
     --sidebar-ring: 210 40% 96.1%;
+    --gradient-from: hsl(222 47% 18%);
+    --gradient-to: hsl(222 47% 11%);
   }
 
   /* Rose Theme (Light) */
   .rose {
-    --background: 350 100% 98%; /* Very light pink */
+    --background: 0 0% 100%;
     --foreground: 350 60% 25%;
     --card: 0 0% 100%;
     --card-foreground: 350 60% 25%;
@@ -104,7 +110,7 @@
     --popover-foreground: 350 60% 25%;
     --primary: 346 76% 59%; /* Hot Pink */
     --primary-foreground: 355 100% 97%;
-    --secondary: 350 100% 94%;
+    --secondary: 0 0% 100%;
     --secondary-foreground: 346 76% 40%;
     --muted: 350 100% 94%;
     --muted-foreground: 350 40% 60%;
@@ -123,11 +129,13 @@
     --sidebar-accent-foreground: 346 76% 59%;
     --sidebar-border: 350 100% 92%;
     --sidebar-ring: 346 76% 59%;
+    --gradient-from: hsl(355 100% 99%);
+    --gradient-to: hsl(355 78% 97%);
   }
   
   /* Ocean Theme (Dark) */
   .ocean {
-    --background: 210 45% 15%; /* Deep Ocean Blue */
+    --background: 205 40% 22%;
     --foreground: 190 70% 92%;
     --card: 205 40% 22%;
     --card-foreground: 190 70% 92%;
@@ -135,7 +143,7 @@
     --popover-foreground: 190 70% 92%;
     --primary: 180 80% 60%; /* Bright Cyan */
     --primary-foreground: 180 80% 10%;
-    --secondary: 200 40% 28%;
+    --secondary: 205 40% 22%;
     --secondary-foreground: 190 70% 92%;
     --muted: 200 40% 28%;
     --muted-foreground: 190 40% 70%;
@@ -154,11 +162,13 @@
     --sidebar-accent-foreground: 180 80% 60%;
     --sidebar-border: 200 40% 28%;
     --sidebar-ring: 180 80% 60%;
+    --gradient-from: hsl(222 47% 11%);
+    --gradient-to: hsl(196 84% 13%);
   }
 
   /* Sage Theme (Light) */
   .sage {
-    --background: 140 30% 97%; /* Very Light Sage Green */
+    --background: 0 0% 100%;
     --foreground: 140 25% 25%;
     --card: 0 0% 100%;
     --card-foreground: 140 25% 25%;
@@ -166,7 +176,7 @@
     --popover-foreground: 140 25% 25%;
     --primary: 150 55% 45%; /* Deep Sage Green */
     --primary-foreground: 150 55% 95%;
-    --secondary: 140 30% 94%;
+    --secondary: 0 0% 100%;
     --secondary-foreground: 150 55% 30%;
     --muted: 140 30% 94%;
     --muted-foreground: 140 20% 60%;
@@ -185,11 +195,13 @@
     --sidebar-accent-foreground: 150 55% 45%;
     --sidebar-border: 140 30% 91%;
     --sidebar-ring: 150 55% 45%;
+    --gradient-from: hsl(144 71% 98%);
+    --gradient-to: hsl(135 65% 94%);
   }
   
   /* Candy Theme (Light) */
   .candy {
-    --background: 300 100% 98%; /* Light Lavender */
+    --background: 0 0% 100%;
     --foreground: 280 50% 30%;
     --card: 0 0% 100%;
     --card-foreground: 280 50% 30%;
@@ -197,7 +209,7 @@
     --popover-foreground: 280 50% 30%;
     --primary: 320 90% 60%; /* Bright Pink */
     --primary-foreground: 320 90% 98%;
-    --secondary: 300 100% 95%;
+    --secondary: 0 0% 100%;
     --secondary-foreground: 320 90% 40%;
     --muted: 300 100% 95%;
     --muted-foreground: 280 30% 65%;
@@ -216,11 +228,13 @@
     --sidebar-accent-foreground: 320 90% 60%;
     --sidebar-border: 300 100% 93%;
     --sidebar-ring: 320 90% 60%;
+    --gradient-from: hsl(283 100% 99%);
+    --gradient-to: hsl(286 100% 97%);
   }
 
   /* Sunset Theme (Dark) */
   .sunset {
-    --background: 25 50% 15%; /* Dark Brown */
+    --background: 20 40% 22%;
     --foreground: 30 80% 90%;
     --card: 20 40% 22%;
     --card-foreground: 30 80% 90%;
@@ -228,7 +242,7 @@
     --popover-foreground: 30 80% 90%;
     --primary: 20 95% 60%; /* Bright Orange */
     --primary-foreground: 20 95% 10%;
-    --secondary: 15 40% 28%;
+    --secondary: 20 40% 22%;
     --secondary-foreground: 30 80% 90%;
     --muted: 15 40% 28%;
     --muted-foreground: 30 40% 70%;
@@ -247,6 +261,8 @@
     --sidebar-accent-foreground: 20 95% 60%;
     --sidebar-border: 15 40% 28%;
     --sidebar-ring: 20 95% 60%;
+    --gradient-from: hsl(32 89% 27%);
+    --gradient-to: hsl(359 89% 14%);
   }
 }
 

@@ -12,14 +12,14 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/app/context/ThemeContext";
 
 const themes = [
-  { name: 'light', label: 'Default Light', colors: ['#f8fafc', '#ffffff', '#60a5fa'] },
-  { name: 'dark', label: 'Default Dark', colors: ['#1e293b', '#334155', '#38bdf8'] },
-  { name: 'slate', label: 'Slate', colors: ['#292d3e', '#3a415a', '#a6accd'] },
-  { name: 'rose', label: 'Rose', colors: ['#fff1f2', '#ffffff', '#f43f5e'] },
-  { name: 'ocean', label: 'Ocean', colors: ['#0f172a', '#1e293b', '#06b6d4'] },
-  { name: 'sage', label: 'Sage', colors: ['#f0fdf4', '#ffffff', '#22c55e'] },
-  { name: 'candy', label: 'Candy', colors: ['#faf5ff', '#ffffff', '#ec4899'] },
-  { name: 'sunset', label: 'Sunset', colors: ['#281e19', '#412d25', '#f97316'] },
+  { name: 'light', label: 'Default Light', gradient: 'linear-gradient(to bottom right, #FFFFFF, #f1f5f9)', card: '#ffffff', primary: '#3b82f6' },
+  { name: 'dark', label: 'Default Dark', gradient: 'linear-gradient(to bottom right, #0f172a, #020617)', card: '#1e293b', primary: '#38bdf8' },
+  { name: 'slate', label: 'Slate', gradient: 'linear-gradient(to bottom right, #1e293b, #0f172a)', card: '#292d3e', primary: '#a6accd' },
+  { name: 'rose', label: 'Rose', gradient: 'linear-gradient(to bottom right, #fff1f2, #ffe4e6)', card: '#ffffff', primary: '#f43f5e' },
+  { name: 'ocean', label: 'Ocean', gradient: 'linear-gradient(to bottom right, #0f172a, #083344)', card: '#1e293b', primary: '#06b6d4' },
+  { name: 'sage', label: 'Sage', gradient: 'linear-gradient(to bottom right, #f0fdf4, #dcfce7)', card: '#ffffff', primary: '#22c55e' },
+  { name: 'candy', label: 'Candy', gradient: 'linear-gradient(to bottom right, #fdf4ff, #fae8ff)', card: '#ffffff', primary: '#ec4899' },
+  { name: 'sunset', label: 'Sunset', gradient: 'linear-gradient(to bottom right, #78350f, #450a0a)', card: '#412d25', primary: '#f97316' },
 ] as const;
 
 
@@ -57,11 +57,11 @@ export default function ThemesPage() {
                       isActive ? "border-primary" : "border-transparent"
                     )}
                   >
-                    <div className="flex items-center gap-2 rounded-md p-2 bg-[var(--preview-bg)]" style={{'--preview-bg': theme.colors[0]} as React.CSSProperties}>
-                      <div className="w-10 h-16 rounded-md bg-[var(--preview-card)]" style={{'--preview-card': theme.colors[1]} as React.CSSProperties} />
+                    <div className="flex items-center gap-2 rounded-md p-2" style={{background: theme.gradient}}>
+                      <div className="w-10 h-16 rounded-md" style={{backgroundColor: theme.card}}/>
                       <div className="flex-1 space-y-1.5">
-                        <div className="w-full h-2.5 rounded-sm bg-[var(--preview-primary)]" style={{'--preview-primary': theme.colors[2]} as React.CSSProperties}/>
-                        <div className="w-4/5 h-2.5 rounded-sm bg-[var(--preview-primary)] opacity-50" style={{'--preview-primary': theme.colors[2]} as React.CSSProperties}/>
+                        <div className="w-full h-2.5 rounded-sm" style={{backgroundColor: theme.primary}}/>
+                        <div className="w-4/5 h-2.5 rounded-sm opacity-50" style={{backgroundColor: theme.primary}}/>
                       </div>
                     </div>
                   </div>
