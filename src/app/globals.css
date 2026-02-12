@@ -40,22 +40,22 @@
   html.theme-slate {
     --background: 220 15% 15%;
     --foreground: 210 20% 90%;
-    --card: 220 10% 90%;
+    --card: 220 10% 88%;
     --card-foreground: 220 15% 15%;
-    --popover: 220 10% 90%;
+    --popover: 220 10% 88%;
     --popover-foreground: 220 15% 15%;
     --primary: 210 90% 60%;
     --primary-foreground: 210 90% 10%;
-    --secondary: 220 10% 90%;
+    --secondary: 220 10% 88%;
     --secondary-foreground: 220 15% 15%;
-    --muted: 220 10% 90%;
+    --muted: 220 10% 88%;
     --muted-foreground: 220 15% 45%;
     --accent: 45 90% 55%;
     --accent-foreground: 45 95% 15%;
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 15% 80%;
-    --input: 220 15% 80%;
+    --border: 220 10% 80%;
+    --input: 220 10% 80%;
     --ring: 210 90% 70%;
     --sidebar-background: transparent;
     --sidebar-foreground: 210 20% 90%;
