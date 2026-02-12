@@ -12,14 +12,14 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/app/context/ThemeContext";
 
 const themes = [
-  { name: 'light', label: 'Default Light', gradient: 'linear-gradient(to bottom right, hsl(70, 80%, 90%), hsl(195, 90%, 85%), hsl(240, 90%, 90%))' },
-  { name: 'dark', label: 'Default Dark', gradient: 'linear-gradient(to bottom right, hsl(222, 47%, 11%), hsl(260, 50%, 18%), hsl(290, 50%, 15%))' },
-  { name: 'slate', label: 'Slate', gradient: 'linear-gradient(to bottom right, hsl(220, 13%, 18%), hsl(215, 25%, 27%), hsl(210, 30%, 35%))' },
-  { name: 'rose', label: 'Rose', gradient: 'linear-gradient(to bottom right, hsl(350, 100%, 97%), hsl(10, 100%, 95%), hsl(340, 100%, 98%))' },
-  { name: 'ocean', label: 'Ocean', gradient: 'linear-gradient(to bottom right, hsl(210, 60%, 15%), hsl(190, 70%, 25%), hsl(170, 60%, 20%))' },
-  { name: 'sage', label: 'Sage', gradient: 'linear-gradient(to bottom right, hsl(120, 20%, 94%), hsl(140, 30%, 90%), hsl(130, 25%, 92%))' },
-  { name: 'candy', label: 'Candy', gradient: 'linear-gradient(to bottom right, hsl(330, 100%, 92%), hsl(270, 100%, 94%), hsl(210, 100%, 96%))' },
-  { name: 'sunset', label: 'Sunset', gradient: 'linear-gradient(to bottom right, hsl(30, 80%, 30%), hsl(350, 70%, 28%), hsl(260, 60%, 20%))' },
+  { name: 'light', label: 'Default Light', gradient: 'linear-gradient(to bottom right, hsl(60, 100%, 95%), hsl(195, 100%, 95%), hsl(240, 100%, 95%))' },
+  { name: 'dark', label: 'Default Dark', gradient: 'linear-gradient(to bottom right, hsl(222, 47%, 11%), hsl(260, 50%, 15%), hsl(280, 40%, 12%))' },
+  { name: 'slate', label: 'Slate', gradient: 'linear-gradient(to bottom right, hsl(220, 13%, 18%), hsl(215, 25%, 27%), hsl(210, 30%, 20%))' },
+  { name: 'rose', label: 'Rose', gradient: 'linear-gradient(to bottom right, hsl(350, 100%, 98%), hsl(0, 100%, 96%), hsl(340, 100%, 98%))' },
+  { name: 'ocean', label: 'Ocean', gradient: 'linear-gradient(to bottom right, hsl(210, 60%, 15%), hsl(190, 70%, 25%), hsl(180, 50%, 15%))' },
+  { name: 'sage', label: 'Sage', gradient: 'linear-gradient(to bottom right, hsl(120, 40%, 96%), hsl(140, 50%, 92%), hsl(130, 45%, 94%))' },
+  { name: 'candy', label: 'Candy', gradient: 'linear-gradient(to bottom right, hsl(330, 100%, 97%), hsl(270, 100%, 96%), hsl(200, 100%, 97%))' },
+  { name: 'sunset', label: 'Sunset', gradient: 'linear-gradient(to bottom right, hsl(50, 100%, 60%), hsl(30, 100%, 55%), hsl(10, 90%, 50%))' },
 ] as const;
 
 
