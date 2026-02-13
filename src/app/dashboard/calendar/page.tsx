@@ -182,12 +182,12 @@ export default function CalendarPage() {
                       return (
                         <div
                           key={index}
-                          className="bg-primary/20 p-1 rounded-sm text-[10px] leading-tight"
+                          className="bg-primary/40 p-1 rounded-sm text-[10px] leading-tight border border-black"
                         >
-                          <p className="font-semibold truncate text-primary">
+                          <p className="font-semibold truncate text-primary-foreground">
                             {event.choreName}
                           </p>
-                          <p className="text-primary/90 truncate flex items-center gap-1">
+                          <p className="text-primary-foreground/90 truncate flex items-center gap-1">
                             <Users className="h-3 w-3" /> {event.championName}
                           </p>
                         </div>
@@ -197,7 +197,7 @@ export default function CalendarPage() {
                     return (
                       <div
                         key={index}
-                        className="bg-accent/30 p-1 rounded-sm text-[10px] leading-tight"
+                        className="bg-accent/40 p-1 rounded-sm text-[10px] leading-tight border border-black"
                       >
                         <p className="font-semibold truncate text-accent-foreground">
                           {event.title}
