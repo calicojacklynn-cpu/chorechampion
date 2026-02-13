@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -41,9 +40,6 @@ export default function FamilySettingsPage() {
                 </Button>
             </div>
         </CardContent>
-            <CardFooter className="border-t px-6 py-4">
-            <Button>Save Family Settings</Button>
-        </CardFooter>
       </Card>
     </div>
   );
