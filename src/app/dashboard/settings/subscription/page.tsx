@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -63,7 +64,7 @@ export default function SubscriptionSettingsPage() {
         <Card className="lg:col-span-1">
             <CardHeader>
                 <CardTitle>Your Current Plan</CardTitle>
-                <CardDescription>You are on the <span className="font-bold text-primary">{currentPlan} Plan</span>.</CardDescription>
+                <CardDescription>You are on the <span className="font-bold text-foreground">{currentPlan} Plan</span>.</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="text-sm text-muted-foreground">
