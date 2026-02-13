@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Check } from "lucide-react";
@@ -18,7 +19,7 @@ const themes = [
   { name: 'rose', label: 'Rose', gradient: 'linear-gradient(to bottom right, hsl(350, 100%, 98%), hsl(0, 100%, 96%), hsl(340, 100%, 98%))' },
   { name: 'ocean', label: 'Ocean', gradient: 'linear-gradient(to bottom right, hsl(210, 60%, 15%), hsl(190, 70%, 25%), hsl(180, 50%, 15%))' },
   { name: 'sage', label: 'Sage', gradient: 'linear-gradient(to bottom right, hsl(120, 40%, 96%), hsl(140, 50%, 92%), hsl(130, 45%, 94%))' },
-  { name: 'candy', label: 'Candy', gradient: 'linear-gradient(to bottom right, hsl(330, 100%, 97%), hsl(270, 100%, 96%), hsl(200, 100%, 97%))' },
+  { name: 'candy', label: 'Candy', gradient: 'linear-gradient(to bottom right, hsl(320, 100%, 80%), hsl(290, 100%, 80%), hsl(270, 100%, 80%))' },
   { name: 'sunset', label: 'Sunset', gradient: 'linear-gradient(to bottom right, hsl(50, 100%, 60%), hsl(30, 100%, 55%), hsl(10, 90%, 50%))' },
 ] as const;
 
