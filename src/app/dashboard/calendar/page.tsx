@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useMemo } from "react";
@@ -182,7 +181,7 @@ export default function CalendarPage() {
                       return (
                         <div
                           key={index}
-                          className="bg-primary/40 p-1 rounded-sm text-[10px] leading-tight border border-black"
+                          className="bg-primary p-1 rounded-sm text-[10px] leading-tight border border-black"
                         >
                           <p className="font-semibold truncate text-primary-foreground">
                             {event.choreName}
@@ -197,13 +196,13 @@ export default function CalendarPage() {
                     return (
                       <div
                         key={index}
-                        className="bg-accent/40 p-1 rounded-sm text-[10px] leading-tight border border-black"
+                        className="bg-primary p-1 rounded-sm text-[10px] leading-tight border border-black"
                       >
-                        <p className="font-semibold truncate text-accent-foreground">
+                        <p className="font-semibold truncate text-primary-foreground">
                           {event.title}
                         </p>
                         {event.startTime && (
-                          <p className="text-accent-foreground/90 truncate flex items-center gap-1">
+                          <p className="text-primary-foreground/90 truncate flex items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {event.startTime}{" "}
                             {event.endTime && `- ${event.endTime}`}
