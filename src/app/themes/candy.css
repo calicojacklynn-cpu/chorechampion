@@ -3,7 +3,7 @@
     --background: 330 100% 98%;
     --foreground: 280 50% 15%;
     --card: 330 100% 96%;
-    --card-foreground: 280 50% 15%;
+    --card-foreground: 280 50% 25%;
     --popover: 330 100% 96%;
     --popover-foreground: 280 50% 15%;
     --primary: 330 100% 92%;
@@ -12,7 +12,7 @@
     --secondary-foreground: 280 50% 15%;
     --muted: 330 100% 96%;
     --muted-foreground: 280 50% 35%;
-    --accent: 326 90% 88%;
+    --accent: 330 100% 92%;
     --accent-foreground: 0 0% 0%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -31,4 +31,3 @@
     --gradient-mid: hsl(290, 100%, 80%);
     --gradient-to: hsl(270, 100%, 80%);
 }
-
