@@ -12,11 +12,11 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('light');
+  const [theme, setThemeState] = useState<Theme>('candy');
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('chore-champion-theme') as Theme | null;
-    const initialTheme = storedTheme || 'light';
+    const initialTheme = storedTheme || 'candy';
     setThemeState(initialTheme);
     document.documentElement.className = initialTheme;
   }, []);
