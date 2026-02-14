@@ -14,10 +14,10 @@
     --muted-foreground: 215 25% 80%;
     --accent: 51 100% 50%;
     --accent-foreground: 24 9.8% 10%;
-    --destructive: 0 60% 65% / 0.9;
+    --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 0%;
     --border: 200 40% 28%;
-    --input: 215 25% 90%;
+    --input: 0 0% 100%;
     --ring: 175 45% 55%;
     --sidebar-background: 220 13% 12%;
     --sidebar-foreground: 215 25% 90%;
