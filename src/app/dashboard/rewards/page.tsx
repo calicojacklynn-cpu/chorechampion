@@ -187,9 +187,9 @@ export default function RewardsPage() {
                 return (
                   <Card key={champion.id} className="flex flex-col">
                     <CardHeader className="flex flex-row items-center gap-4">
-                      <Avatar className="h-16 w-16 border-2 border-black bg-secondary">
+                      <Avatar className="h-16 w-16 border-2 border-black bg-primary">
                         <AvatarImage src={champion.avatarUrl} alt={champion.name} className="object-cover" />
-                        <AvatarFallback className="text-xl bg-secondary text-secondary-foreground">{champion.name.charAt(0)}</AvatarFallback>
+                        <AvatarFallback className="text-xl bg-primary text-primary-foreground">{champion.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div>
                         <CardTitle>{champion.name}</CardTitle>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -151,7 +152,7 @@ export default function AdminsPage() {
                             alt={admin.name}
                             className="object-cover"
                           />
-                          <AvatarFallback>
+                          <AvatarFallback className="bg-primary text-primary-foreground">
                             {admin.name.charAt(0)}
                           </AvatarFallback>
                         </Avatar>

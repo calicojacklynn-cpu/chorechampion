@@ -107,7 +107,7 @@ export default function ChampionSettingsPage() {
                                 <div className="flex items-center gap-4">
                                      <Avatar className="h-20 w-20 border-2 border-black">
                                         <AvatarImage src={photoUrl || undefined} alt={user?.displayName || "Champion"} />
-                                        <AvatarFallback>{user?.displayName?.charAt(0) || 'C'}</AvatarFallback>
+                                        <AvatarFallback className="bg-secondary text-secondary-foreground">{user?.displayName?.charAt(0) || 'C'}</AvatarFallback>
                                     </Avatar>
                                     <Button
                                         type="button"

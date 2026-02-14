@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useCallback } from "react";
@@ -208,7 +209,7 @@ export default function ChampionsPage() {
                               src={champion.avatarUrl}
                               alt={champion.name}
                             />
-                          <AvatarFallback className="bg-secondary text-secondary-foreground">
+                          <AvatarFallback className="bg-primary text-primary-foreground">
                             {champion.name.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
