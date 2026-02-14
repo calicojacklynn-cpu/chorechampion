@@ -3,10 +3,10 @@
     --radius: 1.5rem;
     --background: 205 50% 14%;
     --foreground: 215 25% 90%;
-    --card: 190 70% 65%;
-    --card-foreground: 215 25% 10%;
-    --popover: 190 70% 65%;
-    --popover-foreground: 215 25% 10%;
+    --card: 200 35% 25%;
+    --card-foreground: 215 25% 90%;
+    --popover: 200 35% 25%;
+    --popover-foreground: 215 25% 90%;
     --primary: 195 45% 65%;
     --primary-foreground: 215 25% 10%;
     --secondary: 35 90% 65%;
@@ -38,10 +38,3 @@
 .ocean [role="switch"][data-state="unchecked"] {
     background-color: hsl(210, 9%, 85%);
 }
-
-
-
-
-
-
-
