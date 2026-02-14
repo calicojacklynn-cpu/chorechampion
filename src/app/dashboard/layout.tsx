@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -84,7 +85,7 @@ export default function DashboardLayout({
           <header className="flex h-16 items-center justify-end gap-4 border-b backdrop-blur-sm px-4 sticky top-0 z-30 lg:px-6">
             <SidebarTrigger className="md:hidden mr-auto" />
             <UserNav />
-            <Button variant="secondary" size="sm" onClick={handleLogout}>
+            <Button variant="default" size="sm" onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               Log Out
             </Button>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -29,10 +30,10 @@ export function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" className="relative h-10 w-10 rounded-full border-2 border-black">
+        <Button variant="default" className="relative h-10 w-10 rounded-full border-2 border-black">
           <Avatar className="h-10 w-10">
             <AvatarImage src={user?.photoURL ?? undefined} alt={user?.displayName ?? ""} />
-            <AvatarFallback className="bg-secondary text-secondary-foreground">{user?.displayName?.charAt(0) || user?.email?.charAt(0) || 'P'}</AvatarFallback>
+            <AvatarFallback className="bg-primary text-primary-foreground">{user?.displayName?.charAt(0) || user?.email?.charAt(0) || 'P'}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
