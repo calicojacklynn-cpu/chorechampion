@@ -1,6 +1,6 @@
 .sage {
     --radius: 1.5rem;
-    --background: 125 25% 87%;
+    --background: 120 10% 90%;
     --foreground: 0 0% 0%;
     --card: 100 20% 86%;
     --card-foreground: 0 0% 0%;
@@ -14,7 +14,7 @@
     --muted-foreground: 0 0% 0%;
     --accent: 51 100% 50%;
     --accent-foreground: 0 0% 0%;
-    --destructive: 0 60% 50%;
+    --destructive: 0 70% 45%;
     --destructive-foreground: 0 0% 0%;
     --border: 0 0% 0%;
     --input: 0 0% 100%;
@@ -27,7 +27,7 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(120, 25%, 90%);
-    --gradient-mid: hsl(130, 20%, 85%);
-    --gradient-to: hsl(125, 22%, 88%);
+    --gradient-from: hsl(120, 30%, 85%);
+    --gradient-mid: hsl(130, 25%, 80%);
+    --gradient-to: hsl(125, 28%, 82%);
 }
