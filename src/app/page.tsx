@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,7 +15,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChoreChampionLogo } from '@/app/components/ChoreChampionLogo';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
@@ -33,7 +31,6 @@ const championLoginSchema = z.object({
 
 
 export default function LoginPage() {
-  const loginImage = PlaceHolderImages.find(p => p.id === 'login-hero');
   const router = useRouter();
   const { toast } = useToast();
   const auth = useAuth();
@@ -155,8 +152,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2">
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="w-full min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-theme">
         <div className="mx-auto w-full max-w-md space-y-8">
           <div>
             <div className="flex justify-center">
@@ -276,18 +272,5 @@ export default function LoginPage() {
           </Tabs>
         </div>
       </div>
-      <div className="hidden bg-muted lg:block relative">
-        {loginImage && (
-          <Image
-            src={loginImage.imageUrl}
-            alt={loginImage.description}
-            fill
-            className="object-cover"
-            data-ai-hint={loginImage.imageHint}
-            priority
-          />
-        )}
-      </div>
-    </div>
   );
 }
