@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Link from "next/link";
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import {
@@ -20,7 +21,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AddChampionDialog, type NewChampionData } from "./AddChampionDialog";
 import { useToast } from "@/hooks/use-toast";
@@ -163,7 +164,13 @@ export default function ChampionsPage() {
   }, []);
 
   return (
-    <>
+    <div className="space-y-6">
+      <Button asChild variant="outline" className="w-fit">
+        <Link href="/dashboard/settings/family">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Family Settings
+        </Link>
+      </Button>
       <Card>
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
@@ -289,6 +296,6 @@ export default function ChampionsPage() {
             </AlertDialogContent>
         )}
       </AlertDialog>
-    </>
+    </div>
   );
 }
