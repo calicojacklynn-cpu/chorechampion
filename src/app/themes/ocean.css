@@ -2,11 +2,11 @@
     --radius: 1.5rem;
     --background: 205 50% 14%;
     --foreground: 215 25% 90%;
-    --card: 205 40% 34%;
+    --card: 205 40% 40%;
     --card-foreground: 215 25% 90%;
-    --popover: 205 40% 34%;
+    --popover: 205 40% 40%;
     --popover-foreground: 215 25% 90%;
-    --primary: 185 30% 30% / 0.95;
+    --primary: 210 30% 40%;
     --primary-foreground: 215 25% 90%;
     --secondary: 205 40% 26%;
     --secondary-foreground: 215 25% 90%;
@@ -14,7 +14,7 @@
     --muted-foreground: 215 25% 80%;
     --accent: 51 100% 50%;
     --accent-foreground: 24 9.8% 10%;
-    --destructive: 0 0% 40% / 0.9;
+    --destructive: 0 40% 40% / 0.9;
     --destructive-foreground: 0 0% 0%;
     --border: 200 40% 28%;
     --input: 0 0% 100%;
