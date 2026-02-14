@@ -6,7 +6,7 @@
     --card-foreground: 0 0% 0%;
     --popover: 205 40% 22%;
     --popover-foreground: 0 0% 0%;
-    --primary: 175 45% 42% / 0.95;
+    --primary: 175 45% 38% / 0.95;
     --primary-foreground: 0 0% 0%;
     --secondary: 205 40% 22%;
     --secondary-foreground: 0 0% 0%;
@@ -14,7 +14,7 @@
     --muted-foreground: 0 0% 0%;
     --accent: 51 100% 50%;
     --accent-foreground: 0 0% 0%;
-    --destructive: 0 70% 45%;
+    --destructive: 0 75% 68% / 0.9;
     --destructive-foreground: 0 0% 0%;
     --border: 200 40% 28%;
     --input: 0 0% 100%;
