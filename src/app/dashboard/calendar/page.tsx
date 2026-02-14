@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo } from "react";
@@ -128,8 +129,8 @@ export default function CalendarPage() {
         <CardHeader className="flex flex-row items-center justify-between p-4 border-b">
           <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'monthly' | 'weekly')} className="w-auto">
             <TabsList className="h-9 p-1 bg-secondary text-secondary-foreground">
-                <TabsTrigger value="weekly" className="h-7 px-3 text-xs data-[state=active]:bg-card-foreground data-[state=active]:text-card">Week</TabsTrigger>
-                <TabsTrigger value="monthly" className="h-7 px-3 text-xs data-[state=active]:bg-card-foreground data-[state=active]:text-card">Month</TabsTrigger>
+                <TabsTrigger value="weekly" className="h-7 px-3 text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Week</TabsTrigger>
+                <TabsTrigger value="monthly" className="h-7 px-3 text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Month</TabsTrigger>
             </TabsList>
           </Tabs>
           <div className="flex items-center gap-2">
