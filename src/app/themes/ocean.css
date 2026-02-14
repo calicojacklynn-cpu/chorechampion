@@ -6,13 +6,13 @@
     --card-foreground: 215 25% 90%;
     --popover: 205 40% 50%;
     --popover-foreground: 215 25% 90%;
-    --primary: 210 30% 65% / 0.95;
+    --primary: 210 40% 75%;
     --primary-foreground: 215 25% 10%;
     --secondary: 205 40% 26%;
     --secondary-foreground: 215 25% 90%;
     --muted: 200 40% 28%;
     --muted-foreground: 215 25% 80%;
-    --destructive: 0 30% 40% / 0.9;
+    --destructive: 0 15% 40% / 0.9;
     --destructive-foreground: 0 0% 0%;
     --border: 200 40% 28%;
     --input: 0 0% 100%;
@@ -30,6 +30,10 @@
     --gradient-to: hsl(180, 50%, 15%);
 }
 
-.ocean .bg-input {
+.ocean input, .ocean textarea {
     color: hsl(0 0% 0%);
+}
+
+.ocean [role="switch"][data-state="unchecked"] {
+    background-color: hsl(var(--muted));
 }
