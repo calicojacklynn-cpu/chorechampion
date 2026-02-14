@@ -2,12 +2,12 @@
     --radius: 1.5rem;
     --background: 205 50% 14%;
     --foreground: 215 25% 90%;
-    --card: 205 40% 40%;
+    --card: 205 40% 50%;
     --card-foreground: 215 25% 90%;
-    --popover: 205 40% 40%;
+    --popover: 205 40% 50%;
     --popover-foreground: 215 25% 90%;
-    --primary: 210 30% 40%;
-    --primary-foreground: 215 25% 90%;
+    --primary: 210 30% 70%;
+    --primary-foreground: 215 25% 10%;
     --secondary: 205 40% 26%;
     --secondary-foreground: 215 25% 90%;
     --muted: 200 40% 28%;
