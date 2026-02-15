@@ -215,7 +215,7 @@ export default function ChampionDashboardPage() {
                                             <Image src={imageUrl} alt={reward.name} fill className="object-cover" data-ai-hint={reward.imageHint} />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center bg-secondary">
-                                                <GoldRibbonIcon className="w-12 h-12 text-accent" />
+                                                <GoldRibbonIcon className="w-12 h-12" />
                                             </div>
                                         )}
                                     </div>
