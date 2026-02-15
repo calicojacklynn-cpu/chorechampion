@@ -87,7 +87,7 @@ export default function BroadcastPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
-            <Megaphone className="h-8 w-8 text-muted-foreground" />
+            <Megaphone className="h-8 w-8 text-primary" />
             Family Chat
           </h1>
           <p className="text-muted-foreground">
