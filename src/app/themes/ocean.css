@@ -11,11 +11,11 @@
     --primary-foreground: 215 25% 10%;
     --secondary: 195 45% 75%;
     --secondary-foreground: 0 0% 0%;
-    --muted: 200 40% 30%;
+    --muted: 200 40% 40%;
     --muted-foreground: 215 25% 80%;
     --accent: 195 45% 85%;
     --accent-foreground: 215 25% 10%;
-    --destructive: 0 65% 45%;
+    --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 98%;
     --border: 200 40% 28%;
     --input: 0 0% 100%;
@@ -33,7 +33,15 @@
     --gradient-to: hsl(180, 50%, 15%);
 }
 
-.ocean input, .ocean textarea, .ocean [data-radix-select-trigger] > span {
+.ocean [data-radix-select-trigger] {
+    background-color: hsl(var(--sidebar-background));
+}
+
+.ocean [data-radix-select-trigger] > span {
+    color: hsl(var(--foreground));
+}
+
+.ocean input, .ocean textarea {
     color: hsl(0 0% 0%);
 }
 
