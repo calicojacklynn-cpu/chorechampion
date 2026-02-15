@@ -238,7 +238,7 @@ export default function RewardsPage() {
                             <Image src={reward.imageUrl} alt={reward.name} fill className="object-cover" data-ai-hint={reward.imageHint} />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-secondary">
-                                <Trophy className="w-12 h-12 text-accent fill-accent stroke-black" />
+                                <Trophy className="w-12 h-12 fill-accent stroke-black" />
                             </div>
                           )}
                       </div>
@@ -320,3 +320,5 @@ export default function RewardsPage() {
     </>
   );
 }
+
+    
