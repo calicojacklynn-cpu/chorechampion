@@ -23,12 +23,13 @@ import {
 } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Star, Trophy, CheckCircle2, Loader2 } from 'lucide-react';
+import { Star, CheckCircle2, Loader2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Champion } from '@/app/dashboard/champions/page';
 import type { Reward } from '@/app/dashboard/rewards/page';
 import type { AssignedChore } from '@/ai';
+import { TrophyIcon } from '@/components/TrophyIcon';
 
 export default function ChampionDashboardPage() {
     const { toast } = useToast();
@@ -214,7 +215,7 @@ export default function ChampionDashboardPage() {
                                             <Image src={imageUrl} alt={reward.name} fill className="object-cover" data-ai-hint={reward.imageHint} />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center bg-secondary">
-                                                <Trophy className="w-12 h-12 fill-accent stroke-black" />
+                                                <TrophyIcon className="w-12 h-12 text-accent" />
                                             </div>
                                         )}
                                     </div>
@@ -240,5 +241,3 @@ export default function ChampionDashboardPage() {
         </div>
     );
 }
-
-    
