@@ -159,7 +159,7 @@ export default function ChampionBroadcastPage() {
                   className={`max-w-md rounded-xl px-4 py-3 border border-black ${
                     isSelf
                       ? 'bg-primary text-primary-foreground rounded-br-none'
-                      : 'bg-muted text-foreground rounded-bl-none'
+                      : 'bg-primary text-primary-foreground rounded-bl-none'
                   }`}
                 >
                   <p className={'font-bold text-sm mb-1'}>{message.senderName}</p>

@@ -119,7 +119,7 @@ export default function BroadcastPage() {
                   className={`max-w-md rounded-xl px-4 py-3 border border-black ${
                     isParent
                       ? 'bg-primary text-primary-foreground rounded-tl-none'
-                      : 'bg-muted text-foreground rounded-tr-none'
+                      : 'bg-primary text-primary-foreground rounded-tr-none'
                   }`}
                 >
                   <p className={'font-bold text-sm mb-1'}>{message.senderName}</p>
