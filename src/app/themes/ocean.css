@@ -33,7 +33,7 @@
     --gradient-to: hsl(180, 50%, 15%);
 }
 
-.ocean input, .ocean textarea, .ocean [data-radix-select-trigger] {
+.ocean input, .ocean textarea, .ocean [data-radix-select-trigger] > span {
     color: hsl(0 0% 0%);
 }
 
