@@ -30,7 +30,7 @@ import { useToast } from "@/hooks/use-toast";
 import { EditRewardDialog } from "./EditRewardDialog";
 import { ClaimedRewardsDialog } from "./ClaimedRewardsDialog";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { TrophyIcon } from "@/components/TrophyIcon";
+import { GoldRibbonIcon } from "@/app/components/GoldRibbonIcon";
 
 // Champion type
 export type Champion = {
@@ -170,7 +170,7 @@ export default function RewardsPage() {
         {/* Page Header */}
         <div>
           <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
-              <TrophyIcon className="h-8 w-8 text-accent"/>
+              <GoldRibbonIcon className="h-8 w-8 text-accent"/>
               Rewards & Recognition
           </h1>
           <p className="text-muted-foreground">
@@ -239,7 +239,7 @@ export default function RewardsPage() {
                             <Image src={reward.imageUrl} alt={reward.name} fill className="object-cover" data-ai-hint={reward.imageHint} />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-secondary">
-                                <TrophyIcon className="w-12 h-12 text-accent" />
+                                <GoldRibbonIcon className="w-12 h-12 text-accent" />
                             </div>
                           )}
                       </div>
