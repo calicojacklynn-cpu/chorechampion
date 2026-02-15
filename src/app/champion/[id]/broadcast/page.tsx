@@ -123,7 +123,7 @@ export default function ChampionBroadcastPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
-            <Megaphone className="h-8 w-8 text-primary" />
+            <Megaphone className="h-8 w-8" />
             Family Chat
           </h1>
           <p className="text-muted-foreground">
