@@ -1,10 +1,10 @@
 .rose {
     --radius: 1.5rem;
-    --background: 355 100% 99%;
+    --background: 350 100% 97%;
     --foreground: 0 0% 0%;
-    --card: 0 0% 100%;
+    --card: 350 100% 98%;
     --card-foreground: 0 0% 0%;
-    --popover: 0 0% 100%;
+    --popover: 350 100% 98%;
     --popover-foreground: 0 0% 0%;
     --primary: 346 76% 59%;
     --primary-foreground: 0 0% 0%;
@@ -27,7 +27,7 @@
     --sidebar-accent-foreground: 240 10% 10%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(350, 100%, 98%);
-    --gradient-mid: hsl(0, 100%, 96%);
-    --gradient-to: hsl(340, 100%, 98%);
+    --gradient-from: hsl(335, 90%, 85%);
+    --gradient-mid: hsl(350, 100%, 88%);
+    --gradient-to: hsl(5, 100%, 87%);
 }
