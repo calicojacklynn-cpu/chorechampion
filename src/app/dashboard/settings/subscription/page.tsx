@@ -137,8 +137,8 @@ export default function SubscriptionSettingsPage() {
               <CardDescription>Manage your payment method and view transaction history.</CardDescription>
           </CardHeader>
           <CardContent className="flex gap-4">
-              <Button variant="outline" onClick={handleManageBilling}>Manage Billing</Button>
-              <Button variant="outline" onClick={handleViewHistory}>View History</Button>
+              <Button variant="secondary" onClick={handleManageBilling}>Manage Billing</Button>
+              <Button variant="secondary" onClick={handleViewHistory}>View History</Button>
           </CardContent>
       </Card>
     </div>
