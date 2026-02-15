@@ -34,11 +34,11 @@
 }
 
 .ocean [data-radix-select-trigger] {
-    background-color: hsl(var(--sidebar-background));
+    background-color: hsl(var(--input));
 }
 
 .ocean [data-radix-select-trigger] > span {
-    color: hsl(var(--foreground));
+    color: hsl(0 0% 0%);
 }
 
 .ocean input, .ocean textarea {
