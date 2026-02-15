@@ -169,7 +169,7 @@ export default function RewardsPage() {
         {/* Page Header */}
         <div>
           <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
-              <Trophy className="h-8 w-8 text-primary"/>
+              <Trophy className="h-8 w-8 text-accent fill-accent stroke-black"/>
               Rewards & Recognition
           </h1>
           <p className="text-muted-foreground">
@@ -238,7 +238,7 @@ export default function RewardsPage() {
                             <Image src={reward.imageUrl} alt={reward.name} fill className="object-cover" data-ai-hint={reward.imageHint} />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-secondary">
-                                <Trophy className="w-12 h-12 text-muted-foreground" />
+                                <Trophy className="w-12 h-12 text-accent fill-accent stroke-black" />
                             </div>
                           )}
                       </div>

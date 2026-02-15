@@ -213,7 +213,7 @@ export default function ChampionDashboardPage() {
                                             <Image src={imageUrl} alt={reward.name} fill className="object-cover" data-ai-hint={reward.imageHint} />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center bg-secondary">
-                                                <Trophy className="w-12 h-12 text-muted-foreground" />
+                                                <Trophy className="w-12 h-12 text-accent fill-accent stroke-black" />
                                             </div>
                                         )}
                                     </div>
