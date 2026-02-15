@@ -3,17 +3,16 @@ import { cn } from '@/lib/utils';
 
 export function GoldRibbonIcon(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg 
-      viewBox="0 0 32 32"
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      stroke="black"
-      strokeWidth="1.5"
       {...props}
       className={cn(props.className)}
     >
-      <path d="M16,2A10,10,0,1,0,26,12,10,10,0,0,0,16,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,16,20Z" fill="#FFD700"/>
-      <path d="M21,11H18V28a1,1,0,0,0,1.52.85L22,27.1l2.48,1.73A1,1,0,0,0,26,28V11H23l-3,4Z" fill="#3B82F6"/>
-      <path d="M11,11H14V28a1,1,0,0,1-1.52.85L10,27.1,7.52,28.85A1,1,0,0,1,6,28V11H9l-3,4Z" fill="#3B82F6"/>
+      <path d="M9 2L15 2L15 8L12 10L9 8L9 2Z" fill="#3B82F6" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" fill="#FFD700" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z" stroke="black" strokeWidth="1.5" fill="none"/>
     </svg>
   );
 }
