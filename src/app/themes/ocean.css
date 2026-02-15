@@ -7,7 +7,7 @@
     --card-foreground: 215 25% 90%;
     --popover: 200 40% 38%;
     --popover-foreground: 215 25% 90%;
-    --primary: 195 45% 65%;
+    --primary: 195 45% 55%;
     --primary-foreground: 215 25% 10%;
     --secondary: 195 45% 75%;
     --secondary-foreground: 0 0% 0%;
@@ -34,11 +34,11 @@
 }
 
 .ocean [data-radix-select-trigger] {
-    background-color: hsl(var(--input));
+    background-color: hsl(0 0% 0%);
 }
 
 .ocean [data-radix-select-trigger] > span {
-    color: hsl(0 0% 0%);
+    color: hsl(215 25% 90%);
 }
 
 .ocean input, .ocean textarea {
@@ -48,4 +48,3 @@
 .ocean [role="switch"][data-state="unchecked"] {
     background-color: hsl(210, 9%, 85%);
 }
-
