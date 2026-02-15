@@ -24,12 +24,14 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { ChoreChampionLogo } from "./ChoreChampionLogo";
 
 export function ChampionNav() {
   const pathname = usePathname();
   const params = useParams();
+  const { setOpenMobile } = useSidebar();
   const championId = typeof params.id === 'string' ? params.id : '';
   
   const dashboardHref = `/champion/${championId}`;
@@ -41,10 +43,14 @@ export function ChampionNav() {
       { href: `${settingsBaseHref}/notifications`, label: "Notifications" },
   ];
 
+  const handleLinkClick = () => {
+    setOpenMobile(false);
+  };
+
   return (
     <>
       <SidebarHeader className="group-data-[collapsible=icon]:justify-center">
-        <Link href={dashboardHref} className="flex items-center gap-2">
+        <Link href={dashboardHref} className="flex items-center gap-2" onClick={handleLinkClick}>
           <ChoreChampionLogo className="h-8 w-8" />
           <span className="font-bold font-headline text-lg group-data-[collapsible=icon]:hidden text-sidebar-foreground">
             Chore Champion
@@ -59,7 +65,7 @@ export function ChampionNav() {
               tooltip={{ children: "Dashboard" }}
               asChild
             >
-              <Link href={dashboardHref}>
+              <Link href={dashboardHref} onClick={handleLinkClick}>
                 <LayoutDashboard />
                 <span>Dashboard</span>
               </Link>
@@ -71,7 +77,7 @@ export function ChampionNav() {
               tooltip={{ children: "Broadcasts" }}
               asChild
             >
-              <Link href={broadcastHref}>
+              <Link href={broadcastHref} onClick={handleLinkClick}>
                 <Megaphone />
                 <span>Broadcasts</span>
               </Link>
@@ -105,7 +111,7 @@ export function ChampionNav() {
                         asChild
                         isActive={pathname === child.href}
                       >
-                        <Link href={child.href}>{child.label}</Link>
+                        <Link href={child.href} onClick={handleLinkClick}>{child.label}</Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

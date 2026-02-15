@@ -26,6 +26,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { ChoreChampionLogo } from "./ChoreChampionLogo";
 
@@ -52,11 +53,16 @@ const navItems = [
 
 export function Nav() {
   const pathname = usePathname();
+  const { setOpenMobile } = useSidebar();
+
+  const handleLinkClick = () => {
+    setOpenMobile(false);
+  };
 
   return (
     <>
       <SidebarHeader className="group-data-[collapsible=icon]:justify-center">
-        <Link href="/dashboard" className="flex items-center gap-2">
+        <Link href="/dashboard" className="flex items-center gap-2" onClick={handleLinkClick}>
           <ChoreChampionLogo className="h-8 w-8" />
           <span className="font-bold font-headline text-lg group-data-[collapsible=icon]:hidden text-sidebar-foreground">
             Chore Champion
@@ -96,7 +102,7 @@ export function Nav() {
                             asChild
                             isActive={pathname === child.href}
                           >
-                            <Link href={child.href}>{child.label}</Link>
+                            <Link href={child.href} onClick={handleLinkClick}>{child.label}</Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}
@@ -111,7 +117,7 @@ export function Nav() {
                   tooltip={{ children: item.label }}
                   asChild
                 >
-                  <Link href={item.href}>
+                  <Link href={item.href} onClick={handleLinkClick}>
                     <item.icon />
                     <span>{item.label}</span>
                   </Link>
