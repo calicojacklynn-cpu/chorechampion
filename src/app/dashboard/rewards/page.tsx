@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from "next/image";
@@ -14,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Edit, Star, Trash2 } from "lucide-react";
+import { Edit, Star, Trash2, Gift } from "lucide-react";
 import { AddRewardDialog } from "./AddRewardDialog";
 import {
   AlertDialog,
@@ -30,7 +29,6 @@ import { useToast } from "@/hooks/use-toast";
 import { EditRewardDialog } from "./EditRewardDialog";
 import { ClaimedRewardsDialog } from "./ClaimedRewardsDialog";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { GoldRibbonIcon } from "@/app/components/GoldRibbonIcon";
 
 // Champion type
 export type Champion = {
@@ -170,7 +168,7 @@ export default function RewardsPage() {
         {/* Page Header */}
         <div>
           <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
-              <GoldRibbonIcon className="h-8 w-8"/>
+              <Gift className="h-8 w-8"/>
               Rewards & Recognition
           </h1>
           <p className="text-muted-foreground">
@@ -239,7 +237,7 @@ export default function RewardsPage() {
                             <Image src={reward.imageUrl} alt={reward.name} fill className="object-cover" data-ai-hint={reward.imageHint} />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-secondary">
-                                <GoldRibbonIcon className="w-12 h-12" />
+                                <Gift className="w-12 h-12" />
                             </div>
                           )}
                       </div>
@@ -321,5 +319,3 @@ export default function RewardsPage() {
     </>
   );
 }
-
-    
