@@ -14,7 +14,7 @@ import { useTheme } from "@/app/context/ThemeContext";
 
 const themes = [
   { name: 'light', label: 'Default Light', gradient: 'linear-gradient(to bottom right, hsl(60, 100%, 95%), hsl(195, 100%, 95%), hsl(240, 100%, 95%))' },
-  { name: 'dark', label: 'Default Dark', gradient: 'linear-gradient(to bottom right, hsl(222, 47%, 11%), hsl(260, 50%, 15%), hsl(280, 40%, 12%))' },
+  { name: 'forest', label: 'Forest', gradient: 'linear-gradient(to bottom right, hsl(140, 30%, 20%), hsl(160, 35%, 15%), hsl(180, 30%, 18%))' },
   { name: 'slate', label: 'Slate', gradient: 'linear-gradient(to bottom right, hsl(220, 13%, 18%), hsl(215, 25%, 27%), hsl(210, 30%, 20%))' },
   { name: 'rose', label: 'Rose', gradient: 'linear-gradient(to bottom right, hsl(335, 90%, 85%), hsl(350, 100%, 88%), hsl(5, 100%, 87%))' },
   { name: 'ocean', label: 'Ocean', gradient: 'linear-gradient(to bottom right, hsl(210, 60%, 15%), hsl(190, 70%, 25%), hsl(180, 50%, 15%))' },
