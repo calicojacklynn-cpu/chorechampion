@@ -3,10 +3,10 @@
     --radius: 1.5rem;
     --background: 210 30% 10%;
     --foreground: 120 10% 95%;
-    --card: 100 20% 86%;
-    --card-foreground: 0 0% 0%;
-    --popover: 100 20% 86%;
-    --popover-foreground: 0 0% 0%;
+    --card: 150 25% 40%;
+    --card-foreground: 150 10% 95%;
+    --popover: 150 25% 40%;
+    --popover-foreground: 150 10% 95%;
     --primary: 140 20% 30%;
     --primary-foreground: 120 10% 95%;
     --secondary: 150 20% 30%;
