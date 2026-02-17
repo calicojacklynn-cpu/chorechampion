@@ -1,3 +1,4 @@
+
 .slate {
     --radius: 1.5rem;
     --background: 220 13% 18%;
@@ -14,7 +15,7 @@
     --muted-foreground: 220 10% 65%;
     --accent: 51 100% 50%;
     --accent-foreground: 0 0% 0%;
-    --destructive: 0 63% 31%;
+    --destructive: 0 63% 35%;
     --destructive-foreground: 0 0% 98%;
     --border: 220 13% 30%;
     --input: 220 13% 24%;
