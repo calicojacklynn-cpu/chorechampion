@@ -3,11 +3,11 @@
     --radius: 1.5rem;
     --background: 210 30% 10%;
     --foreground: 120 10% 95%;
-    --card: 140 25% 30%;
-    --card-foreground: 120 10% 95%;
-    --popover: 140 25% 30%;
-    --popover-foreground: 120 10% 95%;
-    --primary: 140 40% 35%;
+    --card: 100 20% 86%;
+    --card-foreground: 0 0% 0%;
+    --popover: 100 20% 86%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 140 20% 30%;
     --primary-foreground: 120 10% 95%;
     --secondary: 150 20% 30%;
     --secondary-foreground: 120 10% 95%;
@@ -19,16 +19,20 @@
     --destructive-foreground: 0 0% 98%;
     --border: 170 15% 25%;
     --input: 160 20% 22%;
-    --ring: 140 40% 40%;
-    --sidebar-background: 210 30% 12%;
+    --ring: 140 20% 35%;
+    --sidebar-background: 160 35% 20%;
     --sidebar-foreground: 120 10% 85%;
-    --sidebar-primary: 140 40% 35%;
+    --sidebar-primary: 140 20% 30%;
     --sidebar-primary-foreground: 120 10% 95%;
     --sidebar-accent: 160 20% 20%;
     --sidebar-accent-foreground: 120 10% 95%;
     --sidebar-border: 170 15% 25%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(140, 30%, 25%);
-    --gradient-mid: hsl(160, 35%, 20%);
-    --gradient-to: hsl(180, 30%, 23%);
+    --gradient-from: hsl(140, 30%, 35%);
+    --gradient-mid: hsl(160, 35%, 30%);
+    --gradient-to: hsl(180, 30%, 33%);
+}
+
+.forest .bg-sidebar {
+    background-image: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-mid), var(--gradient-to));
 }
