@@ -27,7 +27,7 @@
     --sidebar-accent-foreground: 120 10% 95%;
     --sidebar-border: 170 15% 25%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(140, 30%, 20%);
-    --gradient-mid: hsl(160, 35%, 15%);
-    --gradient-to: hsl(180, 30%, 18%);
+    --gradient-from: hsl(140, 30%, 25%);
+    --gradient-mid: hsl(160, 35%, 20%);
+    --gradient-to: hsl(180, 30%, 23%);
 }
