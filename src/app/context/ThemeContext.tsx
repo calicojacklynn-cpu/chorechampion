@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-type Theme = "light" | "forest" | "slate" | "rose" | "ocean" | "sage" | "candy" | "sunset";
+type Theme = "sky" | "forest" | "slate" | "rose" | "ocean" | "sage" | "candy" | "sunset";
 
 interface ThemeContextType {
   theme: Theme;
