@@ -20,15 +20,19 @@
     --border: 210 50% 88%;
     --input: 0 0% 100%;
     --ring: 200 95% 65%;
-    --sidebar-background: 0 0% 100%;
+    --sidebar-background: hsl(200, 100%, 82%);
     --sidebar-foreground: 215 30% 25%;
     --sidebar-primary: 200 95% 60%;
     --sidebar-primary-foreground: 210 20% 10%;
-    --sidebar-accent: 210 60% 95%;
+    --sidebar-accent: hsl(210, 100%, 94%);
     --sidebar-accent-foreground: 215 30% 25%;
-    --sidebar-border: 210 50% 88%;
+    --sidebar-border: hsl(210, 50%, 80%);
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(190, 100%, 88%);
-    --gradient-mid: hsl(200, 100%, 90%);
-    --gradient-to: hsl(210, 100%, 92%);
+    --gradient-from: hsl(190, 100%, 80%);
+    --gradient-mid: hsl(200, 100%, 82%);
+    --gradient-to: hsl(210, 100%, 84%);
+}
+
+.sky .bg-sidebar {
+    background-image: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-mid), var(--gradient-to));
 }
