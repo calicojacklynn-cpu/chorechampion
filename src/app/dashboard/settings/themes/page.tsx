@@ -18,7 +18,7 @@ const themes = [
   { name: 'sage', label: 'Sage', gradient: 'linear-gradient(to bottom right, hsl(115, 25%, 65%), hsl(110, 25%, 45%), hsl(105, 25%, 60%))' },
   { name: 'forest', label: 'Forest', gradient: 'linear-gradient(to bottom right, hsl(140, 30%, 35%), hsl(160, 35%, 30%), hsl(180, 30%, 33%))' },
   { name: 'rose', label: 'Rose', gradient: 'linear-gradient(to bottom right, hsl(335, 90%, 85%), hsl(350, 100%, 88%), hsl(5, 100%, 87%))' },
-  { name: 'candy', label: 'Candy', gradient: 'linear-gradient(to bottom right, hsl(320, 100%, 80%), hsl(290, 100%, 80%), hsl(270, 100%, 80%))' },
+  { name: 'candy', label: 'Candy', gradient: 'linear-gradient(to bottom right, hsl(320, 90%, 88%), hsl(290, 90%, 88%), hsl(270, 90%, 88%))' },
   { name: 'slate', label: 'Slate', gradient: 'linear-gradient(to bottom right, hsl(220, 13%, 18%), hsl(215, 25%, 27%), hsl(210, 30%, 20%))' },
   { name: 'sunset', label: 'Sunset', gradient: 'linear-gradient(to bottom right, hsl(45, 95%, 77%), hsl(30, 100%, 72%), hsl(15, 100%, 67%))' },
 ] as const;
