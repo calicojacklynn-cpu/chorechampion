@@ -7,9 +7,9 @@
     --card-foreground: 215 30% 25%;
     --popover: 210 100% 98%;
     --popover-foreground: 215 30% 25%;
-    --primary: 200 95% 50%;
+    --primary: 200 95% 78%;
     --primary-foreground: 210 20% 10%;
-    --secondary: 210 60% 70%;
+    --secondary: 210 60% 88%;
     --secondary-foreground: 215 30% 25%;
     --muted: 210 50% 95%;
     --muted-foreground: 215 30% 55%;
@@ -20,7 +20,7 @@
     --border: 210 50% 88%;
     --input: 0 0% 100%;
     --ring: 200 95% 65%;
-    --sidebar-background: hsl(200, 100%, 82%);
+    --sidebar-background: linear-gradient(to bottom right, hsl(190, 100%, 80%), hsl(200, 100%, 82%), hsl(210, 100%, 84%));
     --sidebar-foreground: 215 30% 25%;
     --sidebar-primary: 200 95% 60%;
     --sidebar-primary-foreground: 210 20% 10%;
@@ -34,6 +34,6 @@
 }
 
 .sky .bg-sidebar {
+    background: hsl(200, 100%, 82%);
     background-image: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-mid), var(--gradient-to));
 }
-
