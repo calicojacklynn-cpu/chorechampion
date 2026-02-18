@@ -6,9 +6,9 @@
     --foreground: 0 0% 0%;
 
     /* Cards and Popovers */
-    --card: 40 100% 68%;
+    --card: 40 100% 72%;
     --card-foreground: 0 0% 0%;
-    --popover: 40 100% 68%;
+    --popover: 40 100% 72%;
     --popover-foreground: 0 0% 0%;
 
     /* Primary (Parent Chat Bubble) */
