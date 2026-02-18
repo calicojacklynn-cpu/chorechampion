@@ -19,13 +19,13 @@
     --border: 0 0% 0%;
     --input: 0 0% 100%;
     --ring: 0 0% 0%;
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 240 10% 10%;
-    --sidebar-primary: 240 10% 10%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 5% 96%;
-    --sidebar-accent-foreground: 240 10% 10%;
-    --sidebar-border: 240 5% 90%;
+    --sidebar-background: 350 100% 88%;
+    --sidebar-foreground: 0 0% 0%;
+    --sidebar-primary: 340 90% 82%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 345 90% 85%;
+    --sidebar-accent-foreground: 0 0% 0%;
+    --sidebar-border: 335 90% 75%;
     --sidebar-ring: hsl(var(--ring));
     --gradient-from: hsl(335, 90%, 85%);
     --gradient-mid: hsl(350, 100%, 88%);
@@ -34,4 +34,8 @@
 
 .rose [role="progressbar"] {
     border: 2px solid hsl(var(--ring));
+}
+
+.rose .bg-sidebar {
+    background-image: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-mid), var(--gradient-to));
 }
