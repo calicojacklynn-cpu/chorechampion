@@ -19,15 +19,19 @@
     --border: 0 0% 0%;
     --input: 0 0% 100%;
     --ring: 326 80% 65%;
-    --sidebar-background: 0 0% 100%;
+    --sidebar-background: 290 90% 88%;
     --sidebar-foreground: 0 0% 0%;
-    --sidebar-primary: 0 0% 0%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 5% 96%;
+    --sidebar-primary: 320 90% 80%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 320 90% 84%;
     --sidebar-accent-foreground: 0 0% 0%;
-    --sidebar-border: 240 5% 90%;
+    --sidebar-border: 270 90% 70%;
     --sidebar-ring: hsl(var(--ring));
     --gradient-from: hsl(320, 90%, 88%);
     --gradient-mid: hsl(290, 90%, 88%);
     --gradient-to: hsl(270, 90%, 88%);
+}
+
+.candy .bg-sidebar {
+    background-image: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-mid), var(--gradient-to));
 }
