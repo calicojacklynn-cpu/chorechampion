@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/app/context/ThemeContext";
 
 const themes = [
-  { name: 'sky', label: 'Sky Blue', gradient: 'linear-gradient(to bottom right, hsl(190, 100%, 90%), hsl(200, 100%, 92%), hsl(210, 100%, 94%))' },
+  { name: 'sky', label: 'Sky Blue', gradient: 'linear-gradient(to bottom right, hsl(190, 100%, 88%), hsl(200, 100%, 90%), hsl(210, 100%, 92%))' },
   { name: 'ocean', label: 'Ocean', gradient: 'linear-gradient(to bottom right, hsl(210, 60%, 15%), hsl(190, 70%, 25%), hsl(180, 50%, 15%))' },
   { name: 'sage', label: 'Sage', gradient: 'linear-gradient(to bottom right, hsl(115, 25%, 65%), hsl(110, 25%, 45%), hsl(105, 25%, 60%))' },
   { name: 'forest', label: 'Forest', gradient: 'linear-gradient(to bottom right, hsl(140, 30%, 35%), hsl(160, 35%, 30%), hsl(180, 30%, 33%))' },
