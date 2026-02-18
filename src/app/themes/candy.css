@@ -11,11 +11,11 @@
     --secondary: 330 85% 96%;
     --secondary-foreground: 0 0% 0%;
     --muted: 330 85% 96%;
-    --muted-foreground: 0 0% 30%;
+    --muted-foreground: 0 0% 0%;
     --accent: 51 90% 60%;
     --accent-foreground: 0 0% 0%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 0%;
     --border: 0 0% 0%;
     --input: 0 0% 100%;
     --ring: 326 80% 65%;
@@ -27,7 +27,7 @@
     --sidebar-accent-foreground: 0 0% 0%;
     --sidebar-border: 240 5% 90%;
     --sidebar-ring: hsl(var(--ring));
-    --gradient-from: hsl(320, 70%, 92%);
-    --gradient-mid: hsl(290, 70%, 92%);
-    --gradient-to: hsl(270, 70%, 92%);
+    --gradient-from: hsl(320, 90%, 88%);
+    --gradient-mid: hsl(290, 90%, 88%);
+    --gradient-to: hsl(270, 90%, 88%);
 }
