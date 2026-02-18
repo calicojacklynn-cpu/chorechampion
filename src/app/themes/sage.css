@@ -22,12 +22,16 @@
     --gradient-from: hsl(115, 25%, 65%);
     --gradient-mid: hsl(110, 25%, 45%);
     --gradient-to: hsl(105, 25%, 60%);
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 240 10% 10%;
-    --sidebar-primary: 240 10% 10%;
+    --sidebar-background: hsl(110, 25%, 55%);
+    --sidebar-foreground: 0 0% 0%;
+    --sidebar-primary: hsl(110, 25%, 45%);
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 5% 96%;
-    --sidebar-accent-foreground: 240 10% 10%;
-    --sidebar-border: 240 5% 90%;
+    --sidebar-accent: hsl(115, 25%, 65%);
+    --sidebar-accent-foreground: 0 0% 0%;
+    --sidebar-border: hsl(110, 25%, 35%);
     --sidebar-ring: hsl(var(--ring));
+}
+
+.sage .bg-sidebar {
+    background-image: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-mid), var(--gradient-to));
 }
