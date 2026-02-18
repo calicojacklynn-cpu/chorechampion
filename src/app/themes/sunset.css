@@ -37,17 +37,21 @@
     --ring: 35 100% 50%; 
 
     /* Background Gradient - Medium, vibrant colors */
-    --gradient-from: hsl(45, 95%, 70%);
-    --gradient-mid: hsl(30, 100%, 65%);
-    --gradient-to: hsl(15, 100%, 60%);
+    --gradient-from: hsl(45, 95%, 75%);
+    --gradient-mid: hsl(30, 100%, 70%);
+    --gradient-to: hsl(15, 100%, 65%);
 
     /* Sidebar */
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 0%;
-    --sidebar-primary: 0 0% 0%;
+    --sidebar-background: hsl(30, 100%, 70%);
+    --sidebar-foreground: 20 100% 10%;
+    --sidebar-primary: hsl(30, 100%, 55%);
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 5% 96%;
-    --sidebar-accent-foreground: 0 0% 0%;
-    --sidebar-border: 240 5% 90%;
+    --sidebar-accent: hsl(30, 100%, 75%);
+    --sidebar-accent-foreground: 20 100% 10%;
+    --sidebar-border: hsl(30, 100%, 50%);
     --sidebar-ring: hsl(var(--ring));
+}
+
+.sunset .bg-sidebar {
+    background-image: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-mid), var(--gradient-to));
 }
