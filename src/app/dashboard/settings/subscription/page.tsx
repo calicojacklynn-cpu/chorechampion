@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from "react";
@@ -13,22 +12,13 @@ import {
 } from "@/components/ui/card";
 import { Check, UserPlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { PayPalUpgradeButton } from "./PayPalButtons";
+import { StripeUpgradeButton } from "./StripeButtons";
 
 export default function SubscriptionSettingsPage() {
   const { toast } = useToast();
   const [currentPlan, setCurrentPlan] = useState("Free"); 
   const [childSlots, setChildSlots] = useState(3);
   const [maxSlots, setMaxSlots] = useState(3);
-
-  const handleUpgradeApproved = () => {
-    setCurrentPlan("Premium");
-    setMaxSlots(5);
-    toast({
-      title: "Upgrade Successful!",
-      description: "You are now on the Chore Champion Premium plan.",
-    });
-  };
 
   const handleManageBilling = () => {
     toast({
@@ -99,8 +89,7 @@ export default function SubscriptionSettingsPage() {
                 </ul>
             </CardContent>
              <CardFooter>
-                <PayPalUpgradeButton 
-                  onPaymentApproved={handleUpgradeApproved}
+                <StripeUpgradeButton 
                   disabled={currentPlan === 'Premium'}
                 />
             </CardFooter>
