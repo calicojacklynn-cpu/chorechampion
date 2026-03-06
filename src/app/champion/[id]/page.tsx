@@ -3,8 +3,8 @@
 
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { useUser, useDoc, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { doc, collection, query, where } from 'firebase/firestore';
+import { useUser, useDoc, useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase';
+import { doc, collection, query } from 'firebase/firestore';
 import {
   Card,
   CardContent,
@@ -25,10 +25,15 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Star, CheckCircle2, Loader2, Gift } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Champion } from '@/app/dashboard/champions/page';
 import type { Reward } from '@/app/dashboard/rewards/page';
-import type { AssignedChore } from '@/ai';
+
+type AssignedChore = {
+    id: string;
+    choreName: string;
+    pointsValue: number;
+    completed: boolean;
+};
 
 export default function ChampionDashboardPage() {
     const { toast } = useToast();
@@ -37,66 +42,60 @@ export default function ChampionDashboardPage() {
     const params = useParams();
     const championId = typeof params.id === 'string' ? params.id : '';
 
-    // Fetch champion profile
     const championDocRef = useMemoFirebase(() => {
-      if (!firestore || !user) return null;
+      if (!firestore || !championId) return null;
       return doc(firestore, 'champions', championId);
-    }, [firestore, user, championId]);
-    const { data: realChampion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
+    }, [firestore, championId]);
+    const { data: champion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
 
-    // For development, provide a default profile to view the UI.
-    const champion = realChampion || {
-        id: championId,
-        parentId: 'default-parent-id',
-        name: 'Alex',
-        username: 'alex_the_great',
-        email: 'alex@example.com',
-        avatarUrl: '',
-        points: 125,
-    } as Champion;
-
-    // Fetch assigned chores for this champion
     const choresQuery = useMemoFirebase(() => {
-      if (!firestore || !user) return null;
+      if (!firestore || !championId) return null;
       return collection(firestore, 'champions', championId, 'assignedChores');
-    }, [firestore, user, championId]);
+    }, [firestore, championId]);
     const { data: assignedChores, isLoading: areChoresLoading } = useCollection<AssignedChore>(choresQuery);
     
-    // Fetch parent's rewards catalog
     const rewardsQuery = useMemoFirebase(() => {
-        // Only attempt to fetch rewards if we have a real champion profile from Firestore.
-        // The fallback profile has a placeholder parentId which will cause a permission error.
-        if (!realChampion?.parentId) return null;
-        return collection(firestore, 'users', realChampion.parentId, 'rewards');
-    }, [firestore, realChampion]);
+        if (!champion?.parentId || !firestore) return null;
+        return collection(firestore, 'users', champion.parentId, 'rewards');
+    }, [firestore, champion]);
     const { data: rewards, isLoading: areRewardsLoading } = useCollection<Reward>(rewardsQuery);
     
     const handleClaimReward = (reward: Reward) => {
         if (champion && champion.points >= reward.points) {
-            // In a real app, this would deduct points and record the claim in Firestore
-            // e.g., create a document in /champions/{championId}/redeemedRewards
+            const colRef = collection(firestore, 'champions', champion.id, 'redeemedRewards');
+            addDocumentNonBlocking(colRef, {
+                rewardId: reward.id,
+                rewardName: reward.name,
+                pointsCost: reward.points,
+                redemptionDate: new Date().toISOString(),
+                status: 'pending'
+            });
+            
+            // Note: Ideally point deduction is handled by a cloud function when redemption is approved.
             toast({
                 title: "Reward Claimed!",
-                description: `You've successfully claimed "${reward.name}". Your parent has been notified.`,
+                description: `You've submitted a claim for "${reward.name}".`,
             });
         } else {
              toast({
                 variant: "destructive",
                 title: "Not enough points!",
-                description: `You need ${reward.points - (champion?.points || 0)} more points to claim this reward.`,
+                description: `You need more points to claim this.`,
             });
         }
     };
     
     const handleMarkAsDone = (choreId: string) => {
-        // In a real app, this would update the 'completed' status of the chore in Firestore.
+        if (!firestore || !championId) return;
+        const docRef = doc(firestore, 'champions', championId, 'assignedChores', choreId);
+        updateDocumentNonBlocking(docRef, { completed: true });
         toast({
             title: "Quest Submitted!",
-            description: "Your parent has been notified for approval.",
+            description: "Nice work! Your parent has been notified.",
         });
     }
 
-    if ((isChampionLoading && !realChampion) || areChoresLoading || areRewardsLoading) {
+    if (isChampionLoading || areChoresLoading || areRewardsLoading) {
         return (
             <div className="flex h-full items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin" />
@@ -104,6 +103,8 @@ export default function ChampionDashboardPage() {
         );
     }
     
+    if (!champion) return <div className="p-8 text-center">Champion profile not found.</div>;
+
     const pendingChores = assignedChores?.filter(c => !c.completed) || [];
     const completedChores = assignedChores?.filter(c => c.completed) || [];
 
@@ -122,7 +123,7 @@ export default function ChampionDashboardPage() {
                 <Card>
                     <CardHeader>
                         <CardTitle>Today's Quests</CardTitle>
-                        <CardDescription>Chores you need to complete.</CardDescription>
+                        <CardDescription>Complete these to earn points.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <Table>
@@ -150,8 +151,8 @@ export default function ChampionDashboardPage() {
                                     ))
                                 ) : (
                                     <TableRow>
-                                        <TableCell colSpan={3} className="h-24 text-center">
-                                            No quests for today. Great job!
+                                        <TableCell colSpan={3} className="h-24 text-center text-muted-foreground">
+                                            No pending quests.
                                         </TableCell>
                                     </TableRow>
                                 )}
@@ -163,7 +164,7 @@ export default function ChampionDashboardPage() {
                  <Card>
                     <CardHeader>
                         <CardTitle>Completed Quests</CardTitle>
-                        <CardDescription>Quests you've already finished.</CardDescription>
+                        <CardDescription>Waiting for parent approval.</CardDescription>
                     </CardHeader>
                     <CardContent>
                          <Table>
@@ -180,14 +181,14 @@ export default function ChampionDashboardPage() {
                                         <TableCell className="font-medium">{chore.choreName}</TableCell>
                                         <TableCell className="text-right flex items-center justify-end gap-2">
                                             <CheckCircle2 className="h-4 w-4 text-green-500" />
-                                            Done
+                                            Pending
                                         </TableCell>
                                     </TableRow>
                                     ))
                                 ) : (
                                     <TableRow>
-                                        <TableCell colSpan={2} className="h-24 text-center">
-                                            No quests completed yet.
+                                        <TableCell colSpan={2} className="h-24 text-center text-muted-foreground">
+                                            No completed quests yet.
                                         </TableCell>
                                     </TableRow>
                                 )}
@@ -203,18 +204,16 @@ export default function ChampionDashboardPage() {
                 </div>
                  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {rewards && rewards.map((reward) => {
-                        const rewardImage = PlaceHolderImages.find(p => p.id === reward.id);
-                        const imageUrl = reward.imageUrl || rewardImage?.imageUrl;
                         const canAfford = champion.points >= reward.points;
                         return (
                             <Card key={reward.id} className="overflow-hidden flex flex-col">
                                 <CardContent className="p-0">
                                     <div className="relative aspect-[4/3] bg-muted">
-                                        {imageUrl ? (
-                                            <Image src={imageUrl} alt={reward.name} fill className="object-cover" data-ai-hint={reward.imageHint} />
+                                        {reward.imageUrl ? (
+                                            <Image src={reward.imageUrl} alt={reward.name} fill className="object-cover" />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center bg-secondary">
-                                                <Gift className="w-12 h-12" />
+                                                <Gift className="w-12 h-12 opacity-20" />
                                             </div>
                                         )}
                                     </div>

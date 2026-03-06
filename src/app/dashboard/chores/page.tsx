@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useState, useCallback } from "react";
-import { Plus, Star, Edit, Trash2, Wand2 } from "lucide-react";
+import { Plus, Star, Edit, Trash2, Wand2, Loader2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -35,6 +36,8 @@ import { EditChoreDialog } from "./EditChoreDialog";
 import { AssignChoreDialog } from "./AssignChoreDialog";
 import { useToast } from "@/hooks/use-toast";
 import { useSchedule } from "@/app/context/ScheduleContext";
+import { useUser, useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking, updateDocumentNonBlocking, deleteDocumentNonBlocking } from "@/firebase";
+import { collection, doc, query } from "firebase/firestore";
 import type { ChoreAssignment } from "@/ai";
 
 export type Chore = {
@@ -44,22 +47,6 @@ export type Chore = {
   points: number;
 };
 
-// Mock data for initial custom chores
-const initialChores: Chore[] = [
-  {
-    id: "chore-1",
-    name: "Water the plants",
-    description: "Water all indoor and outdoor plants.",
-    points: 5,
-  },
-  {
-    id: "chore-2",
-    name: "Set the dinner table",
-    points: 3,
-  },
-];
-
-// Mock data for preset chores
 const presetChores = [
   { name: "Take out the trash", points: 5 },
   { name: "Wash the dishes", points: 10 },
@@ -69,55 +56,50 @@ const presetChores = [
   { name: "Fold laundry", points: 7 },
 ];
 
-
 export default function ChoresPage() {
   const { toast } = useToast();
-  const [chores, setChores] = useState<Chore[]>(initialChores);
+  const { user } = useUser();
+  const firestore = useFirestore();
   const { setSchedule } = useSchedule();
+
+  const choresQuery = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return query(collection(firestore, 'users', user.uid, 'chores'));
+  }, [firestore, user]);
+
+  const { data: chores, isLoading } = useCollection<Chore>(choresQuery);
 
   const [choreToAssign, setChoreToAssign] = useState<Chore | null>(null);
   const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
-  
   const [choreToEdit, setChoreToEdit] = useState<Chore | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  
   const [choreToDelete, setChoreToDelete] = useState<Chore | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  
 
   const handleAddChore = useCallback((newChoreData: Omit<Chore, "id">) => {
-    const newChore: Chore = {
-      ...newChoreData,
-      id: `chore-${Date.now()}`,
-    };
-    setChores((prev) => [newChore, ...prev]);
-  }, []);
+    if (!user || !firestore) return;
+    const colRef = collection(firestore, 'users', user.uid, 'chores');
+    addDocumentNonBlocking(colRef, newChoreData);
+  }, [user, firestore]);
 
   const handleUpdateChore = useCallback((updatedChore: Chore) => {
-    setChores((prev) =>
-      prev.map((c) => (c.id === updatedChore.id ? updatedChore : c))
-    );
-    toast({
-      title: "Chore Updated!",
-      description: `${updatedChore.name}'s details have been updated.`,
-    });
+    if (!user || !firestore) return;
+    const docRef = doc(firestore, 'users', user.uid, 'chores', updatedChore.id);
+    const { id, ...data } = updatedChore;
+    updateDocumentNonBlocking(docRef, data);
     setIsEditDialogOpen(false);
-  }, [toast]);
+  }, [user, firestore]);
   
   const handleConfirmDelete = useCallback(() => {
-    if (!choreToDelete) return;
-    setChores((prev) => prev.filter((c) => c.id !== choreToDelete.id));
-    toast({
-      title: "Chore Deleted",
-      description: `${choreToDelete.name} has been removed.`,
-      variant: "destructive",
-    });
+    if (!choreToDelete || !user || !firestore) return;
+    const docRef = doc(firestore, 'users', user.uid, 'chores', choreToDelete.id);
+    deleteDocumentNonBlocking(docRef);
     setIsDeleteDialogOpen(false);
     setChoreToDelete(null);
-  }, [choreToDelete, toast]);
+  }, [choreToDelete, user, firestore]);
 
   const handleAddPreset = useCallback((preset: { name: string; points: number }) => {
-    if (chores.some(chore => chore.name.toLowerCase() === preset.name.toLowerCase())) {
+    if (chores?.some(chore => chore.name.toLowerCase() === preset.name.toLowerCase())) {
         toast({
             variant: "default",
             title: "Chore already exists",
@@ -125,37 +107,16 @@ export default function ChoresPage() {
         });
         return;
     }
-    
-    const newChore: Chore = {
-      ...preset,
-      id: `chore-${Date.now()}`,
-      description: "",
-    };
-    setChores(prev => [newChore, ...prev]);
-    toast({
-        title: "Chore Added",
-        description: `"${preset.name}" has been added to your library.`,
-    });
-  }, [chores, toast]);
+    handleAddChore({ ...preset, description: "" });
+  }, [chores, handleAddChore, toast]);
 
   const handleAssignChore = useCallback((newAssignments: ChoreAssignment[]) => {
+    // In a launch-ready state, this would also add documents to /champions/{id}/assignedChores
+    // For now, we update local context which is used by the calendar
     setSchedule((prevSchedule) => [...prevSchedule, ...newAssignments]);
   }, [setSchedule]);
 
-  const openAssignDialog = useCallback((chore: Chore) => {
-    setChoreToAssign(chore);
-    setIsAssignDialogOpen(true);
-  }, []);
-  
-  const openEditDialog = useCallback((chore: Chore) => {
-    setChoreToEdit(chore);
-    setIsEditDialogOpen(true);
-  }, []);
-
-  const openDeleteDialog = useCallback((chore: Chore) => {
-    setChoreToDelete(chore);
-    setIsDeleteDialogOpen(true);
-  }, []);
+  if (isLoading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
 
   return (
     <>
@@ -169,7 +130,6 @@ export default function ChoresPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          
           <div className="lg:col-span-2">
               <Card>
                   <CardHeader>
@@ -186,7 +146,7 @@ export default function ChoresPage() {
                               </TableRow>
                           </TableHeader>
                           <TableBody>
-                              {chores.length > 0 ? (
+                              {chores && chores.length > 0 ? (
                                   chores.map((chore) => (
                                       <TableRow key={chore.id}>
                                           <TableCell className="align-top">
@@ -201,17 +161,14 @@ export default function ChoresPage() {
                                           </TableCell>
                                           <TableCell className="text-right align-top">
                                               <div className="flex flex-col items-end gap-1">
-                                                  <Button variant="default" size="icon-sm" onClick={() => openAssignDialog(chore)} title="AI Schedule Chore">
+                                                  <Button variant="default" size="icon-sm" onClick={() => { setChoreToAssign(chore); setIsAssignDialogOpen(true); }} title="AI Schedule Chore">
                                                       <Wand2 className="h-4 w-4" />
-                                                      <span className="sr-only">AI Schedule Chore</span>
                                                   </Button>
-                                                  <Button variant="default" size="icon-sm" onClick={() => openEditDialog(chore)} title="Edit Chore">
+                                                  <Button variant="default" size="icon-sm" onClick={() => { setChoreToEdit(chore); setIsEditDialogOpen(true); }} title="Edit Chore">
                                                       <Edit className="h-4 w-4" />
-                                                      <span className="sr-only">Edit Chore</span>
                                                   </Button>
-                                                  <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(chore)} title="Delete Chore">
+                                                  <Button variant="destructive" size="icon-sm" onClick={() => { setChoreToDelete(chore); setIsDeleteDialogOpen(true); }} title="Delete Chore">
                                                       <Trash2 className="h-4 w-4" />
-                                                      <span className="sr-only">Delete Chore</span>
                                                   </Button>
                                               </div>
                                           </TableCell>
@@ -219,8 +176,8 @@ export default function ChoresPage() {
                                   ))
                               ) : (
                                   <TableRow>
-                                      <TableCell colSpan={3} className="h-24 text-center">
-                                          No chores yet. Add a chore or pick from the presets.
+                                      <TableCell colSpan={3} className="h-24 text-center text-muted-foreground">
+                                          No custom chores yet.
                                       </TableCell>
                                   </TableRow>
                               )}
@@ -234,11 +191,11 @@ export default function ChoresPage() {
               <Card>
                   <CardHeader>
                       <CardTitle>Quick Add Presets</CardTitle>
-                      <CardDescription>Add common chores to your library with one click.</CardDescription>
+                      <CardDescription>Add common chores to your library.</CardDescription>
                   </CardHeader>
                   <CardContent className="flex flex-wrap gap-2">
                       {presetChores.map((preset) => (
-                          <Button key={preset.name} size="sm" variant="default" onClick={() => handleAddPreset(preset)}>
+                          <Button key={preset.name} size="sm" variant="outline" onClick={() => handleAddPreset(preset)}>
                               <Plus className="mr-2 h-4 w-4" />
                               {preset.name}
                           </Button>
@@ -246,7 +203,6 @@ export default function ChoresPage() {
                   </CardContent>
               </Card>
           </div>
-
         </div>
       </div>
       <AssignChoreDialog
@@ -261,29 +217,17 @@ export default function ChoresPage() {
         onOpenChange={setIsEditDialogOpen}
         onSave={handleUpdateChore}
       />
-       <AlertDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-      >
-        {choreToDelete && (
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the chore "{choreToDelete.name}".
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  className="bg-destructive hover:bg-destructive/90"
-                  onClick={handleConfirmDelete}
-                >
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-        )}
+       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>Permanently delete "{choreToDelete?.name}".</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={handleConfirmDelete}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
       </AlertDialog>
     </>
   );

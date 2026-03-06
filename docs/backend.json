@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "ParentProfile": {
@@ -130,6 +131,14 @@
           "type": "string",
           "description": "Reference to Chore. (Relationship: Chore 1:N AssignedChore)"
         },
+        "choreName": {
+          "type": "string",
+          "description": "Snapshot of the chore name at time of assignment."
+        },
+        "pointsValue": {
+          "type": "number",
+          "description": "Points value at time of assignment."
+        },
         "dueDate": {
           "type": "string",
           "description": "The date the chore is due.",
@@ -138,6 +147,10 @@
         "completed": {
           "type": "boolean",
           "description": "Indicates whether the chore has been completed."
+        },
+        "approved": {
+          "type": "boolean",
+          "description": "Indicates whether the completion was approved by a parent."
         }
       },
       "required": [
@@ -170,17 +183,20 @@
           "type": "string",
           "description": "Detailed description of the reward."
         },
-        "pointsRequired": {
+        "points": {
           "type": "number",
           "description": "Number of points required to redeem the reward."
+        },
+        "imageUrl": {
+          "type": "string",
+          "format": "uri"
         }
       },
       "required": [
         "id",
         "parentId",
         "name",
-        "description",
-        "pointsRequired"
+        "points"
       ]
     },
     "RedeemedReward": {
@@ -201,17 +217,31 @@
           "type": "string",
           "description": "Reference to Reward. (Relationship: Reward 1:N RedeemedReward)"
         },
+        "rewardName": {
+          "type": "string",
+          "description": "Snapshot of the reward name."
+        },
+        "pointsCost": {
+          "type": "number",
+          "description": "Points spent."
+        },
         "redemptionDate": {
           "type": "string",
           "description": "The date the reward was redeemed.",
           "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "fulfilled"],
+          "description": "Status of the redemption."
         }
       },
       "required": [
         "id",
         "championId",
         "rewardId",
-        "redemptionDate"
+        "redemptionDate",
+        "status"
       ]
     }
   },
@@ -230,69 +260,17 @@
           "schema": {
             "$ref": "#/backend/entities/ParentProfile"
           },
-          "description": "Stores parent user profiles. Path-based ownership ensures that only the authenticated user (parent) can access their profile.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique ID of the parent user."
-            }
-          ]
+          "description": "Stores parent user profiles."
         }
       },
       {
-        "path": "/champions/{championId}",
+        "path": "/users/{userId}/chores/{choreId}",
         "definition": {
-          "entityName": "ChampionProfile",
+          "entityName": "Chore",
           "schema": {
-            "$ref": "#/backend/entities/ChampionProfile"
+            "$ref": "#/backend/entities/Chore"
           },
-          "description": "Top-level collection for champion profiles. Accessible by the champion and their parent.",
-          "params": [
-            {
-              "name": "championId",
-              "description": "The unique ID of the champion (matches their auth UID)."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/champions/{championId}/assignedChores/{assignedChoreId}",
-        "definition": {
-          "entityName": "AssignedChore",
-          "schema": {
-            "$ref": "#/backend/entities/AssignedChore"
-          },
-          "description": "Stores chores assigned to a specific champion. Accessible by both champion and parent.",
-          "params": [
-            {
-              "name": "championId",
-              "description": "The unique ID of the champion profile."
-            },
-            {
-              "name": "assignedChoreId",
-              "description": "The unique ID of the assigned chore."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/champions/{championId}/redeemedRewards/{redeemedRewardId}",
-        "definition": {
-          "entityName": "RedeemedReward",
-          "schema": {
-            "$ref": "#/backend/entities/RedeemedReward"
-          },
-          "description": "Stores rewards redeemed by a specific champion. Accessible by both champion and parent.",
-          "params": [
-            {
-              "name": "championId",
-              "description": "The unique ID of the champion profile."
-            },
-            {
-              "name": "redeemedRewardId",
-              "description": "The unique ID of the redeemed reward."
-            }
-          ]
+          "description": "Parent-specific custom chore library."
         }
       },
       {
@@ -302,17 +280,37 @@
           "schema": {
             "$ref": "#/backend/entities/Reward"
           },
-          "description": "Stores rewards created by the parent. Path-based ownership allows only the parent to access the rewards they created.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique ID of the parent user."
-            },
-            {
-              "name": "rewardId",
-              "description": "The unique ID of the reward."
-            }
-          ]
+          "description": "Parent-specific custom reward library."
+        }
+      },
+      {
+        "path": "/champions/{championId}",
+        "definition": {
+          "entityName": "ChampionProfile",
+          "schema": {
+            "$ref": "#/backend/entities/ChampionProfile"
+          },
+          "description": "Champion profiles."
+        }
+      },
+      {
+        "path": "/champions/{championId}/assignedChores/{assignedChoreId}",
+        "definition": {
+          "entityName": "AssignedChore",
+          "schema": {
+            "$ref": "#/backend/entities/AssignedChore"
+          },
+          "description": "Chores assigned to a champion."
+        }
+      },
+      {
+        "path": "/champions/{championId}/redeemedRewards/{redeemedRewardId}",
+        "definition": {
+          "entityName": "RedeemedReward",
+          "schema": {
+            "$ref": "#/backend/entities/RedeemedReward"
+          },
+          "description": "Rewards redeemed by a champion."
         }
       },
       {
@@ -322,16 +320,9 @@
           "schema": {
             "$ref": "#/backend/entities/Chore"
           },
-          "description": "Stores preset chores available to all users. Accessible to all users, but write access is restricted to admin roles (if implemented).",
-          "params": [
-            {
-              "name": "choreId",
-              "description": "The unique ID of the chore."
-            }
-          ]
+          "description": "Global preset chores."
         }
       }
-    ],
-    "reasoning": "The Firestore data structure has been revised to solve a critical access control issue for champion users. Originally, champion data was nested under a parent's user document (`/users/{userId}/champions/{championId}`), which made it impossible for a logged-in champion to access their own data without knowing their parent's ID. The new structure promotes the `champions` collection to the top level (`/champions/{championId}`). This allows a champion to directly and securely access their own profile and subcollections using their own UID. The parent-child relationship is maintained via a `parentId` field within each champion document, enabling parents to query for all their children. This model supports secure and efficient access for both parents and champions without compromising data ownership principles."
+    ]
   }
 }

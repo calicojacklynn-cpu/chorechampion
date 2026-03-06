@@ -1,21 +1,4 @@
-/**
- * Core Philosophy: This ruleset enforces a strict user-ownership model. Parent data is stored under `/users/{userId}`.
- * Champion (child) data is stored in a top-level `/champions/{championId}` collection to allow both the champion
- * and their parent to access it securely. The `parentId` field within a champion's document links them to their parent.
- *
- * Data Structure:
- * - `/users/{userId}`: Private data for parent accounts.
- * - `/champions/{championId}`: Profiles for child accounts. The document ID is the child's UID.
- * - `/champions/{championId}/...`: Subcollections for a champion's activities (assigned chores, etc.).
- * - `/chores`: Public, read-only collection of preset chores.
- *
- * Key Security Decisions:
- * - Dual Access for Champions: A champion document can be read by the champion themselves (`request.auth.uid == championId`)
- *   or by their parent (`request.auth.uid == resource.data.parentId`).
- * - Parent-Controlled Creation: Only a parent can create a champion profile, and they must correctly set themselves
- *   as the `parentId`.
- * - Public Read-Only Data: The `/chores` collection is publicly readable but not writable by clients.
- */
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -38,79 +21,51 @@ service cloud.firestore {
     }
 
     // --- User (Parent) Profile Rules ---
-    /**
-     * @description Controls access to parent user profiles.
-     * @path /users/{userId}
-     */
     match /users/{userId} {
       allow get: if isOwner(userId);
-      allow list: if false; // No one can list all users
-      allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow list: if false;
+      allow create: if isOwner(userId);
+      allow update: if isExistingOwner(userId);
       allow delete: if isExistingOwner(userId);
 
-      /**
-       * @description Controls access to custom rewards created by a parent. A champion can read their parent's rewards.
-       * @path /users/{userId}/rewards/{rewardId}
-       */
       match /rewards/{rewardId} {
         allow get, list: if isOwner(userId) || (isSignedIn() && exists(/databases/$(database)/documents/champions/$(request.auth.uid)) && get(/databases/$(database)/documents/champions/$(request.auth.uid)).data.parentId == userId);
-        allow create, update, delete: if isOwner(userId);
+        allow write: if isOwner(userId);
+      }
+
+      match /chores/{choreId} {
+        allow get, list: if isOwner(userId);
+        allow write: if isOwner(userId);
       }
     }
 
     // --- Champion Profile Rules ---
-    /**
-     * @description Controls access to champion (child) profiles.
-     * @path /champions/{championId}
-     * @allow (get) Champion can read their own profile; parent can read their child's profile.
-     * @allow (create) Parent can create a profile for a new champion.
-     * @allow (update) Parent can update their child's profile.
-     * @allow (list) Only parents can query for the champions linked to them.
-     */
     match /champions/{championId} {
       allow get: if isSignedIn() && (request.auth.uid == championId || request.auth.uid == resource.data.parentId);
-      allow list: if isSignedIn(); // Queries must be secured by `where` clauses in app code
+      allow list: if isSignedIn(); 
       allow create: if isSignedIn() && request.auth.uid == request.resource.data.parentId;
-      allow update: if isSignedIn() && request.auth.uid == resource.data.parentId;
+      allow update: if isSignedIn() && (request.auth.uid == championId || request.auth.uid == resource.data.parentId);
       allow delete: if isSignedIn() && request.auth.uid == resource.data.parentId;
 
-      /**
-       * @description Controls access to chores assigned to a specific champion.
-       * @path /champions/{championId}/assignedChores/{assignedChoreId}
-       */
       match /assignedChores/{assignedChoreId} {
-        // Parent or champion can read assigned chores
         allow get, list: if isSignedIn() && (request.auth.uid == championId || request.auth.uid == get(/databases/$(database)/documents/champions/$(championId)).data.parentId);
-        // Only parent can create or delete assignments
         allow create, delete: if isSignedIn() && request.auth.uid == get(/databases/$(database)/documents/champions/$(championId)).data.parentId;
-        // Parent can update. Champion can update if they are marking it complete.
         allow update: if isSignedIn() && (
           request.auth.uid == get(/databases/$(database)/documents/champions/$(championId)).data.parentId ||
-          (request.auth.uid == championId && request.resource.data.championId == resource.data.championId) // Champion can only update, not change owner
+          (request.auth.uid == championId && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['completed']))
         );
       }
 
-      /**
-       * @description Controls access to rewards redeemed by a specific champion.
-       * @path /champions/{championId}/redeemedRewards/{redeemedRewardId}
-       */
       match /redeemedRewards/{redeemedRewardId} {
-        // Parent or champion can read redeemed rewards
         allow get, list: if isSignedIn() && (request.auth.uid == championId || request.auth.uid == get(/databases/$(database)/documents/champions/$(championId)).data.parentId);
-        // Only parent can create or delete redemption records (e.g., approve/deny)
-        allow create, delete, update: if isSignedIn() && request.auth.uid == get(/databases/$(database)/documents/champions/$(championId)).data.parentId;
+        allow create: if isSignedIn() && request.auth.uid == championId;
+        allow update, delete: if isSignedIn() && request.auth.uid == get(/databases/$(database)/documents/champions/$(championId)).data.parentId;
       }
     }
 
-    // --- Public Chores Collection ---
-    /**
-     * @description Controls access to the public, preset chores collection.
-     * @path /chores/{choreId}
-     */
     match /chores/{choreId} {
-      allow get, list: if true; // Publicly readable
-      allow write: if false; // No client-side writes
+      allow get, list: if true;
+      allow write: if false;
     }
   }
 }
