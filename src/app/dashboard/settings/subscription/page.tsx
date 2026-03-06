@@ -115,9 +115,7 @@ export default function SubscriptionSettingsPage() {
                     Purchase Slot
                 </Button>
             </CardFooter>
-
-        </div>
-
+        </Card>
       </div>
 
       <Card>
