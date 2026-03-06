@@ -38,6 +38,7 @@ export default function SubscriptionSettingsPage() {
   };
   
   const handlePurchaseSlot = () => {
+    // Redirect directly to the Stripe checkout link
     window.location.href = ADDITIONAL_SLOT_URL;
   };
 
@@ -50,12 +51,12 @@ export default function SubscriptionSettingsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Current Plan Card */}
-        <Card className="lg:col-span-1">
+        <Card className="lg:col-span-1 flex flex-col">
             <CardHeader>
                 <CardTitle>Your Current Plan</CardTitle>
                 <CardDescription>You are on the <span className="font-bold text-foreground">{currentPlan} Plan</span>.</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
                 <div className="text-sm text-muted-foreground">
                     <p>Child Slots: {childSlots} / {maxSlots}</p>
                 </div>
@@ -66,12 +67,12 @@ export default function SubscriptionSettingsPage() {
         </Card>
 
         {/* Upgrade to Premium Card */}
-        <Card className="lg:col-span-1 border-primary">
+        <Card className="lg:col-span-1 border-primary flex flex-col">
             <CardHeader>
                 <CardTitle>Chore Champion Premium</CardTitle>
                  <CardDescription>A one-time payment to upgrade your account.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 flex-grow">
                  <div className="flex items-baseline">
                     <span className="text-4xl font-bold">$4.99</span>
                     <span className="text-muted-foreground"> one-time</span>
@@ -95,12 +96,12 @@ export default function SubscriptionSettingsPage() {
         </Card>
         
         {/* Add more slots card */}
-        <Card className="lg:col-span-1">
+        <Card className="lg:col-span-1 flex flex-col">
             <CardHeader>
                 <CardTitle>Need More Slots?</CardTitle>
                  <CardDescription>Add individual champion slots to your plan.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 flex-grow">
                  <div className="flex items-baseline">
                     <span className="text-4xl font-bold">$0.75</span>
                     <span className="text-muted-foreground">/slot (one-time)</span>
@@ -110,7 +111,12 @@ export default function SubscriptionSettingsPage() {
                 </p>
             </CardContent>
              <CardFooter>
-                <Button className="w-full" variant="secondary" disabled={currentPlan !== 'Premium'} onClick={handlePurchaseSlot}>
+                <Button 
+                  className="w-full" 
+                  variant="secondary" 
+                  disabled={currentPlan !== 'Premium'} 
+                  onClick={handlePurchaseSlot}
+                >
                     <UserPlus className="mr-2 h-4 w-4" />
                     Purchase Slot
                 </Button>

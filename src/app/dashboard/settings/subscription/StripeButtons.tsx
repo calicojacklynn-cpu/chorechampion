@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 
-// Direct link for the five child upgrade
+// Direct link for the five child upgrade provided by the user
 const UPGRADE_URL = "https://buy.stripe.com/4gM14p8XV0R30hs2Hg7Re00";
 
 type StripeButtonsProps = {
@@ -11,6 +11,7 @@ type StripeButtonsProps = {
 
 export function StripeUpgradeButton({ disabled = false }: StripeButtonsProps) {
   const handleUpgrade = () => {
+    // Redirect directly to the Stripe checkout link
     window.location.href = UPGRADE_URL;
   };
 
