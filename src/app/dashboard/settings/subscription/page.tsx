@@ -14,6 +14,9 @@ import { Check, UserPlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { StripeUpgradeButton } from "./StripeButtons";
 
+// Direct link for purchasing an additional child slot
+const ADDITIONAL_SLOT_URL = "https://buy.stripe.com/9B6eVffmj0R3c0a4Po7Re01";
+
 export default function SubscriptionSettingsPage() {
   const { toast } = useToast();
   const [currentPlan, setCurrentPlan] = useState("Free"); 
@@ -35,11 +38,7 @@ export default function SubscriptionSettingsPage() {
   };
   
   const handlePurchaseSlot = () => {
-    setMaxSlots(prev => prev + 1);
-    toast({
-      title: "Slot Purchased!",
-      description: `You can now add another champion. You have ${maxSlots + 1} total slots.`
-    });
+    window.location.href = ADDITIONAL_SLOT_URL;
   };
 
   return (
@@ -116,7 +115,8 @@ export default function SubscriptionSettingsPage() {
                     Purchase Slot
                 </Button>
             </CardFooter>
-        </Card>
+
+        </div>
 
       </div>
 
