@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,8 +20,72 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useUser, useFirestore, useAuth } from "@/firebase";
+import { doc, deleteDoc } from "firebase/firestore";
+import { deleteUser } from "firebase/auth";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 
 export default function SettingsPage() {
+  const { user } = useUser();
+  const firestore = useFirestore();
+  const auth = useAuth();
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    if (!user || !firestore) return;
+    setIsDeleting(true);
+    try {
+      // 1. Delete Firestore Profile
+      // Note: Subcollections like chores/rewards should be handled by a cloud function 
+      // or recursive delete in a production app. For MVP, we delete the profile.
+      const userRef = doc(firestore, 'users', user.uid);
+      await deleteDoc(userRef);
+
+      // 2. Delete Auth Account
+      // Firebase requires a recent login for this.
+      await deleteUser(user);
+
+      toast({
+        title: "Account Deleted",
+        description: "Your account and profile have been successfully removed.",
+      });
+
+      router.push('/');
+    } catch (error: any) {
+      console.error("Deletion error:", error);
+      
+      if (error.code === 'auth/requires-recent-login') {
+        toast({
+          variant: "destructive",
+          title: "Action Restricted",
+          description: "For security, please log out and log back in before deleting your account.",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Deletion Failed",
+          description: error.message || "An unexpected error occurred while trying to delete your account.",
+        });
+      }
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -39,11 +105,11 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" defaultValue="Parent" />
+              <Input id="name" defaultValue={user?.displayName || "Parent"} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" defaultValue="parent@example.com" />
+              <Input id="email" type="email" defaultValue={user?.email || "parent@example.com"} />
             </div>
           </CardContent>
           <CardFooter className="border-t px-6 py-4">
@@ -115,10 +181,35 @@ export default function SettingsPage() {
             <div>
               <CardTitle className="text-lg">Delete Account</CardTitle>
               <CardDescription>
-                Permanently delete your account and all data.
+                Permanently delete your account and all data. This action is irreversible.
               </CardDescription>
             </div>
-            <Button variant="destructive" size="sm">Delete</Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm" disabled={isDeleting}>
+                  {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Delete Account
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete your
+                    parent profile and your authentication account. All your family data will be lost.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction 
+                    onClick={handleDeleteAccount}
+                    className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                  >
+                    Yes, Delete My Account
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </CardHeader>
         </Card>
       </div>
