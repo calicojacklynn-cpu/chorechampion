@@ -5,9 +5,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth, useUser, useFirestore } from '@/firebase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, UserCredential } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import { useEffect } from 'react';
+import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -19,16 +20,10 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
-const parentLoginSchema = z.object({
+const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address.'),
   password: z.string().min(6, 'Password must be at least 6 characters.'),
 });
-
-const championLoginSchema = z.object({
-  email: z.string().email('Please enter a valid email address.'),
-  password: z.string().min(6, 'Password must be at least 6 characters.'),
-});
-
 
 export default function LoginPage() {
   const router = useRouter();
@@ -37,102 +32,65 @@ export default function LoginPage() {
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
 
-  const parentForm = useForm<z.infer<typeof parentLoginSchema>>({
-    resolver: zodResolver(parentLoginSchema),
+  const parentForm = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   });
 
-  const championForm = useForm<z.infer<typeof championLoginSchema>>({
-    resolver: zodResolver(championLoginSchema),
+  const championForm = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   });
 
-  const handleParentLogin = async (values: z.infer<typeof parentLoginSchema>) => {
-    let userCredential: UserCredential | undefined;
+  const handleParentLogin = async (values: z.infer<typeof loginSchema>) => {
     try {
-        // Try to sign in first
-        userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
-    } catch (signInError: any) {
-        // If user not found or invalid credential, try to sign them up
-        if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/invalid-credential') {
-            try {
-                userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-            } catch (signUpError: any) {
-                toast({ variant: "destructive", title: "Sign Up Failed", description: signUpError.message });
-                return; // Stop execution on failed sign-up
-            }
-        } else {
-            toast({ variant: "destructive", title: "Login Failed", description: signInError.message });
-            return; // Stop execution on other login errors
-        }
-    }
-
-    if (!userCredential) return;
-
-    try {
-        // Now that we have a user, ensure their profile exists
+        const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
         const loggedInUser = userCredential.user;
+        
+        // Verify this is actually a parent
         const parentProfileDocRef = doc(firestore, 'users', loggedInUser.uid);
         const docSnap = await getDoc(parentProfileDocRef);
 
         if (!docSnap.exists()) {
-            const nameParts = loggedInUser.email?.split('@')[0].split('.') || ['New', 'User'];
-            const firstName = nameParts[0] ? nameParts[0].charAt(0).toUpperCase() + nameParts[0].slice(1) : 'New';
-            const lastName = nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() + nameParts[1].slice(1) : 'User';
-            await setDoc(parentProfileDocRef, {
-                id: loggedInUser.uid,
-                email: loggedInUser.email,
-                firstName: firstName,
-                lastName: lastName,
-            });
+            // This might be a champion trying to log in as a parent
+            router.push(`/champion/${loggedInUser.uid}`);
+        } else {
+            router.push('/dashboard');
         }
-        
-        // All checks and creation are done. Now, navigate.
-        router.push('/dashboard');
-
-    } catch (profileError: any) {
-        toast({ variant: "destructive", title: "Profile Error", description: profileError.message });
+    } catch (error: any) {
+        toast({ 
+            variant: "destructive", 
+            title: "Login Failed", 
+            description: error.code === 'auth/invalid-credential' 
+                ? "Invalid email or password." 
+                : error.message 
+        });
     }
   };
   
-  const handleChampionLogin = async (values: z.infer<typeof championLoginSchema>) => {
-    let userCredential: UserCredential | undefined;
+  const handleChampionLogin = async (values: z.infer<typeof loginSchema>) => {
     try {
-      userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
-    } catch (signInError: any) {
-      if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/invalid-credential') {
-        try {
-          userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-          toast({
-            title: 'Welcome!',
-            description: "Your champion account has been created."
-          });
-        } catch (signUpError: any) {
-          toast({ variant: "destructive", title: "Sign Up Failed", description: signUpError.message });
-          return;
-        }
-      } else {
-        toast({ variant: "destructive", title: "Login Failed", description: signInError.message });
-        return;
-      }
+      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+      router.push(`/champion/${userCredential.user.uid}`);
+    } catch (error: any) {
+      toast({ 
+          variant: "destructive", 
+          title: "Login Failed", 
+          description: error.code === 'auth/invalid-credential' 
+              ? "Invalid email or password." 
+              : error.message 
+      });
     }
-
-    if (!userCredential) return;
-
-    // After login/signup, navigate to the specific champion page.
-    router.push(`/champion/${userCredential.user.uid}`);
   };
   
-  // Redirect already logged-in users. This hook is safe because it only runs *after*
-  // the initial auth state is resolved and a user is present.
   useEffect(() => {
     if (!isUserLoading && user) {
+      // Direct redirect if already logged in. 
+      // Dashboards handle role-based internal redirection.
       router.push('/dashboard');
     }
   }, [isUserLoading, user, router]);
 
-  // If we are still determining the auth state, show a loader.
-  // We no longer redirect if user is present, that's handled by the useEffect above.
   if (isUserLoading) {
     return (
         <div className="flex h-screen w-full items-center justify-center">
@@ -141,8 +99,6 @@ export default function LoginPage() {
     )
   }
   
-  // If a user is logged in, this page will redirect, so we can show a loader
-  // or null to prevent the login form from flashing.
   if (user) {
     return (
        <div className="flex h-screen w-full items-center justify-center">
@@ -173,7 +129,7 @@ export default function LoginPage() {
             </TabsList>
             <TabsContent value="parent">
               <Card className="mt-6 border-transparent bg-transparent shadow-none">
-                <CardContent className="p-0">
+                <CardContent className="p-0 space-y-6">
                   <Form {...parentForm}>
                     <form onSubmit={parentForm.handleSubmit(handleParentLogin)} className="space-y-4">
                       <FormField
@@ -204,10 +160,23 @@ export default function LoginPage() {
                       />
                       <Button type="submit" className="w-full !mt-6" disabled={parentForm.formState.isSubmitting}>
                         {parentForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Login or Sign Up
+                        Log In
                       </Button>
                     </form>
                   </Form>
+                  
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">New to Chore Champion?</span>
+                    </div>
+                  </div>
+
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link href="/register">Create Family Account</Link>
+                  </Button>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -244,10 +213,13 @@ export default function LoginPage() {
                         />
                         <Button type="submit" className="w-full !mt-6" disabled={championForm.formState.isSubmitting}>
                           {championForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                          Login or Sign Up
+                          Champion Log In
                         </Button>
                       </form>
                     </Form>
+                    <p className="mt-4 text-center text-xs text-muted-foreground">
+                      Champions: Your parent will provide your login details.
+                    </p>
                 </CardContent>
               </Card>
             </TabsContent>
