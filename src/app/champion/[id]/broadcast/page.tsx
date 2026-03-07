@@ -49,11 +49,11 @@ export default function ChampionBroadcastPage() {
       id: user.uid,
       parentId: '',
       name: user.displayName || 'Champion',
-      username: '',
-      email: user.email || '',
-      avatarUrl: user.photoURL || '',
-      points: 0,
-      } as Champion) : null;
+    const champion = user ? ({
+      id: user.uid,
+      name: user.displayName || "Anonymous",
+      points: 0
+    } as Champion) : null;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
