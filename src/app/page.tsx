@@ -6,9 +6,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth, useUser, useFirestore } from '@/firebase';
-import { signInWithEmailAndPassword, signOut, signInAnonymously } from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut, signInAnonymously, sendPasswordResetEmail } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,14 @@ import { ChoreChampionLogo } from '@/app/components/ChoreChampionLogo';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Info, Sparkles } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const CHAMPION_INTERNAL_PASSWORD = "CHAMPION_INTERNAL_ACCESS";
 
@@ -38,6 +46,10 @@ export default function LoginPage() {
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
+
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [isSendingReset, setIsSendingReset] = useState(false);
 
   const parentForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -62,7 +74,14 @@ export default function LoginPage() {
         const docSnap = await getDoc(parentProfileDocRef);
 
         if (!docSnap.exists()) {
-            router.push(`/champion/${loggedInUser.uid}`);
+            // Check if they are a champion
+            const champRef = doc(firestore, 'champions', loggedInUser.uid);
+            const champSnap = await getDoc(champRef);
+            if (champSnap.exists()) {
+                router.push(`/champion/${loggedInUser.uid}`);
+            } else {
+                toast({ variant: "destructive", title: "Profile Not Found", description: "Could not find a profile for this account." });
+            }
         } else {
             router.push('/dashboard');
         }
@@ -95,13 +114,38 @@ export default function LoginPage() {
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (!resetEmail || !z.string().email().safeParse(resetEmail).success) {
+      toast({ variant: "destructive", title: "Invalid Email", description: "Please enter a valid email address." });
+      return;
+    }
+
+    setIsSendingReset(true);
+    try {
+      await sendPasswordResetEmail(auth, resetEmail);
+      toast({
+        title: "Reset Link Sent!",
+        description: "Check your email for instructions to reset your password.",
+      });
+      setIsResetDialogOpen(false);
+      setResetEmail('');
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
+    } finally {
+      setIsSendingReset(false);
+    }
+  };
+
   const handleParentInstantAccess = async () => {
     try {
       if (auth.currentUser) await signOut(auth);
       const userCredential = await signInAnonymously(auth);
       const uid = userCredential.user.uid;
       
-      // Check if doc exists first to be safe
       const docRef = doc(firestore, 'users', uid);
       const snap = await getDoc(docRef);
       
@@ -225,7 +269,18 @@ export default function LoginPage() {
                         name="password"
                         render={({ field }) => (
                           <FormItem>
-                            <Label>Password</Label>
+                            <div className="flex items-center justify-between">
+                              <Label>Password</Label>
+                              <Button 
+                                variant="link" 
+                                size="sm" 
+                                className="px-0 font-normal" 
+                                onClick={() => setIsResetDialogOpen(true)}
+                                type="button"
+                              >
+                                Forgot password?
+                              </Button>
+                            </div>
                             <FormControl>
                               <Input type="password" placeholder="••••••••" {...field} />
                             </FormControl>
@@ -305,6 +360,39 @@ export default function LoginPage() {
             </p>
           </div>
         </div>
+
+        <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Reset Password</DialogTitle>
+              <DialogDescription>
+                Enter your email address and we'll send you a link to reset your password.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="reset-email">Email Address</Label>
+                <Input 
+                  id="reset-email" 
+                  placeholder="parent@example.com" 
+                  value={resetEmail} 
+                  onChange={(e) => setResetEmail(e.target.value)}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button 
+                variant="default" 
+                onClick={handleForgotPassword} 
+                disabled={isSendingReset}
+                className="w-full"
+              >
+                {isSendingReset && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Send Reset Link
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
   );
 }
