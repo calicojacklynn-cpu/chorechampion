@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -21,6 +20,8 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
+const CHAMPION_INTERNAL_PASSWORD = "CHAMPION_INTERNAL_ACCESS";
+
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address.'),
   password: z.string().min(6, 'Password must be at least 6 characters.'),
@@ -28,7 +29,6 @@ const loginSchema = z.object({
 
 const championLoginSchema = z.object({
   code: z.string().min(4, 'Please enter your champion code.'),
-  password: z.string().min(4, 'Please enter your password.'),
 });
 
 export default function LoginPage() {
@@ -45,7 +45,7 @@ export default function LoginPage() {
 
   const championForm = useForm<z.infer<typeof championLoginSchema>>({
     resolver: zodResolver(championLoginSchema),
-    defaultValues: { code: '', password: '' },
+    defaultValues: { code: '' },
   });
 
   const handleParentLogin = async (values: z.infer<typeof loginSchema>) => {
@@ -78,22 +78,32 @@ export default function LoginPage() {
     try {
       // Map champion code to internal email format
       const internalEmail = `${values.code.toLowerCase()}@champions.app`;
-      const userCredential = await signInWithEmailAndPassword(auth, internalEmail, values.password);
+      const userCredential = await signInWithEmailAndPassword(auth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
       router.push(`/champion/${userCredential.user.uid}`);
     } catch (error: any) {
       toast({ 
           variant: "destructive", 
           title: "Login Failed", 
-          description: "Invalid code or password. Please check with your parent."
+          description: "Invalid code. Please check with your parent."
       });
     }
   };
   
   useEffect(() => {
     if (!isUserLoading && user) {
-      router.push('/dashboard');
+      // Check if user is parent or champion
+      const checkRole = async () => {
+        const parentProfileDocRef = doc(firestore, 'users', user.uid);
+        const docSnap = await getDoc(parentProfileDocRef);
+        if (docSnap.exists()) {
+          router.push('/dashboard');
+        } else {
+          router.push(`/champion/${user.uid}`);
+        }
+      }
+      checkRole();
     }
-  }, [isUserLoading, user, router]);
+  }, [isUserLoading, user, router, firestore]);
 
   if (isUserLoading) {
     return (
@@ -202,19 +212,6 @@ export default function LoginPage() {
                             </FormItem>
                           )}
                         />
-                        <FormField
-                          control={championForm.control}
-                          name="password"
-                          render={({ field }) => (
-                            <FormItem>
-                              <Label>Password</Label>
-                              <FormControl>
-                                <Input type="password" placeholder="••••••••" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
                         <Button type="submit" className="w-full !mt-6" disabled={championForm.formState.isSubmitting}>
                           {championForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                           Champion Log In
@@ -222,7 +219,7 @@ export default function LoginPage() {
                       </form>
                     </Form>
                     <p className="mt-4 text-center text-xs text-muted-foreground">
-                      Champions: Enter your unique code and password.
+                      Champions: Enter your unique code provided by your parent.
                     </p>
                 </CardContent>
               </Card>

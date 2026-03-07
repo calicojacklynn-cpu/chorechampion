@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -23,13 +22,14 @@ import { Form, FormControl, FormField, FormItem, FormMessage, FormDescription } 
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, ArrowLeft, CheckCircle2, Copy } from 'lucide-react';
 
+const CHAMPION_INTERNAL_PASSWORD = "CHAMPION_INTERNAL_ACCESS";
+
 const registerSchema = z.object({
   firstName: z.string().min(2, 'First name is required.'),
   lastName: z.string().min(2, 'Last name is required.'),
   email: z.string().email('Please enter a valid email address.'),
   password: z.string().min(6, 'Password must be at least 6 characters.'),
   firstChampionName: z.string().min(2, 'First champion name is required.'),
-  championPassword: z.string().min(4, 'Password must be at least 4 characters.'),
 });
 
 export default function RegisterPage() {
@@ -48,7 +48,6 @@ export default function RegisterPage() {
         email: '', 
         password: '',
         firstChampionName: '',
-        championPassword: '',
     },
   });
 
@@ -84,7 +83,7 @@ export default function RegisterPage() {
         const tempApp = initializeApp(firebaseConfig, tempAppName);
         const tempAuth = getAuth(tempApp);
 
-        const champCredential = await createUserWithEmailAndPassword(tempAuth, internalEmail, values.championPassword);
+        const champCredential = await createUserWithEmailAndPassword(tempAuth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
         const champUid = champCredential.user.uid;
         
         await updateProfile(champCredential.user, { displayName: values.firstChampionName });
@@ -146,7 +145,7 @@ export default function RegisterPage() {
                             </Button>
                         </div>
                         <p className="text-xs text-muted-foreground">
-                            Have your child use this code and the password you set to log in.
+                            Have your child use this code to log in. No password required!
                         </p>
                     </div>
 
@@ -245,20 +244,7 @@ export default function RegisterPage() {
                             <FormControl>
                             <Input placeholder="e.g. Alex" {...field} />
                             </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="championPassword"
-                        render={({ field }) => (
-                        <FormItem>
-                            <Label>Child's Password (PIN)</Label>
-                            <FormControl>
-                            <Input type="password" placeholder="••••" {...field} />
-                            </FormControl>
-                            <FormDescription>Set a simple password for your child.</FormDescription>
+                            <FormDescription>Your champion will log in using a code we'll generate for them.</FormDescription>
                             <FormMessage />
                         </FormItem>
                         )}

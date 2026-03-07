@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect } from "react";
@@ -28,7 +27,6 @@ import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
-  password: z.string().min(4, "Password must be at least 4 characters."),
 });
 
 // The shape of the data for a new champion
@@ -46,7 +44,6 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange, isAdding }: Add
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      password: "",
     },
   });
 
@@ -67,7 +64,7 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange, isAdding }: Add
         <DialogHeader>
           <DialogTitle>Add New Champion</DialogTitle>
           <DialogDescription>
-            Create a profile for a new champion. A unique login code will be generated automatically.
+            Create a profile for a new champion. A unique login code will be generated automatically. No password required!
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -84,25 +81,7 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange, isAdding }: Add
                   <FormControl>
                     <Input placeholder="e.g. Alex" {...field} disabled={isAdding}/>
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password (PIN)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="••••"
-                      {...field}
-                      disabled={isAdding}
-                    />
-                  </FormControl>
-                  <FormDescription>Set a simple password for your champion to use when logging in.</FormDescription>
+                  <FormDescription>The child will use this name in the app.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

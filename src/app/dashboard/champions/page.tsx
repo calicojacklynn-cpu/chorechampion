@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
@@ -45,6 +44,8 @@ import {
 } from "@/components/ui/dialog";
 import { useAuth, useUser, useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 import { firebaseConfig } from "@/firebase/config";
+
+const CHAMPION_INTERNAL_PASSWORD = "CHAMPION_INTERNAL_ACCESS";
 
 export type Champion = {
   id: string; // Champion's UID
@@ -99,7 +100,7 @@ export default function ChampionsPage() {
 
     try {
       // 1. Create the champion user in Firebase Auth
-      const userCredential = await createUserWithEmailAndPassword(tempAuth, internalEmail, newChampionData.password);
+      const userCredential = await createUserWithEmailAndPassword(tempAuth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
       const newUserId = userCredential.user.uid;
       
       // 2. Update their Auth profile with the display name
@@ -185,7 +186,7 @@ export default function ChampionsPage() {
           <div className="grid gap-2">
             <CardTitle>Champions</CardTitle>
             <CardDescription>
-              Manage your champions. They log in using their unique codes.
+              Manage your champions. They log in using their unique codes. No password required.
             </CardDescription>
           </div>
           <Button
