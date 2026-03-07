@@ -1,4 +1,4 @@
-{
+{"engines": { "node": "20" },
   "name": "nextn",
   "version": "0.1.0",
   "private": true,
