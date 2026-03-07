@@ -8,3 +8,4 @@
 
 export const GET = () => new Response('Genkit under maintenance');
 export const POST = GET;
+// Refreshing build cache
