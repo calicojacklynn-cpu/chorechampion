@@ -24,32 +24,7 @@ type Message = {
   timestamp: string;
 };
 
-const initialMessages: Message[] = [
-  {
-    id: 'msg-1',
-    senderId: 'parent',
-    senderName: 'Parent',
-    avatarId: 'user-avatar-parent',
-    text: "Don't forget, the Chore Champion of the week will be announced in 10 minutes!",
-    timestamp: '10:30 AM',
-  },
-  {
-    id: 'msg-2',
-    senderId: 'alex',
-    senderName: 'Alex',
-    avatarId: 'champion-avatar-1',
-    text: "I hope it's me! I finished all my quests.",
-    timestamp: '10:31 AM',
-  },
-  {
-    id: 'msg-3',
-    senderId: 'bella',
-    senderName: 'Bella',
-    avatarId: 'champion-avatar-2',
-    text: 'Me too! Good luck! 🍀',
-    timestamp: '10:32 AM',
-  },
-];
+const initialMessages: Message[] = [];
 
 export default function ChampionBroadcastPage() {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
@@ -70,15 +45,15 @@ export default function ChampionBroadcastPage() {
 
   const champion =
     realChampion ||
-    ({
-      id: championId,
-      parentId: 'default-parent-id',
-      name: 'Alex',
-      username: 'alex_the_great',
-      email: 'alex@example.com',
-      avatarUrl: '',
-      points: 125,
-    } as Champion);
+    (user ? {
+      id: user.uid,
+      parentId: '',
+      name: user.displayName || 'Champion',
+      username: '',
+      email: user.email || '',
+      avatarUrl: user.photoURL || '',
+      points: 0,
+    } as Champion) : null;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -133,54 +108,65 @@ export default function ChampionBroadcastPage() {
       </div>
       <Card className="flex-1 flex flex-col">
         <CardContent className="flex-1 p-6 space-y-6 overflow-y-auto">
-          {messages.map((message) => {
-            const isSelf = champion && message.senderId === champion.id;
-            const isParent = message.senderId === 'parent';
+          {messages.length > 0 ? (
+            messages.map((message) => {
+              const isSelf = champion && message.senderId === champion.id;
 
-            const avatarPlaceholder = message.avatarId
-              ? PlaceHolderImages.find((p) => p.id === message.avatarId)
-              : null;
-            const imageUrl = message.avatarUrl || avatarPlaceholder?.imageUrl;
-            const imageHint = avatarPlaceholder?.imageHint;
-            const altText = avatarPlaceholder?.description || message.senderName;
+              const avatarPlaceholder = message.avatarId
+                ? PlaceHolderImages.find((p) => p.id === message.avatarId)
+                : null;
+              const imageUrl = message.avatarUrl || avatarPlaceholder?.imageUrl;
+              const imageHint = avatarPlaceholder?.imageHint;
+              const altText = avatarPlaceholder?.description || message.senderName;
 
-            return (
-              <div
-                key={message.id}
-                className={`flex items-start gap-4 ${isSelf ? 'justify-end' : ''}`}
-              >
-                {!isSelf && (
-                  <Avatar className="h-10 w-10 border-2 border-black">
-                    <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
-                    <AvatarFallback className="bg-primary text-primary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                )}
+              return (
                 <div
-                  className={`max-w-md rounded-xl px-4 py-3 border border-black ${
-                    isSelf
-                      ? 'bg-primary text-primary-foreground rounded-br-none'
-                      : 'bg-primary text-primary-foreground rounded-bl-none'
-                  }`}
+                  key={message.id}
+                  className={`flex items-start gap-4 ${isSelf ? 'justify-end' : ''}`}
                 >
-                  <p className={'font-bold text-sm mb-1'}>{message.senderName}</p>
-                  <p>{message.text}</p>
-                  <p
-                    className={`text-xs mt-2 opacity-70 ${
-                      isSelf ? 'text-right' : 'text-left'
+                  {!isSelf && (
+                    <Avatar className="h-10 w-10 border-2 border-black">
+                      <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  )}
+                  <div
+                    className={`max-w-md rounded-xl px-4 py-3 border border-black ${
+                      isSelf
+                        ? 'bg-primary text-primary-foreground rounded-br-none'
+                        : 'bg-primary text-primary-foreground rounded-bl-none'
                     }`}
                   >
-                    {message.timestamp}
-                  </p>
+                    <p className={'font-bold text-sm mb-1'}>{message.senderName}</p>
+                    <p>{message.text}</p>
+                    <p
+                      className={`text-xs mt-2 opacity-70 ${
+                        isSelf ? 'text-right' : 'text-left'
+                      }`}
+                    >
+                      {message.timestamp}
+                    </p>
+                  </div>
+                  {isSelf && (
+                    <Avatar className="h-10 w-10 border-2 border-black">
+                      <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  )}
                 </div>
-                {isSelf && (
-                  <Avatar className="h-10 w-10 border-2 border-black">
-                    <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
-                    <AvatarFallback className="bg-primary text-primary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                )}
+              );
+            })
+          ) : (
+            <div className="h-full flex flex-col items-center justify-center text-center p-8 space-y-4">
+              <div className="bg-muted rounded-full p-4">
+                <Megaphone className="h-8 w-8 text-muted-foreground" />
               </div>
-            );
-          })}
+              <div>
+                <p className="font-semibold">No messages yet</p>
+                <p className="text-sm text-muted-foreground">Start the conversation with your family!</p>
+              </div>
+            </div>
+          )}
           <div ref={messagesEndRef} />
         </CardContent>
         <CardFooter className="p-4 border-t bg-background/95 backdrop-blur-sm">

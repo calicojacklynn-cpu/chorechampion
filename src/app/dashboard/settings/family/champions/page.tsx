@@ -1,5 +1,4 @@
-
-"use client";
+'use client';
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
@@ -49,27 +48,8 @@ export type Champion = {
   choresCompleted: number;
 };
 
-// Mock data for champions
-const initialChampions: Champion[] = [
-  {
-    id: "alex",
-    name: "Alex",
-    username: "alex_the_great",
-    email: "alex@example.com",
-    avatarUrl: "",
-    points: 125,
-    choresCompleted: 12,
-  },
-  {
-    id: "bella",
-    name: "Bella",
-    username: "bella_the_brave",
-    email: "bella@example.com",
-    avatarUrl: "",
-    points: 85,
-    choresCompleted: 8,
-  },
-];
+// Removed mock data for a blank slate
+const initialChampions: Champion[] = [];
 
 export default function ChampionsPage() {
   const { toast } = useToast();
@@ -95,9 +75,6 @@ export default function ChampionsPage() {
       const userCredential = await createUserWithEmailAndPassword(tempAuth, newChampionData.email, newChampionData.password);
       const newUserId = userCredential.user.uid;
 
-      // In a real app, we would also update their profile, e.g., with updateProfile
-      // and save the champion's profile to Firestore.
-
       const newChampion: Champion = {
         id: newUserId,
         name: newChampionData.name,
@@ -121,10 +98,7 @@ export default function ChampionsPage() {
         description: error.message,
       });
     } finally {
-      // Sign out from the temporary instance.
       await signOut(tempAuth);
-      // The client SDK doesn't have a public API to delete an app instance, 
-      // but signing out ensures the session is cleared.
       setIsAdding(false);
     }
   }, [toast]);
@@ -142,8 +116,6 @@ export default function ChampionsPage() {
 
   const handleConfirmDelete = useCallback(() => {
     if (!selectedChampion) return;
-    // In a real app, you would also need to delete the user from Firebase Auth
-    // and delete their data from Firestore. This requires backend logic.
     setChampions((prev) => prev.filter((c) => c.id !== selectedChampion.id));
     toast({
       title: "Champion Deleted",
@@ -245,7 +217,7 @@ export default function ChampionsPage() {
                   ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center">
+                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
                     No champions added yet. Start by adding a champion.
                   </TableCell>
                 </TableRow>

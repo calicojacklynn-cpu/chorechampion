@@ -12,6 +12,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useUser } from '@/firebase';
 
 type Message = {
     id: string;
@@ -23,35 +24,10 @@ type Message = {
     timestamp: string;
 }
 
-// Mock messages for demonstration
-const initialMessages: Message[] = [
-  {
-    id: 'msg-1',
-    senderId: 'parent',
-    senderName: 'Parent',
-    avatarId: 'user-avatar-parent',
-    text: "Don't forget, the Chore Champion of the week will be announced in 10 minutes!",
-    timestamp: '10:30 AM',
-  },
-  {
-    id: 'msg-2',
-    senderId: 'alex',
-    senderName: 'Alex',
-    avatarId: 'champion-avatar-1',
-    text: "I hope it's me! I finished all my quests.",
-    timestamp: '10:31 AM',
-  },
-  {
-    id: 'msg-3',
-    senderId: 'bella',
-    senderName: 'Bella',
-    avatarId: 'champion-avatar-2',
-    text: "Me too! Good luck! 🍀",
-    timestamp: '10:32 AM',
-  },
-];
+const initialMessages: Message[] = [];
 
 export default function BroadcastPage() {
+  const { user } = useUser();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -71,9 +47,9 @@ export default function BroadcastPage() {
 
     const messageToSend: Message = {
       id: `msg-${Date.now()}`,
-      senderId: 'parent',
-      senderName: 'Parent',
-      avatarId: 'user-avatar-parent',
+      senderId: user?.uid || 'parent',
+      senderName: user?.displayName || 'Parent',
+      avatarUrl: user?.photoURL || '',
       text: newMessage,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }),
     };
@@ -97,46 +73,58 @@ export default function BroadcastPage() {
       </div>
       <Card className="flex-1 flex flex-col">
         <CardContent className="flex-1 p-6 space-y-6 overflow-y-auto">
-          {messages.map((message) => {
-            const avatarPlaceholder = message.avatarId ? PlaceHolderImages.find(p => p.id === message.avatarId) : null;
-            const imageUrl = message.avatarUrl || avatarPlaceholder?.imageUrl;
-            const imageHint = avatarPlaceholder?.imageHint;
-            const altText = avatarPlaceholder?.description || message.senderName;
-            const isParent = message.senderId === 'parent';
+          {messages.length > 0 ? (
+            messages.map((message) => {
+              const avatarPlaceholder = message.avatarId ? PlaceHolderImages.find(p => p.id === message.avatarId) : null;
+              const imageUrl = message.avatarUrl || avatarPlaceholder?.imageUrl;
+              const imageHint = avatarPlaceholder?.imageHint;
+              const altText = avatarPlaceholder?.description || message.senderName;
+              const isParent = message.senderId === user?.uid || message.senderId === 'parent';
 
-            return (
-              <div
-                key={message.id}
-                className={`flex items-start gap-4 ${isParent ? '' : 'justify-end'}`}
-              >
-                {isParent && (
-                  <Avatar className="h-10 w-10 border-2 border-black">
-                    <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
-                    <AvatarFallback className="bg-primary text-primary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                )}
+              return (
                 <div
-                  className={`max-w-md rounded-xl px-4 py-3 border border-black ${
-                    isParent
-                      ? 'bg-primary text-primary-foreground rounded-tl-none'
-                      : 'bg-primary text-primary-foreground rounded-tr-none'
-                  }`}
+                  key={message.id}
+                  className={`flex items-start gap-4 ${isParent ? '' : 'justify-end'}`}
                 >
-                  <p className={'font-bold text-sm mb-1'}>{message.senderName}</p>
-                  <p>{message.text}</p>
-                   <p className={`text-xs mt-2 opacity-70 ${isParent ? 'text-left' : 'text-right'}`}>
-                    {message.timestamp}
-                  </p>
+                  {isParent && (
+                    <Avatar className="h-10 w-10 border-2 border-black">
+                      <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  )}
+                  <div
+                    className={`max-w-md rounded-xl px-4 py-3 border border-black ${
+                      isParent
+                        ? 'bg-primary text-primary-foreground rounded-tl-none'
+                        : 'bg-primary text-primary-foreground rounded-tr-none'
+                    }`}
+                  >
+                    <p className={'font-bold text-sm mb-1'}>{message.senderName}</p>
+                    <p>{message.text}</p>
+                     <p className={`text-xs mt-2 opacity-70 ${isParent ? 'text-left' : 'text-right'}`}>
+                      {message.timestamp}
+                    </p>
+                  </div>
+                   {!isParent && (
+                    <Avatar className="h-10 w-10 border-2 border-black">
+                      <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  )}
                 </div>
-                 {!isParent && (
-                  <Avatar className="h-10 w-10 border-2 border-black">
-                    <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
-                    <AvatarFallback className="bg-primary text-primary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                )}
+              );
+            })
+          ) : (
+            <div className="h-full flex flex-col items-center justify-center text-center p-8 space-y-4">
+              <div className="bg-muted rounded-full p-4">
+                <Megaphone className="h-8 w-8 text-muted-foreground" />
               </div>
-            );
-          })}
+              <div>
+                <p className="font-semibold">No messages yet</p>
+                <p className="text-sm text-muted-foreground">Broadcast a message to your family champions!</p>
+              </div>
+            </div>
+          )}
           <div ref={messagesEndRef} />
         </CardContent>
         <CardFooter className="p-4 border-t bg-background/95 backdrop-blur-sm">

@@ -19,16 +19,8 @@ import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import type { Champion } from "./page";
 
-// Mock data for claimed rewards - in a real app, this would be fetched
-const claimedRewardsData = {
-    alex: [
-        { id: 'claimed-1', rewardName: 'Extra Screen Time', points: 75, date: '2024-07-15' },
-    ],
-    bella: [
-        { id: 'claimed-2', rewardName: 'Ice Cream Trip', points: 150, date: '2024-06-28' },
-        { id: 'claimed-3', rewardName: 'Extra Screen Time', points: 75, date: '2024-05-12' },
-    ]
-};
+// Removed mock data for a blank slate
+const claimedRewardsData = {};
 
 type ClaimedRewardsDialogProps = {
   champion: Champion | null;
@@ -39,7 +31,7 @@ type ClaimedRewardsDialogProps = {
 export function ClaimedRewardsDialog({ champion, isOpen, onOpenChange }: ClaimedRewardsDialogProps) {
   if (!champion) return null;
   
-  const rewards = claimedRewardsData[champion.id as keyof typeof claimedRewardsData] || [];
+  const rewards = (claimedRewardsData as any)[champion.id] || [];
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -61,7 +53,7 @@ export function ClaimedRewardsDialog({ champion, isOpen, onOpenChange }: Claimed
                 </TableHeader>
                 <TableBody>
                     {rewards.length > 0 ? (
-                        rewards.map(reward => (
+                        rewards.map((reward: any) => (
                             <TableRow key={reward.id}>
                                 <TableCell className="font-medium">{reward.rewardName}</TableCell>
                                 <TableCell>
@@ -75,7 +67,7 @@ export function ClaimedRewardsDialog({ champion, isOpen, onOpenChange }: Claimed
                         ))
                     ) : (
                         <TableRow>
-                            <TableCell colSpan={3} className="h-24 text-center">
+                            <TableCell colSpan={3} className="h-24 text-center text-muted-foreground">
                                 No rewards have been claimed yet.
                             </TableCell>
                         </TableRow>

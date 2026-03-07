@@ -1,5 +1,4 @@
-
-"use client";
+'use client';
 
 import Image from "next/image";
 import { useState, useCallback } from "react";
@@ -35,6 +34,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useUser } from "@/firebase";
 
 export type Admin = {
   id: string;
@@ -43,17 +43,12 @@ export type Admin = {
   avatarUrl?: string;
 };
 
-const initialAdmins: Admin[] = [
-  {
-    id: "parent-1",
-    name: "Parent",
-    email: "parent@example.com",
-    avatarUrl: "",
-  },
-];
+// Start with empty list for users
+const initialAdmins: Admin[] = [];
 
 export default function AdminsPage() {
   const { toast } = useToast();
+  const { user } = useUser();
   const [admins, setAdmins] = useState<Admin[]>(initialAdmins);
   
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -182,8 +177,8 @@ export default function AdminsPage() {
                   )})
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center">
-                    No admins added yet. Start by adding an admin.
+                  <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                    No other admins added yet. Start by inviting a co-parent or guardian.
                   </TableCell>
                 </TableRow>
               )}
