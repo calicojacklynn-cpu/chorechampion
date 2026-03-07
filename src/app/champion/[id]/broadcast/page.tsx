@@ -45,10 +45,6 @@ export default function ChampionBroadcastPage() {
 
   const champion =
     realChampion ||
-    (user ? {
-      id: user.uid,
-      parentId: '',
-      name: user.displayName || 'Champion',
     const champion = user ? ({
       id: user.uid,
       name: user.displayName || "Anonymous",
