@@ -43,8 +43,6 @@ export default function ChampionBroadcastPage() {
 
   const { data: realChampion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
 
-  const champion =
-    realChampion ||
     const champion = user ? ({
       id: user.uid,
       name: user.displayName || "Anonymous",
