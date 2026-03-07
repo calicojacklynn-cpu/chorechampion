@@ -1,7 +1,8 @@
+
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth, useFirestore } from '@/firebase';
@@ -14,23 +15,34 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ChoreChampionLogo } from '@/app/components/ChoreChampionLogo';
 import { Form, FormControl, FormField, FormItem, FormMessage, FormDescription } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, ArrowLeft, CheckCircle2, Copy } from 'lucide-react';
+import { Loader2, ArrowLeft, CheckCircle2, Copy, Plus, Trash2, Users, UserPlus } from 'lucide-react';
 
 const CHAMPION_INTERNAL_PASSWORD = "CHAMPION_INTERNAL_ACCESS";
 
-const registerSchema = z.object({
+const parentSchema = z.object({
   firstName: z.string().min(2, 'First name is required.'),
   lastName: z.string().min(2, 'Last name is required.'),
-  email: z.string().email('Please enter a valid email address.'),
-  password: z.string().min(6, 'Password must be at least 6 characters.'),
-  firstChampionName: z.string().min(2, 'First champion name is required.'),
+  email: z.string().email('Valid email required.'),
 });
+
+const championSchema = z.object({
+  name: z.string().min(2, 'Champion name is required.'),
+  email: z.string().email('Valid email required.'),
+});
+
+const registerSchema = z.object({
+  parents: z.array(parentSchema).min(1).max(2),
+  champions: z.array(championSchema).min(1).max(3),
+  password: z.string().min(6, 'Password must be at least 6 characters.'),
+});
+
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -38,237 +50,340 @@ export default function RegisterPage() {
   const auth = useAuth();
   const firestore = useFirestore();
   const [isSuccess, setIsSuccess] = useState(false);
-  const [championCode, setChampionCode] = useState('');
+  const [results, setResults] = useState<{ name: string; code: string }[]>([]);
 
-  const form = useForm<z.infer<typeof registerSchema>>({
+  const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { 
-        firstName: '', 
-        lastName: '', 
-        email: '', 
-        password: '',
-        firstChampionName: '',
+    defaultValues: {
+      parents: [{ firstName: '', lastName: '', email: '' }],
+      champions: [{ name: '', email: '' }],
+      password: '',
     },
+  });
+
+  const { fields: parentFields, append: addParent, remove: removeParent } = useFieldArray({
+    control: form.control,
+    name: "parents",
+  });
+
+  const { fields: championFields, append: addChampion, remove: removeChampion } = useFieldArray({
+    control: form.control,
+    name: "champions",
   });
 
   const generateCode = () => {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
   };
 
-  const onSubmit = async (values: z.infer<typeof registerSchema>) => {
+  const onSubmit = async (values: RegisterFormValues) => {
     try {
-        // 1. Create Parent User in Firebase Auth
-        const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-        const parentUser = userCredential.user;
+      // 1. Create Primary Parent
+      const primaryParent = values.parents[0];
+      const userCredential = await createUserWithEmailAndPassword(auth, primaryParent.email, values.password);
+      const primaryParentUid = userCredential.user.uid;
 
-        // 2. Update Parent Auth Profile
-        await updateProfile(parentUser, {
-            displayName: `${values.firstName} ${values.lastName}`
+      await updateProfile(userCredential.user, {
+        displayName: `${primaryParent.firstName} ${primaryParent.lastName}`
+      });
+
+      await setDoc(doc(firestore, 'users', primaryParentUid), {
+        id: primaryParentUid,
+        email: primaryParent.email,
+        firstName: primaryParent.firstName,
+        lastName: primaryParent.lastName,
+      });
+
+      // 2. Handle Secondary Parent and Champions using temp app instances
+      const createdChampions: { name: string; code: string }[] = [];
+
+      // Secondary Parent
+      if (values.parents.length > 1) {
+        const secondary = values.parents[1];
+        const tempApp = initializeApp(firebaseConfig, `temp-parent-${Date.now()}`);
+        const tempAuth = getAuth(tempApp);
+        const secCred = await createUserWithEmailAndPassword(tempAuth, secondary.email, values.password);
+        await updateProfile(secCred.user, { displayName: `${secondary.firstName} ${secondary.lastName}` });
+        await setDoc(doc(firestore, 'users', secCred.user.uid), {
+          id: secCred.user.uid,
+          email: secondary.email,
+          firstName: secondary.firstName,
+          lastName: secondary.lastName,
         });
+        await signOut(tempAuth);
+      }
 
-        // 3. Create Parent Profile in Firestore
-        await setDoc(doc(firestore, 'users', parentUser.uid), {
-            id: parentUser.uid,
-            email: values.email,
-            firstName: values.firstName,
-            lastName: values.lastName,
-        });
-
-        // 4. Create First Champion
+      // Champions
+      for (const champ of values.champions) {
         const code = generateCode();
         const internalEmail = `${code.toLowerCase()}@champions.app`;
-        
-        // Use a temporary app instance to create the champion user without logging the parent out.
-        const tempAppName = `temp-app-for-initial-champion-${Date.now()}`;
-        const tempApp = initializeApp(firebaseConfig, tempAppName);
+        const tempApp = initializeApp(firebaseConfig, `temp-champ-${Date.now()}-${Math.random()}`);
         const tempAuth = getAuth(tempApp);
 
-        const champCredential = await createUserWithEmailAndPassword(tempAuth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
-        const champUid = champCredential.user.uid;
-        
-        await updateProfile(champCredential.user, { displayName: values.firstChampionName });
+        const champCred = await createUserWithEmailAndPassword(tempAuth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
+        const champUid = champCred.user.uid;
+
+        await updateProfile(champCred.user, { displayName: champ.name });
 
         await setDoc(doc(firestore, 'champions', champUid), {
-            id: champUid,
-            parentId: parentUser.uid,
-            name: values.firstChampionName,
-            username: code,
-            email: internalEmail,
-            points: 0,
+          id: champUid,
+          parentId: primaryParentUid,
+          name: champ.name,
+          username: code,
+          email: champ.email, // Storing their real email in the profile
+          points: 0,
         });
 
+        createdChampions.push({ name: champ.name, code });
         await signOut(tempAuth);
+      }
 
-        setChampionCode(code);
-        setIsSuccess(true);
+      setResults(createdChampions);
+      setIsSuccess(true);
 
-        toast({
-            title: "Welcome!",
-            description: "Your family account has been created successfully.",
-        });
+      toast({
+        title: "Family Registered!",
+        description: "Welcome to Chore Champion!",
+      });
 
     } catch (error: any) {
-        toast({
-            variant: "destructive",
-            title: "Account Creation Failed",
-            description: error.message,
-        });
+      toast({
+        variant: "destructive",
+        title: "Registration Failed",
+        description: error.message,
+      });
     }
   };
 
-  const copyCode = () => {
-    navigator.clipboard.writeText(championCode);
-    toast({ title: "Code copied!", description: "Share this with your champion." });
-  }
-
   if (isSuccess) {
     return (
-        <div className="w-full min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-theme">
-            <Card className="mx-auto w-full max-w-md shadow-xl border-2 border-primary">
-                <CardContent className="pt-8 text-center space-y-6">
-                    <div className="flex justify-center">
-                        <div className="bg-primary/10 p-4 rounded-full">
-                            <CheckCircle2 className="h-12 w-12 text-primary" />
-                        </div>
-                    </div>
-                    <div className="space-y-2">
-                        <h2 className="text-3xl font-bold font-headline">Registration Complete!</h2>
-                        <p className="text-muted-foreground">Your family account is ready.</p>
-                    </div>
-                    
-                    <div className="bg-muted p-6 rounded-xl space-y-4">
-                        <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">First Champion Code</p>
-                        <div className="flex items-center justify-center gap-4">
-                            <span className="text-4xl font-mono font-bold tracking-widest text-primary">{championCode}</span>
-                            <Button variant="ghost" size="icon" onClick={copyCode}>
-                                <Copy className="h-5 w-5" />
-                            </Button>
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                            Have your child use this code to log in. No password required!
-                        </p>
-                    </div>
+      <div className="w-full min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-theme">
+        <Card className="mx-auto w-full max-w-md shadow-xl border-2 border-primary">
+          <CardContent className="pt-8 text-center space-y-6">
+            <div className="flex justify-center">
+              <div className="bg-primary/10 p-4 rounded-full">
+                <CheckCircle2 className="h-12 w-12 text-primary" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold font-headline">Family Ready!</h2>
+              <p className="text-muted-foreground">Your champion login codes are below:</p>
+            </div>
 
-                    <Button className="w-full" asChild size="lg">
-                        <Link href="/dashboard">Go to Parent Dashboard</Link>
-                    </Button>
-                </CardContent>
-            </Card>
-        </div>
-    )
+            <div className="space-y-3">
+              {results.map((res, i) => (
+                <div key={i} className="bg-muted p-4 rounded-xl flex items-center justify-between">
+                  <div className="text-left">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase">{res.name}'s Code</p>
+                    <p className="text-2xl font-mono font-bold text-primary">{res.code}</p>
+                  </div>
+                  <Button variant="ghost" size="icon" onClick={() => {
+                    navigator.clipboard.writeText(res.code);
+                    toast({ title: "Code copied!" });
+                  }}>
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            <Button className="w-full" asChild size="lg">
+              <Link href="/dashboard">Go to Parent Dashboard</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-theme">
-        <div className="mx-auto w-full max-w-md space-y-8">
-          <div className="flex flex-col items-center">
-            <ChoreChampionLogo className="h-16 w-16" />
-            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-foreground font-headline">
-              Create Family Account
-            </h2>
-            <p className="mt-2 text-center text-sm text-muted-foreground">
-              Start your journey to becoming a Chore Champion family.
-            </p>
-          </div>
+    <div className="w-full min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gradient-theme">
+      <div className="mx-auto w-full max-w-2xl space-y-8">
+        <div className="flex flex-col items-center">
+          <ChoreChampionLogo className="h-16 w-16" />
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-foreground font-headline">
+            Create Family Account
+          </h2>
+          <p className="mt-2 text-center text-sm text-muted-foreground">
+            Register your family and start your champion journey.
+          </p>
+        </div>
 
-          <Card className="shadow-xl">
-            <CardContent className="pt-6">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <div className="space-y-4">
-                    <h3 className="font-semibold text-lg border-b pb-2">Parent Information</h3>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            {/* Parents Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Parents
+                </CardTitle>
+                <CardDescription>Up to two parent or guardian accounts.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {parentFields.map((field, index) => (
+                  <div key={field.id} className="space-y-4 p-4 border rounded-lg relative">
+                    {index > 0 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-2 top-2 text-destructive"
+                        onClick={() => removeParent(index)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                    <h4 className="font-medium text-sm text-muted-foreground uppercase">Parent {index + 1}</h4>
                     <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                            control={form.control}
-                            name="firstName"
-                            render={({ field }) => (
-                            <FormItem>
-                                <Label>First Name</Label>
-                                <FormControl>
-                                <Input placeholder="Jane" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="lastName"
-                            render={({ field }) => (
-                            <FormItem>
-                                <Label>Last Name</Label>
-                                <FormControl>
-                                <Input placeholder="Doe" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                            )}
-                        />
+                      <FormField
+                        control={form.control}
+                        name={`parents.${index}.firstName`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <Label>First Name</Label>
+                            <FormControl><Input placeholder="Jane" {...field} /></FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`parents.${index}.lastName`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <Label>Last Name</Label>
+                            <FormControl><Input placeholder="Doe" {...field} /></FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
                     <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
+                      control={form.control}
+                      name={`parents.${index}.email`}
+                      render={({ field }) => (
                         <FormItem>
-                            <Label>Parent Email</Label>
-                            <FormControl>
-                            <Input type="email" placeholder="jane.doe@example.com" {...field} />
-                            </FormControl>
-                            <FormMessage />
+                          <Label>Email</Label>
+                          <FormControl><Input type="email" placeholder="jane@example.com" {...field} /></FormControl>
+                          <FormMessage />
                         </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                        <FormItem>
-                            <Label>Parent Password</Label>
-                            <FormControl>
-                            <Input type="password" placeholder="••••••••" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                        )}
+                      )}
                     />
                   </div>
-
-                  <div className="space-y-4 pt-4 border-t">
-                    <h3 className="font-semibold text-lg border-b pb-2">First Champion</h3>
-                    <FormField
-                        control={form.control}
-                        name="firstChampionName"
-                        render={({ field }) => (
-                        <FormItem>
-                            <Label>Child's Name</Label>
-                            <FormControl>
-                            <Input placeholder="e.g. Alex" {...field} />
-                            </FormControl>
-                            <FormDescription>Your champion will log in using a code we'll generate for them.</FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
-                  </div>
-
-                  <Button type="submit" className="w-full !mt-8" size="lg" disabled={form.formState.isSubmitting}>
-                    {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Register Family
+                ))}
+                {parentFields.length < 2 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full border-dashed"
+                    onClick={() => addParent({ firstName: '', lastName: '', email: '' })}
+                  >
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    Add Second Parent
                   </Button>
-                </form>
-              </Form>
-              
-              <div className="mt-6 text-center">
-                <Button variant="link" asChild className="text-muted-foreground">
-                    <Link href="/" className="flex items-center gap-2">
-                        <ArrowLeft className="h-4 w-4" />
-                        Back to Login
-                    </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Champions Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Champions
+                </CardTitle>
+                <CardDescription>Add between 1 and 3 children to your family.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {championFields.map((field, index) => (
+                  <div key={field.id} className="space-y-4 p-4 border rounded-lg relative">
+                    {index > 0 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-2 top-2 text-destructive"
+                        onClick={() => removeChampion(index)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                    <h4 className="font-medium text-sm text-muted-foreground uppercase">Champion {index + 1}</h4>
+                    <FormField
+                      control={form.control}
+                      name={`champions.${index}.name`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <Label>Name</Label>
+                          <FormControl><Input placeholder="Alex" {...field} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`champions.${index}.email`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <Label>Email (for notifications)</Label>
+                          <FormControl><Input type="email" placeholder="alex@family.com" {...field} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                ))}
+                {championFields.length < 3 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full border-dashed"
+                    onClick={() => addChampion({ name: '', email: '' })}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Another Champion
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Security Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Family Security</CardTitle>
+                <CardDescription>Set a password for your parent accounts.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Label>Shared Parent Password</Label>
+                      <FormControl><Input type="password" placeholder="••••••••" {...field} /></FormControl>
+                      <FormDescription>This password will be used for all parent logins.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            <div className="flex flex-col gap-4">
+              <Button type="submit" className="w-full" size="lg" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Register Family & Generate Codes
+              </Button>
+              <Button variant="link" asChild className="text-muted-foreground">
+                <Link href="/" className="flex items-center gap-2">
+                  <ArrowLeft className="h-4 w-4" />
+                  Back to Login
+                </Link>
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
+    </div>
   );
 }
