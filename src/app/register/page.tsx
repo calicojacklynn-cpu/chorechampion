@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -5,24 +6,30 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth, useFirestore } from '@/firebase';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, signOut } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { firebaseConfig } from '@/firebase/config';
+import { useState } from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ChoreChampionLogo } from '@/app/components/ChoreChampionLogo';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormMessage, FormDescription } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, ArrowLeft } from 'lucide-react';
+import { Loader2, ArrowLeft, CheckCircle2, Copy } from 'lucide-react';
 
 const registerSchema = z.object({
   firstName: z.string().min(2, 'First name is required.'),
   lastName: z.string().min(2, 'Last name is required.'),
   email: z.string().email('Please enter a valid email address.'),
   password: z.string().min(6, 'Password must be at least 6 characters.'),
+  firstChampionName: z.string().min(2, 'First champion name is required.'),
+  championPassword: z.string().min(4, 'Password must be at least 4 characters.'),
 });
 
 export default function RegisterPage() {
@@ -30,6 +37,8 @@ export default function RegisterPage() {
   const { toast } = useToast();
   const auth = useAuth();
   const firestore = useFirestore();
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [championCode, setChampionCode] = useState('');
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -37,35 +46,68 @@ export default function RegisterPage() {
         firstName: '', 
         lastName: '', 
         email: '', 
-        password: '' 
+        password: '',
+        firstChampionName: '',
+        championPassword: '',
     },
   });
 
+  const generateCode = () => {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+  };
+
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
     try {
-        // 1. Create User in Firebase Auth
+        // 1. Create Parent User in Firebase Auth
         const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-        const user = userCredential.user;
+        const parentUser = userCredential.user;
 
-        // 2. Update Auth Profile
-        await updateProfile(user, {
+        // 2. Update Parent Auth Profile
+        await updateProfile(parentUser, {
             displayName: `${values.firstName} ${values.lastName}`
         });
 
         // 3. Create Parent Profile in Firestore
-        await setDoc(doc(firestore, 'users', user.uid), {
-            id: user.uid,
+        await setDoc(doc(firestore, 'users', parentUser.uid), {
+            id: parentUser.uid,
             email: values.email,
             firstName: values.firstName,
             lastName: values.lastName,
         });
+
+        // 4. Create First Champion
+        const code = generateCode();
+        const internalEmail = `${code.toLowerCase()}@champions.app`;
+        
+        // Use a temporary app instance to create the champion user without logging the parent out.
+        const tempAppName = `temp-app-for-initial-champion-${Date.now()}`;
+        const tempApp = initializeApp(firebaseConfig, tempAppName);
+        const tempAuth = getAuth(tempApp);
+
+        const champCredential = await createUserWithEmailAndPassword(tempAuth, internalEmail, values.championPassword);
+        const champUid = champCredential.user.uid;
+        
+        await updateProfile(champCredential.user, { displayName: values.firstChampionName });
+
+        await setDoc(doc(firestore, 'champions', champUid), {
+            id: champUid,
+            parentId: parentUser.uid,
+            name: values.firstChampionName,
+            username: code,
+            email: internalEmail,
+            points: 0,
+        });
+
+        await signOut(tempAuth);
+
+        setChampionCode(code);
+        setIsSuccess(true);
 
         toast({
             title: "Welcome!",
             description: "Your family account has been created successfully.",
         });
 
-        router.push('/dashboard');
     } catch (error: any) {
         toast({
             variant: "destructive",
@@ -74,6 +116,48 @@ export default function RegisterPage() {
         });
     }
   };
+
+  const copyCode = () => {
+    navigator.clipboard.writeText(championCode);
+    toast({ title: "Code copied!", description: "Share this with your champion." });
+  }
+
+  if (isSuccess) {
+    return (
+        <div className="w-full min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-theme">
+            <Card className="mx-auto w-full max-w-md shadow-xl border-2 border-primary">
+                <CardContent className="pt-8 text-center space-y-6">
+                    <div className="flex justify-center">
+                        <div className="bg-primary/10 p-4 rounded-full">
+                            <CheckCircle2 className="h-12 w-12 text-primary" />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <h2 className="text-3xl font-bold font-headline">Registration Complete!</h2>
+                        <p className="text-muted-foreground">Your family account is ready.</p>
+                    </div>
+                    
+                    <div className="bg-muted p-6 rounded-xl space-y-4">
+                        <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">First Champion Code</p>
+                        <div className="flex items-center justify-center gap-4">
+                            <span className="text-4xl font-mono font-bold tracking-widest text-primary">{championCode}</span>
+                            <Button variant="ghost" size="icon" onClick={copyCode}>
+                                <Copy className="h-5 w-5" />
+                            </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                            Have your child use this code and the password you set to log in.
+                        </p>
+                    </div>
+
+                    <Button className="w-full" asChild size="lg">
+                        <Link href="/dashboard">Go to Parent Dashboard</Link>
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
+    )
+  }
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-theme">
@@ -91,16 +175,45 @@ export default function RegisterPage() {
           <Card className="shadow-xl">
             <CardContent className="pt-6">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-lg border-b pb-2">Parent Information</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                            control={form.control}
+                            name="firstName"
+                            render={({ field }) => (
+                            <FormItem>
+                                <Label>First Name</Label>
+                                <FormControl>
+                                <Input placeholder="Jane" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="lastName"
+                            render={({ field }) => (
+                            <FormItem>
+                                <Label>Last Name</Label>
+                                <FormControl>
+                                <Input placeholder="Doe" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                    </div>
                     <FormField
                         control={form.control}
-                        name="firstName"
+                        name="email"
                         render={({ field }) => (
                         <FormItem>
-                            <Label>First Name</Label>
+                            <Label>Parent Email</Label>
                             <FormControl>
-                            <Input placeholder="Jane" {...field} />
+                            <Input type="email" placeholder="jane.doe@example.com" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -108,45 +221,51 @@ export default function RegisterPage() {
                     />
                     <FormField
                         control={form.control}
-                        name="lastName"
+                        name="password"
                         render={({ field }) => (
                         <FormItem>
-                            <Label>Last Name</Label>
+                            <Label>Parent Password</Label>
                             <FormControl>
-                            <Input placeholder="Doe" {...field} />
+                            <Input type="password" placeholder="••••••••" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                         )}
                     />
                   </div>
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <Label>Email</Label>
-                        <FormControl>
-                          <Input type="email" placeholder="jane.doe@example.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <Label>Password</Label>
-                        <FormControl>
-                          <Input type="password" placeholder="••••••••" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="submit" className="w-full !mt-6" disabled={form.formState.isSubmitting}>
+
+                  <div className="space-y-4 pt-4 border-t">
+                    <h3 className="font-semibold text-lg border-b pb-2">First Champion</h3>
+                    <FormField
+                        control={form.control}
+                        name="firstChampionName"
+                        render={({ field }) => (
+                        <FormItem>
+                            <Label>Child's Name</Label>
+                            <FormControl>
+                            <Input placeholder="e.g. Alex" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="championPassword"
+                        render={({ field }) => (
+                        <FormItem>
+                            <Label>Child's Password (PIN)</Label>
+                            <FormControl>
+                            <Input type="password" placeholder="••••" {...field} />
+                            </FormControl>
+                            <FormDescription>Set a simple password for your child.</FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                  </div>
+
+                  <Button type="submit" className="w-full !mt-8" size="lg" disabled={form.formState.isSubmitting}>
                     {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Register Family
                   </Button>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -25,6 +26,11 @@ const loginSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters.'),
 });
 
+const championLoginSchema = z.object({
+  code: z.string().min(4, 'Please enter your champion code.'),
+  password: z.string().min(4, 'Please enter your password.'),
+});
+
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -37,9 +43,9 @@ export default function LoginPage() {
     defaultValues: { email: '', password: '' },
   });
 
-  const championForm = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
+  const championForm = useForm<z.infer<typeof championLoginSchema>>({
+    resolver: zodResolver(championLoginSchema),
+    defaultValues: { code: '', password: '' },
   });
 
   const handleParentLogin = async (values: z.infer<typeof loginSchema>) => {
@@ -68,25 +74,23 @@ export default function LoginPage() {
     }
   };
   
-  const handleChampionLogin = async (values: z.infer<typeof loginSchema>) => {
+  const handleChampionLogin = async (values: z.infer<typeof championLoginSchema>) => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+      // Map champion code to internal email format
+      const internalEmail = `${values.code.toLowerCase()}@champions.app`;
+      const userCredential = await signInWithEmailAndPassword(auth, internalEmail, values.password);
       router.push(`/champion/${userCredential.user.uid}`);
     } catch (error: any) {
       toast({ 
           variant: "destructive", 
           title: "Login Failed", 
-          description: error.code === 'auth/invalid-credential' 
-              ? "Invalid email or password." 
-              : error.message 
+          description: "Invalid code or password. Please check with your parent."
       });
     }
   };
   
   useEffect(() => {
     if (!isUserLoading && user) {
-      // Direct redirect if already logged in. 
-      // Dashboards handle role-based internal redirection.
       router.push('/dashboard');
     }
   }, [isUserLoading, user, router]);
@@ -187,12 +191,12 @@ export default function LoginPage() {
                       <form onSubmit={championForm.handleSubmit(handleChampionLogin)} className="space-y-4">
                         <FormField
                           control={championForm.control}
-                          name="email"
+                          name="code"
                           render={({ field }) => (
                             <FormItem>
-                              <Label>Email</Label>
+                              <Label>Champion Code</Label>
                               <FormControl>
-                                <Input type="email" placeholder="alex@example.com" {...field} />
+                                <Input placeholder="ABC-123" className="uppercase" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -218,7 +222,7 @@ export default function LoginPage() {
                       </form>
                     </Form>
                     <p className="mt-4 text-center text-xs text-muted-foreground">
-                      Champions: Your parent will provide your login details.
+                      Champions: Enter your unique code and password.
                     </p>
                 </CardContent>
               </Card>
