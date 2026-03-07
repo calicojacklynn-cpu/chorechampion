@@ -172,33 +172,65 @@ export default function LoginPage() {
               <TabsTrigger value="child">Champion</TabsTrigger>
             </TabsList>
             <TabsContent value="parent">
-              <div className="relative">
-                <Button
-                    variant="link"
-                    className="absolute -top-4 left-0 h-auto p-0 text-sm text-muted-foreground z-10"
-                    onClick={() => handleParentLogin({ email: 'parent@example.com', password: 'password' })}
-                >
-                    Admin Backdoor
-                </Button>
-                <Card className="mt-6 border-transparent bg-transparent shadow-none">
-                  <CardContent className="p-0">
-                    <Form {...parentForm}>
-                      <form onSubmit={parentForm.handleSubmit(handleParentLogin)} className="space-y-4">
+              <Card className="mt-6 border-transparent bg-transparent shadow-none">
+                <CardContent className="p-0">
+                  <Form {...parentForm}>
+                    <form onSubmit={parentForm.handleSubmit(handleParentLogin)} className="space-y-4">
+                      <FormField
+                        control={parentForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <Label>Email</Label>
+                            <FormControl>
+                              <Input type="email" placeholder="parent@example.com" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={parentForm.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <Label>Password</Label>
+                            <FormControl>
+                              <Input type="password" placeholder="••••••••" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button type="submit" className="w-full !mt-6" disabled={parentForm.formState.isSubmitting}>
+                        {parentForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        Login or Sign Up
+                      </Button>
+                    </form>
+                  </Form>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="child">
+              <Card className="mt-6 border-transparent bg-transparent shadow-none">
+                <CardContent className="p-0">
+                  <Form {...championForm}>
+                      <form onSubmit={championForm.handleSubmit(handleChampionLogin)} className="space-y-4">
                         <FormField
-                          control={parentForm.control}
+                          control={championForm.control}
                           name="email"
                           render={({ field }) => (
                             <FormItem>
                               <Label>Email</Label>
                               <FormControl>
-                                <Input type="email" placeholder="parent@example.com" {...field} />
+                                <Input type="email" placeholder="alex@example.com" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
                         <FormField
-                          control={parentForm.control}
+                          control={championForm.control}
                           name="password"
                           render={({ field }) => (
                             <FormItem>
@@ -210,64 +242,14 @@ export default function LoginPage() {
                             </FormItem>
                           )}
                         />
-                        <Button type="submit" className="w-full !mt-6" disabled={parentForm.formState.isSubmitting}>
-                          {parentForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        <Button type="submit" className="w-full !mt-6" disabled={championForm.formState.isSubmitting}>
+                          {championForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                           Login or Sign Up
                         </Button>
                       </form>
                     </Form>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-            <TabsContent value="child">
-              <div className="relative">
-                 <Button
-                    variant="link"
-                    className="absolute -top-4 left-0 h-auto p-0 text-sm text-muted-foreground z-10"
-                    onClick={() => handleChampionLogin({ email: 'alex@example.com', password: 'password' })}
-                >
-                    Admin Backdoor
-                </Button>
-                <Card className="mt-6 border-transparent bg-transparent shadow-none">
-                  <CardContent className="p-0">
-                    <Form {...championForm}>
-                        <form onSubmit={championForm.handleSubmit(handleChampionLogin)} className="space-y-4">
-                          <FormField
-                            control={championForm.control}
-                            name="email"
-                            render={({ field }) => (
-                              <FormItem>
-                                <Label>Email</Label>
-                                <FormControl>
-                                  <Input type="email" placeholder="alex@example.com" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={championForm.control}
-                            name="password"
-                            render={({ field }) => (
-                              <FormItem>
-                                <Label>Password</Label>
-                                <FormControl>
-                                  <Input type="password" placeholder="••••••••" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <Button type="submit" className="w-full !mt-6" disabled={championForm.formState.isSubmitting}>
-                            {championForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Login or Sign Up
-                          </Button>
-                        </form>
-                      </Form>
-                  </CardContent>
-                </Card>
-              </div>
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </div>
