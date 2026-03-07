@@ -6,8 +6,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth, useUser, useFirestore } from '@/firebase';
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { signInWithEmailAndPassword, signOut, signInAnonymously } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useEffect } from 'react';
 import Link from 'next/link';
 
@@ -19,7 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChoreChampionLogo } from '@/app/components/ChoreChampionLogo';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Info } from 'lucide-react';
+import { Loader2, Info, Sparkles } from 'lucide-react';
 
 const CHAMPION_INTERNAL_PASSWORD = "CHAMPION_INTERNAL_ACCESS";
 
@@ -51,7 +51,6 @@ export default function LoginPage() {
 
   const handleParentLogin = async (values: z.infer<typeof loginSchema>) => {
     try {
-        // Ensure clean session for backdoor/development switches
         if (auth.currentUser) {
             await signOut(auth);
         }
@@ -59,12 +58,10 @@ export default function LoginPage() {
         const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
         const loggedInUser = userCredential.user;
         
-        // Verify this is actually a parent
         const parentProfileDocRef = doc(firestore, 'users', loggedInUser.uid);
         const docSnap = await getDoc(parentProfileDocRef);
 
         if (!docSnap.exists()) {
-            // This might be a champion or a user without a profile doc
             router.push(`/champion/${loggedInUser.uid}`);
         } else {
             router.push('/dashboard');
@@ -86,7 +83,6 @@ export default function LoginPage() {
           await signOut(auth);
       }
 
-      // Map champion code to internal email format
       const internalEmail = `${values.code.toLowerCase()}@champions.app`;
       const userCredential = await signInWithEmailAndPassword(auth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
       router.push(`/champion/${userCredential.user.uid}`);
@@ -98,17 +94,72 @@ export default function LoginPage() {
       });
     }
   };
+
+  const handleParentInstantAccess = async () => {
+    try {
+      if (auth.currentUser) await signOut(auth);
+      const userCredential = await signInAnonymously(auth);
+      const uid = userCredential.user.uid;
+      
+      // Check if doc exists first to be safe
+      const docRef = doc(firestore, 'users', uid);
+      const snap = await getDoc(docRef);
+      
+      if (!snap.exists()) {
+        await setDoc(docRef, {
+          id: uid,
+          email: 'instant-parent@test.local',
+          firstName: 'Instant',
+          lastName: 'Parent'
+        });
+      }
+      
+      router.push('/dashboard');
+    } catch (error: any) {
+      toast({ variant: "destructive", title: "Instant Access Failed", description: error.message });
+    }
+  };
+
+  const handleChampionInstantAccess = async () => {
+    try {
+      if (auth.currentUser) await signOut(auth);
+      const userCredential = await signInAnonymously(auth);
+      const uid = userCredential.user.uid;
+      
+      const docRef = doc(firestore, 'champions', uid);
+      const snap = await getDoc(docRef);
+      
+      if (!snap.exists()) {
+        await setDoc(docRef, {
+          id: uid,
+          parentId: 'backdoor-parent-id',
+          name: 'Alex',
+          username: 'ALEX12',
+          email: 'instant-champion@test.local',
+          points: 125
+        });
+      }
+      
+      router.push(`/champion/${uid}`);
+    } catch (error: any) {
+      toast({ variant: "destructive", title: "Instant Access Failed", description: error.message });
+    }
+  };
   
   useEffect(() => {
     if (!isUserLoading && user) {
-      // Automatic role-based redirect for active sessions
       const checkRole = async () => {
         const parentProfileDocRef = doc(firestore, 'users', user.uid);
         const docSnap = await getDoc(parentProfileDocRef);
         if (docSnap.exists()) {
           router.push('/dashboard');
         } else {
-          router.push(`/champion/${user.uid}`);
+          // Check for champion doc
+          const champRef = doc(firestore, 'champions', user.uid);
+          const champSnap = await getDoc(champRef);
+          if (champSnap.exists()) {
+            router.push(`/champion/${user.uid}`);
+          }
         }
       }
       checkRole();
@@ -238,19 +289,19 @@ export default function LoginPage() {
 
           <div className="mt-8 pt-6 border-t border-muted flex flex-col gap-4">
             <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase tracking-wider">
-              <Info className="h-3 w-3" />
-              <span>Development Shortcuts (Admin Backdoor)</span>
+              <Sparkles className="h-3 w-3" />
+              <span>Development Shortcuts (Instant Access)</span>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <Button variant="outline" size="sm" onClick={() => handleParentLogin({ email: 'parent@example.com', password: 'password123' })}>
-                Login as Parent
+              <Button variant="outline" size="sm" onClick={handleParentInstantAccess}>
+                Instant Parent Access
               </Button>
-              <Button variant="outline" size="sm" onClick={() => handleChampionLogin({ code: 'ALEX12' })}>
-                Login as Champion
+              <Button variant="outline" size="sm" onClick={handleChampionInstantAccess}>
+                Instant Champion Access
               </Button>
             </div>
             <p className="text-[10px] text-muted-foreground text-center italic">
-              Note: Shortcuts require these accounts to be registered via the "Create Family Account" flow first.
+              Note: Instant access uses anonymous sessions. Profiles created here are temporary and browser-specific.
             </p>
           </div>
         </div>

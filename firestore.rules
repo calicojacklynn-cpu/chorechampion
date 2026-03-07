@@ -24,8 +24,8 @@ service cloud.firestore {
     match /users/{userId} {
       allow get: if isOwner(userId);
       allow list: if false;
-      // Allow creation if signed in (handles primary parent creating secondary parent docs during registration)
-      allow create: if isSignedIn();
+      // Allow creation if signed in and creating their own profile (handles registration and backdoor)
+      allow create: if isSignedIn() && request.auth.uid == userId;
       allow update: if isExistingOwner(userId);
       allow delete: if isExistingOwner(userId);
 
@@ -42,12 +42,12 @@ service cloud.firestore {
 
     // --- Champion Profile Rules ---
     match /champions/{championId} {
-      allow get: if isSignedIn() && (request.auth.uid == championId || request.auth.uid == resource.data.parentId);
+      allow get: if isSignedIn() && (request.auth.uid == championId || (isExistingDocument() && request.auth.uid == resource.data.parentId));
       allow list: if isSignedIn(); 
-      // Allows a parent to create a champion profile if they are the designated parent
-      allow create: if isSignedIn() && request.auth.uid == request.resource.data.parentId;
-      allow update: if isSignedIn() && (request.auth.uid == championId || request.auth.uid == resource.data.parentId);
-      allow delete: if isSignedIn() && request.auth.uid == resource.data.parentId;
+      // Allows a parent to create a champion OR a champion to create their own (for backdoor)
+      allow create: if isSignedIn() && (request.auth.uid == request.resource.data.parentId || request.auth.uid == championId);
+      allow update: if isSignedIn() && (request.auth.uid == championId || (isExistingDocument() && request.auth.uid == resource.data.parentId));
+      allow delete: if isSignedIn() && (isExistingDocument() && request.auth.uid == resource.data.parentId);
 
       match /assignedChores/{assignedChoreId} {
         allow get, list: if isSignedIn() && (request.auth.uid == championId || request.auth.uid == get(/databases/$(database)/documents/champions/$(championId)).data.parentId);
