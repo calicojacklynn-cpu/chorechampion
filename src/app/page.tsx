@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth, useUser, useFirestore } from '@/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { useEffect } from 'react';
 import Link from 'next/link';
@@ -19,7 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChoreChampionLogo } from '@/app/components/ChoreChampionLogo';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Info } from 'lucide-react';
 
 const CHAMPION_INTERNAL_PASSWORD = "CHAMPION_INTERNAL_ACCESS";
 
@@ -51,6 +51,11 @@ export default function LoginPage() {
 
   const handleParentLogin = async (values: z.infer<typeof loginSchema>) => {
     try {
+        // Ensure clean session for backdoor/development switches
+        if (auth.currentUser) {
+            await signOut(auth);
+        }
+        
         const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
         const loggedInUser = userCredential.user;
         
@@ -59,7 +64,7 @@ export default function LoginPage() {
         const docSnap = await getDoc(parentProfileDocRef);
 
         if (!docSnap.exists()) {
-            // This might be a champion trying to log in as a parent
+            // This might be a champion or a user without a profile doc
             router.push(`/champion/${loggedInUser.uid}`);
         } else {
             router.push('/dashboard');
@@ -77,6 +82,10 @@ export default function LoginPage() {
   
   const handleChampionLogin = async (values: z.infer<typeof championLoginSchema>) => {
     try {
+      if (auth.currentUser) {
+          await signOut(auth);
+      }
+
       // Map champion code to internal email format
       const internalEmail = `${values.code.toLowerCase()}@champions.app`;
       const userCredential = await signInWithEmailAndPassword(auth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
@@ -92,7 +101,7 @@ export default function LoginPage() {
   
   useEffect(() => {
     if (!isUserLoading && user) {
-      // Check if user is parent or champion
+      // Automatic role-based redirect for active sessions
       const checkRole = async () => {
         const parentProfileDocRef = doc(firestore, 'users', user.uid);
         const docSnap = await getDoc(parentProfileDocRef);
@@ -227,8 +236,11 @@ export default function LoginPage() {
             </TabsContent>
           </Tabs>
 
-          <div className="mt-8 pt-6 border-t border-muted flex flex-col gap-2">
-            <p className="text-center text-xs text-muted-foreground uppercase tracking-wider mb-2">Development Shortcuts (Admin Backdoor)</p>
+          <div className="mt-8 pt-6 border-t border-muted flex flex-col gap-4">
+            <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase tracking-wider">
+              <Info className="h-3 w-3" />
+              <span>Development Shortcuts (Admin Backdoor)</span>
+            </div>
             <div className="grid grid-cols-2 gap-2">
               <Button variant="outline" size="sm" onClick={() => handleParentLogin({ email: 'parent@example.com', password: 'password123' })}>
                 Login as Parent
@@ -237,6 +249,9 @@ export default function LoginPage() {
                 Login as Champion
               </Button>
             </div>
+            <p className="text-[10px] text-muted-foreground text-center italic">
+              Note: Shortcuts require these accounts to be registered via the "Create Family Account" flow first.
+            </p>
           </div>
         </div>
       </div>

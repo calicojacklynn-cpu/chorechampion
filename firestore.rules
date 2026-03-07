@@ -24,7 +24,8 @@ service cloud.firestore {
     match /users/{userId} {
       allow get: if isOwner(userId);
       allow list: if false;
-      allow create: if isOwner(userId);
+      // Allow creation if signed in (handles primary parent creating secondary parent docs during registration)
+      allow create: if isSignedIn();
       allow update: if isExistingOwner(userId);
       allow delete: if isExistingOwner(userId);
 
@@ -43,6 +44,7 @@ service cloud.firestore {
     match /champions/{championId} {
       allow get: if isSignedIn() && (request.auth.uid == championId || request.auth.uid == resource.data.parentId);
       allow list: if isSignedIn(); 
+      // Allows a parent to create a champion profile if they are the designated parent
       allow create: if isSignedIn() && request.auth.uid == request.resource.data.parentId;
       allow update: if isSignedIn() && (request.auth.uid == championId || request.auth.uid == resource.data.parentId);
       allow delete: if isSignedIn() && request.auth.uid == resource.data.parentId;
