@@ -53,7 +53,7 @@ export default function ChampionBroadcastPage() {
       email: user.email || '',
       avatarUrl: user.photoURL || '',
       points: 0,
-      } : null,
+      } as Champion) : null;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
