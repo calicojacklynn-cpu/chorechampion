@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -225,6 +226,18 @@ export default function LoginPage() {
               </Card>
             </TabsContent>
           </Tabs>
+
+          <div className="mt-8 pt-6 border-t border-muted flex flex-col gap-2">
+            <p className="text-center text-xs text-muted-foreground uppercase tracking-wider mb-2">Development Shortcuts (Admin Backdoor)</p>
+            <div className="grid grid-cols-2 gap-2">
+              <Button variant="outline" size="sm" onClick={() => handleParentLogin({ email: 'parent@example.com', password: 'password123' })}>
+                Login as Parent
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => handleChampionLogin({ code: 'ALEX12' })}>
+                Login as Champion
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
   );
