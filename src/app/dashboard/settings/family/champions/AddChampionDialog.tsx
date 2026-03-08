@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect } from "react";
@@ -20,14 +21,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
-  email: z.string().email("Please provide a valid email for the champion."),
-  password: z.string().min(6, "Password must be at least 6 characters."),
 });
 
 // The shape of the data for a new champion
@@ -45,8 +45,6 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange, isAdding }: Add
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      email: "",
-      password: "",
     },
   });
 
@@ -67,7 +65,7 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange, isAdding }: Add
         <DialogHeader>
           <DialogTitle>Add New Champion</DialogTitle>
           <DialogDescription>
-            Create a login for a new champion. They will use this email and password to log in.
+            Create a profile for a new champion. A unique login code will be generated automatically. No password required!
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -80,41 +78,11 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange, isAdding }: Add
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Display Name</FormLabel>
+                  <FormLabel>Champion Name</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g. Alex" {...field} disabled={isAdding}/>
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. alex@example.com" {...field} disabled={isAdding}/>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      {...field}
-                      disabled={isAdding}
-                    />
-                  </FormControl>
+                  <FormDescription>The child will use this name in the app.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

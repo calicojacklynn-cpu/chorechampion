@@ -33,7 +33,6 @@ const parentSchema = z.object({
 
 const championSchema = z.object({
   name: z.string().min(2, 'Champion name is required.'),
-  email: z.string().email('Valid email required.'),
 });
 
 const registerSchema = z.object({
@@ -56,7 +55,7 @@ export default function RegisterPage() {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       parents: [{ firstName: '', lastName: '', email: '' }],
-      champions: [{ name: '', email: '' }],
+      champions: [{ name: '' }],
       password: '',
     },
   });
@@ -129,7 +128,7 @@ export default function RegisterPage() {
           parentId: primaryParentUid,
           name: champ.name,
           username: code,
-          email: champ.email, // Storing their real email in the profile
+          email: internalEmail,
           points: 0,
         });
 
@@ -320,17 +319,6 @@ export default function RegisterPage() {
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={form.control}
-                      name={`champions.${index}.email`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <Label>Email (for notifications)</Label>
-                          <FormControl><Input type="email" placeholder="alex@family.com" {...field} /></FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </div>
                 ))}
                 {championFields.length < 3 && (
@@ -338,7 +326,7 @@ export default function RegisterPage() {
                     type="button"
                     variant="outline"
                     className="w-full border-dashed"
-                    onClick={() => addChampion({ name: '', email: '' })}
+                    onClick={() => addChampion({ name: '' })}
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Add Another Champion
