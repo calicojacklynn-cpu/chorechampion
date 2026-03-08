@@ -28,19 +28,16 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { SpeechToTextInput } from '@/app/components/SpeechToTextInput';
 import { useToast } from '@/hooks/use-toast';
-import { useSchedule, type CalendarEvent } from '@/app/context/ScheduleContext';
+import { useSchedule } from '@/app/context/ScheduleContext';
+import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, where } from 'firebase/firestore';
 import type { Chore } from './page';
 import type { ChoreAssignment } from '@/ai';
 import { aiScheduleChore, type AiScheduleChoreInput } from '@/ai';
-
-// Mock data for champions
-const champions = [
-  { id: 'alex', name: 'Alex' },
-  { id: 'bella', name: 'Bella' },
-];
+import type { Champion } from '../champions/page';
 
 const FormSchema = z.object({
-  championIds: z.array(z.string()).refine((value) => value.some((item) => item), {
+  championIds: z.array(z.string()).refine((value) => value.length > 0, {
     message: 'You have to select at least one champion.',
   }),
   constraints: z.string().optional(),
@@ -50,7 +47,7 @@ type AssignChoreDialogProps = {
   chore: Chore | null;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onAssign: (assignments: ChoreAssignment[]) => void;
+  onAssign: (assignments: ChoreAssignment[], championIds: string[]) => void;
 };
 
 export function AssignChoreDialog({
@@ -60,8 +57,17 @@ export function AssignChoreDialog({
   onAssign,
 }: AssignChoreDialogProps) {
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
   const { schedule, events } = useSchedule();
   const [isAiRunning, setIsAiRunning] = useState(false);
+
+  const championsQuery = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return query(collection(firestore, 'champions'), where('parentId', '==', user.uid));
+  }, [firestore, user]);
+
+  const { data: champions, isLoading: isLoadingChampions } = useCollection<Champion>(championsQuery);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -79,13 +85,12 @@ export function AssignChoreDialog({
   }, [isOpen, form]);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    if (!chore) return;
+    if (!chore || !champions) return;
 
     setIsAiRunning(true);
     try {
       const selectedChampions = champions.filter(c => data.championIds.includes(c.id));
       const clientEvents = events || [];
-      // Prepare events for the AI, removing client-side 'id'
       const aiEvents = clientEvents.map(({ id, ...rest }) => rest);
 
       const input: AiScheduleChoreInput = {
@@ -100,10 +105,10 @@ export function AssignChoreDialog({
       const result = await aiScheduleChore(input);
 
       if (result.assignments && result.assignments.length > 0) {
-        onAssign(result.assignments);
+        onAssign(result.assignments, data.championIds);
         toast({
           title: 'AI Scheduled!',
-          description: `"${chore.name}" has been added to the calendar.`,
+          description: `"${chore.name}" has been added to the calendar and assigned.`,
         });
         onOpenChange(false);
       } else {
@@ -143,36 +148,45 @@ export function AssignChoreDialog({
                     Select the champion(s) to assign this chore to.
                   </FormDescription>
                   <div className="space-y-2 pt-2">
-                    {champions.map((item) => (
-                      <FormField
-                        key={item.id}
-                        control={form.control}
-                        name="championIds"
-                        render={({ field }) => (
-                          <FormItem
-                            key={item.id}
-                            className="flex flex-row items-start space-x-3 space-y-0"
-                          >
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(item.id)}
-                                onCheckedChange={(checked) => {
-                                  const currentIds = field.value || [];
-                                  const newIds = checked
-                                    ? [...currentIds, item.id]
-                                    : currentIds.filter(value => value !== item.id);
-                                  field.onChange(newIds);
-                                }}
-                                disabled={isAiRunning}
-                              />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {item.name}
-                            </FormLabel>
-                          </FormItem>
-                        )}
-                      />
-                    ))}
+                    {isLoadingChampions ? (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Loading champions...
+                      </div>
+                    ) : champions && champions.length > 0 ? (
+                      champions.map((item) => (
+                        <FormField
+                          key={item.id}
+                          control={form.control}
+                          name="championIds"
+                          render={({ field }) => (
+                            <FormItem
+                              key={item.id}
+                              className="flex flex-row items-start space-x-3 space-y-0"
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(item.id)}
+                                  onCheckedChange={(checked) => {
+                                    const currentIds = field.value || [];
+                                    const newIds = checked
+                                      ? [...currentIds, item.id]
+                                      : currentIds.filter(value => value !== item.id);
+                                    field.onChange(newIds);
+                                  }}
+                                  disabled={isAiRunning}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                {item.name}
+                              </FormLabel>
+                            </FormItem>
+                          )}
+                        />
+                      ))
+                    ) : (
+                      <p className="text-sm text-muted-foreground">No champions found. Add them in Settings.</p>
+                    )}
                   </div>
                   <FormMessage />
                 </FormItem>
@@ -200,7 +214,7 @@ export function AssignChoreDialog({
               )}
             />
             <DialogFooter>
-              <Button type="submit" disabled={isAiRunning} className="w-full">
+              <Button type="submit" disabled={isAiRunning || !champions?.length} className="w-full">
                 {isAiRunning ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

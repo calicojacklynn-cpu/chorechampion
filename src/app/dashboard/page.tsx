@@ -1,8 +1,7 @@
-
 'use client';
 
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, where, collectionGroup } from 'firebase/firestore';
+import { collection, query, where, getDocs, limit, orderBy } from 'firebase/firestore';
 import {
   Card,
   CardContent,
@@ -18,30 +17,71 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ListTodo, Star, Loader2 } from "lucide-react";
+import { ListTodo, Star, Loader2, CheckCircle2 } from "lucide-react";
+import { useState, useEffect } from 'react';
 import type { Champion } from './champions/page';
 
-type AssignedChore = {
+type FeedItem = {
     id: string;
-    championId: string;
+    championName: string;
     choreName: string;
-    completed: boolean;
+    date: string;
 };
 
 export default function DashboardPage() {
   const { user } = useUser();
   const firestore = useFirestore();
+  const [feed, setFeed] = useState<FeedItem[]>([]);
+  const [isFeedLoading, setIsFeedLoading] = useState(true);
 
   // Fetch champions
   const championsQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
     return query(collection(firestore, 'champions'), where('parentId', '==', user.uid));
-  }, [firestore, user]);
+  }, [firestore, user?.uid]);
+  
   const { data: champions, isLoading: isChampionsLoading } = useCollection<Champion>(championsQuery);
 
-  // Note: To fetch ALL assigned chores across all champions efficiently, we'd use a collectionGroup
-  // but rules and indexes need to be configured. For MVP, we'll show standing.
-  
+  // Fetch recent completed chores from all champions
+  useEffect(() => {
+    if (!champions || champions.length === 0 || !firestore) {
+        setIsFeedLoading(false);
+        return;
+    }
+
+    const fetchFeed = async () => {
+        setIsFeedLoading(true);
+        try {
+            const allCompleted: FeedItem[] = [];
+            for (const champion of champions) {
+                const q = query(
+                    collection(firestore, 'champions', champion.id, 'assignedChores'),
+                    where('completed', '==', true),
+                    orderBy('dueDate', 'desc'),
+                    limit(5)
+                );
+                const snap = await getDocs(q);
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    allCompleted.push({
+                        id: doc.id,
+                        championName: champion.name,
+                        choreName: data.choreName,
+                        date: data.dueDate
+                    });
+                });
+            }
+            setFeed(allCompleted.sort((a, b) => b.date.localeCompare(a.date)).slice(0, 10));
+        } catch (e) {
+            console.error("Feed error:", e);
+        } finally {
+            setIsFeedLoading(false);
+        }
+    };
+
+    fetchFeed();
+  }, [champions, firestore]);
+
   if (isChampionsLoading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
 
   return (
@@ -105,9 +145,31 @@ export default function DashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-             <div className="h-24 flex items-center justify-center text-muted-foreground text-sm">
-                Activity feed will appear as quests are completed.
-             </div>
+             {isFeedLoading ? (
+                 <div className="flex justify-center p-8">
+                     <Loader2 className="h-6 w-6 animate-spin" />
+                 </div>
+             ) : feed.length > 0 ? (
+                 <div className="space-y-4">
+                     {feed.map(item => (
+                         <div key={item.id} className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30">
+                             <CheckCircle2 className="h-5 w-5 text-green-500" />
+                             <div>
+                                 <p className="text-sm font-medium">
+                                     <span className="font-bold">{item.championName}</span> finished <span className="italic">"{item.choreName}"</span>
+                                 </p>
+                                 <p className="text-xs text-muted-foreground">
+                                     {new Date(item.date).toLocaleDateString()}
+                                 </p>
+                             </div>
+                         </div>
+                     ))}
+                 </div>
+             ) : (
+                 <div className="h-24 flex items-center justify-center text-muted-foreground text-sm">
+                    No recent activity. Assign some quests to get started!
+                 </div>
+             )}
           </CardContent>
         </Card>
       </div>

@@ -43,11 +43,11 @@ export default function ChampionBroadcastPage() {
 
   const { data: realChampion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
 
-    const champion = user ? ({
-      id: user.uid,
-      name: user.displayName || "Anonymous",
-      points: 0
-    } as Champion) : null;
+  const champion = realChampion || (user ? {
+    id: user.uid,
+    name: user.displayName || "Anonymous",
+    points: 0
+  } as Champion : null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

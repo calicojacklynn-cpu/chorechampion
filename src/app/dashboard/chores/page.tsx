@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useCallback } from "react";
@@ -110,11 +109,28 @@ export default function ChoresPage() {
     handleAddChore({ ...preset, description: "" });
   }, [chores, handleAddChore, toast]);
 
-  const handleAssignChore = useCallback((newAssignments: ChoreAssignment[]) => {
-    // In a launch-ready state, this would also add documents to /champions/{id}/assignedChores
-    // For now, we update local context which is used by the calendar
+  const handleAssignChore = useCallback((newAssignments: ChoreAssignment[], championIds: string[]) => {
+    if (!firestore || !choreToAssign) return;
+
+    // Persist to each champion's Firestore collection
+    championIds.forEach(champId => {
+        const assignmentForChamp = newAssignments.find(a => true); // AI logic might need more mapping if multiple champs are unique per assignment
+        if (assignmentForChamp) {
+            const colRef = collection(firestore, 'champions', champId, 'assignedChores');
+            addDocumentNonBlocking(colRef, {
+                choreId: choreToAssign.id,
+                choreName: choreToAssign.name,
+                pointsValue: choreToAssign.points,
+                dueDate: assignmentForChamp.date || new Date().toISOString(),
+                completed: false,
+                approved: false
+            });
+        }
+    });
+
+    // Update local context for the calendar
     setSchedule((prevSchedule) => [...prevSchedule, ...newAssignments]);
-  }, [setSchedule]);
+  }, [firestore, choreToAssign, setSchedule]);
 
   if (isLoading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
 

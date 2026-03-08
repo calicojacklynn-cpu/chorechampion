@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useParams } from 'next/navigation';
@@ -55,9 +54,10 @@ export default function ChampionDashboardPage() {
     const { data: assignedChores, isLoading: areChoresLoading } = useCollection<AssignedChore>(choresQuery);
     
     const rewardsQuery = useMemoFirebase(() => {
-        if (!champion?.parentId || !firestore) return null;
-        return collection(firestore, 'users', champion.parentId, 'rewards');
-    }, [firestore, champion]);
+        const parentId = champion?.parentId;
+        if (!parentId || !firestore) return null;
+        return collection(firestore, 'users', parentId, 'rewards');
+    }, [firestore, champion?.parentId]);
     const { data: rewards, isLoading: areRewardsLoading } = useCollection<Reward>(rewardsQuery);
     
     const handleClaimReward = (reward: Reward) => {
@@ -71,7 +71,6 @@ export default function ChampionDashboardPage() {
                 status: 'pending'
             });
             
-            // Note: Ideally point deduction is handled by a cloud function when redemption is approved.
             toast({
                 title: "Reward Claimed!",
                 description: `You've submitted a claim for "${reward.name}".`,
