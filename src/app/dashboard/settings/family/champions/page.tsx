@@ -5,7 +5,7 @@ import { useState, useCallback } from "react";
 import Link from "next/link";
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
-import { getFirestore, doc, setDoc, collection, query, where } from 'firebase/firestore';
+import { doc, setDoc, collection, query, where, deleteDoc } from 'firebase/firestore';
 import {
   Table,
   TableBody,
@@ -22,7 +22,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { PlusCircle, Edit, Trash2, ArrowLeft, Copy, CheckCircle2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2, ArrowLeft, Copy, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AddChampionDialog, type NewChampionData } from "./AddChampionDialog";
 import { useToast } from "@/hooks/use-toast";
@@ -72,6 +72,7 @@ export default function ChampionsPage() {
   const { data: champions, isLoading: isLoadingChampions } = useCollection<Champion>(championsQuery);
 
   const [isAdding, setIsAdding] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -149,16 +150,29 @@ export default function ChampionsPage() {
     }
   }, [firestore, toast]);
 
-  const handleConfirmDelete = useCallback(() => {
-    if (!selectedChampion) return;
-    // In a real app, delete the Firestore doc and Auth user (via cloud function)
-    toast({
-      title: "Champion Deleted (UI only)",
-      description: `${selectedChampion.name} has been removed.`,
-      variant: 'destructive'
-    });
-    setIsDeleteDialogOpen(false);
-  }, [selectedChampion, toast]);
+  const handleConfirmDelete = useCallback(async () => {
+    if (!selectedChampion || !firestore) return;
+    setIsDeleting(true);
+    try {
+      const championDocRef = doc(firestore, 'champions', selectedChampion.id);
+      await deleteDoc(championDocRef);
+      toast({
+        title: "Champion Deleted",
+        description: `${selectedChampion.name}'s profile has been permanently removed.`,
+        variant: 'destructive'
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Deletion Failed",
+        description: error.message,
+      });
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteDialogOpen(false);
+      setSelectedChampion(null);
+    }
+  }, [selectedChampion, firestore, toast]);
 
   const openEditDialog = useCallback((champion: Champion) => {
     setSelectedChampion(champion);
@@ -242,10 +256,10 @@ export default function ChampionsPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
-                           <Button variant="default" size="icon-sm" onClick={() => openEditDialog(champion)}>
+                           <Button variant="default" size="icon-sm" onClick={() => openEditDialog(champion)} title="Edit Profile">
                              <Edit className="h-3.5 w-3.5" />
                            </Button>
-                           <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(champion)}>
+                           <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(champion)} title="Delete Champion">
                               <Trash2 className="h-3.5 w-3.5" />
                            </Button>
                         </div>
@@ -290,15 +304,17 @@ export default function ChampionsPage() {
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action cannot be undone. This will permanently remove{" "}
-                  {selectedChampion.name}'s access.
+                  {selectedChampion.name}'s access and all their champion data.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
                 <AlertDialogAction
                   className="bg-destructive hover:bg-destructive/90"
                   onClick={handleConfirmDelete}
+                  disabled={isDeleting}
                 >
+                  {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Delete
                 </AlertDialogAction>
               </AlertDialogFooter>

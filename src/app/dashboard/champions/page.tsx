@@ -1,9 +1,10 @@
+
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, updateProfile, signOut } from "firebase/auth";
-import { getFirestore, doc, setDoc, collection, query, where } from 'firebase/firestore';
+import { doc, setDoc, collection, query, where, deleteDoc } from 'firebase/firestore';
 import {
   Table,
   TableBody,
@@ -20,7 +21,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { PlusCircle, Edit, Trash2, Copy, CheckCircle2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Copy, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AddChampionDialog, type NewChampionData } from "./AddChampionDialog";
 import { useToast } from "@/hooks/use-toast";
@@ -59,7 +60,6 @@ export type Champion = {
 
 export default function ChampionsPage() {
   const { toast } = useToast();
-  const parentAuth = useAuth();
   const { user: parentUser } = useUser();
   const firestore = useFirestore();
 
@@ -72,6 +72,7 @@ export default function ChampionsPage() {
   const { data: champions, isLoading: isLoadingChampions } = useCollection<Champion>(championsQuery);
 
   const [isAdding, setIsAdding] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -93,25 +94,21 @@ export default function ChampionsPage() {
     const code = generateCode();
     const internalEmail = `${code.toLowerCase()}@champions.app`;
 
-    // Use a temporary app instance to create a new user without logging the parent out.
     const tempAppName = `temp-app-for-champion-creation-${Date.now()}`;
     const tempApp = initializeApp(firebaseConfig, tempAppName);
     const tempAuth = getAuth(tempApp);
 
     try {
-      // 1. Create the champion user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(tempAuth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
       const newUserId = userCredential.user.uid;
       
-      // 2. Update their Auth profile with the display name
       await updateProfile(userCredential.user, { displayName: newChampionData.name });
       
-      // 3. Create the champion's profile document in Firestore
       const newChampion: Champion = {
         id: newUserId,
         parentId: parentUser.uid,
         name: newChampionData.name,
-        username: code, // This is the login code
+        username: code,
         email: internalEmail,
         avatarUrl: "",
         points: 0,
@@ -158,16 +155,29 @@ export default function ChampionsPage() {
     }
   }, [firestore, toast]);
 
-  const handleConfirmDelete = useCallback(() => {
-    if (!selectedChampion) return;
-    // Full deletion would happen here...
-    toast({
-      title: "Champion Deleted (UI Only)",
-      description: `${selectedChampion.name} has been removed.`,
-      variant: 'destructive'
-    });
-    setIsDeleteDialogOpen(false);
-  }, [selectedChampion, toast]);
+  const handleConfirmDelete = useCallback(async () => {
+    if (!selectedChampion || !firestore) return;
+    setIsDeleting(true);
+    try {
+      const championDocRef = doc(firestore, 'champions', selectedChampion.id);
+      await deleteDoc(championDocRef);
+      toast({
+        title: "Champion Deleted",
+        description: `${selectedChampion.name} has been removed from your family.`,
+        variant: 'destructive'
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Deletion Failed",
+        description: error.message,
+      });
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteDialogOpen(false);
+      setSelectedChampion(null);
+    }
+  }, [selectedChampion, firestore, toast]);
 
   const openEditDialog = useCallback((champion: Champion) => {
     setSelectedChampion(champion);
@@ -292,16 +302,18 @@ export default function ChampionsPage() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete{" "}
-                  {selectedChampion.name}.
+                  This action cannot be undone. This will permanently remove{" "}
+                  {selectedChampion.name} and all their progress data.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
                 <AlertDialogAction
                   className="bg-destructive hover:bg-destructive/90"
                   onClick={handleConfirmDelete}
+                  disabled={isDeleting}
                 >
+                  {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Delete
                 </AlertDialogAction>
               </AlertDialogFooter>
