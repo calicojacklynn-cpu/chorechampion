@@ -93,6 +93,23 @@ export default function SettingsPage() {
 
   const handleDeleteAccount = async () => {
     if (!user || !firestore || !profile) return;
+
+    // Proactive check: Sensitive operations need a recent login (usually < 5 mins)
+    const lastSignIn = user.metadata.lastSignInTime;
+    const lastSignInMillis = lastSignIn ? new Date(lastSignIn).getTime() : 0;
+    const fiveMinutesAgo = Date.now() - (5 * 60 * 1000);
+    
+    // Anonymous users don't usually hit the fresh login requirement as hard, 
+    // but standard accounts do.
+    if (lastSignInMillis < fiveMinutesAgo && !user.isAnonymous) {
+        toast({
+            variant: "destructive",
+            title: "Action Restricted",
+            description: "For security, please log out and log back in before deleting your account.",
+        });
+        return;
+    }
+
     setIsDeleting(true);
     
     try {
@@ -147,8 +164,6 @@ export default function SettingsPage() {
 
       router.push('/');
     } catch (error: any) {
-      console.error("Deletion error:", error);
-      
       if (error.code === 'auth/requires-recent-login') {
         toast({
           variant: "destructive",
