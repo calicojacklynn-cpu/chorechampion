@@ -53,7 +53,6 @@ export default function SettingsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSavingProfile, setIsSavingSavingProfile] = useState(false);
 
-  // Fetch real parent profile for fields like phone number and familyId
   const userRef = useMemoFirebase(() => {
     if (!firestore || !user) return null;
     return doc(firestore, 'users', user.uid);
@@ -99,7 +98,6 @@ export default function SettingsPage() {
   const handleDeleteAccount = async () => {
     if (!user || !firestore || !profile) return;
 
-    // Proactive check: Sensitive operations need a recent login (usually < 5 mins)
     const lastSignIn = user.metadata.lastSignInTime;
     const lastSignInMillis = lastSignIn ? new Date(lastSignIn).getTime() : 0;
     const fiveMinutesAgo = Date.now() - (5 * 60 * 1000);
@@ -119,33 +117,27 @@ export default function SettingsPage() {
       const batch = writeBatch(firestore);
       const familyId = profile.familyId;
 
-      // 1. Find and delete all champions for this parent
       const championsQuery = query(collection(firestore, 'champions'), where('parentId', '==', user.uid));
       const championsSnap = await getDocs(championsQuery);
       
       for (const champDoc of championsSnap.docs) {
           const champData = champDoc.data() as Champion;
           
-          // CRITICAL: Delete the champion's Auth account so their code becomes inert
           try {
               const tempAppName = `temp-del-auth-${champDoc.id}`;
               const tempApp = initializeApp(firebaseConfig, tempAppName);
               const tempAuth = getAuth(tempApp);
               const internalEmail = `${champData.username.toLowerCase()}@champions.app`;
               
-              // Sign in as champion temporarily to delete their own account
               const champCred = await signInWithEmailAndPassword(tempAuth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
               await deleteUser(champCred.user);
               await signOut(tempAuth);
           } catch (e) {
-              // We log but continue to ensure Firestore cleanup happens regardless of Auth state
-              console.warn("Failed to delete champion auth account during cleanup:", e);
+              console.warn("Auth cleanup warning:", e);
           }
 
-          // Delete champion profile from Firestore
           batch.delete(champDoc.ref);
           
-          // Delete subcollections
           const assignedChoresSnap = await getDocs(collection(firestore, 'champions', champDoc.id, 'assignedChores'));
           assignedChoresSnap.forEach(d => batch.delete(d.ref));
           
@@ -153,7 +145,6 @@ export default function SettingsPage() {
           redeemedRewardsSnap.forEach(d => batch.delete(d.ref));
       }
 
-      // 2. Delete shared messages, custom chores, and rewards for this parent
       const messagesSnap = await getDocs(collection(firestore, 'users', user.uid, 'messages'));
       messagesSnap.forEach(d => batch.delete(d.ref));
 
@@ -163,7 +154,6 @@ export default function SettingsPage() {
       const rewardsSnap = await getDocs(collection(firestore, 'users', user.uid, 'rewards'));
       rewardsSnap.forEach(d => batch.delete(d.ref));
 
-      // 3. Find and delete all parents in the family
       if (familyId) {
           const parentsQuery = query(collection(firestore, 'users'), where('familyId', '==', familyId));
           const parentsSnap = await getDocs(parentsQuery);
@@ -172,10 +162,7 @@ export default function SettingsPage() {
           batch.delete(doc(firestore, 'users', user.uid));
       }
 
-      // Commit all Firestore deletions
       await batch.commit();
-
-      // 4. Finally, delete the Primary Auth Account
       await deleteUser(user);
 
       toast({
@@ -195,7 +182,7 @@ export default function SettingsPage() {
         toast({
           variant: "destructive",
           title: "Deletion Failed",
-          description: error.message || "An unexpected error occurred while trying to delete your account.",
+          description: error.message || "An unexpected error occurred.",
         });
       }
     } finally {
@@ -291,49 +278,12 @@ export default function SettingsPage() {
           </CardFooter>
         </Card>
 
-        <Card>
-          <CardHeader>
-              <CardTitle>Language & Region</CardTitle>
-              <CardDescription>The Culture Setting. Sync the app with your life.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-              <div className="space-y-2">
-                  <Label htmlFor="localized-terminology">Localized Terminology</Label>
-                  <p className="text-sm text-muted-foreground">Rename "Chores" to something more engaging.</p>
-                  <Input id="localized-terminology" defaultValue="Daily Quests" />
-              </div>
-                <div className="space-y-2">
-                  <Label htmlFor="currency-standardization">Currency Standardization</Label>
-                  <p className="text-sm text-muted-foreground">Choose the visual representation of rewards.</p>
-                  <Input id="currency-standardization" defaultValue="Champion Coins" />
-              </div>
-              <div className="space-y-2">
-                  <Label htmlFor="time-zone">Time Zone Sync</Label>
-                  <p className="text-sm text-muted-foreground">Synchronizes the "Daily Reset" of chores.</p>
-                    <Select defaultValue="cst">
-                      <SelectTrigger className="w-full md:w-1/2">
-                          <SelectValue placeholder="Select timezone" />
-                      </SelectTrigger>
-                      <SelectContent>
-                          <SelectItem value="est">Eastern Standard Time (EST)</SelectItem>
-                          <SelectItem value="cst">Central Standard Time (CST)</SelectItem>
-                          <SelectItem value="mst">Mountain Standard Time (MST)</SelectItem>
-                          <SelectItem value="pst">Pacific Standard Time (PST)</SelectItem>
-                      </SelectContent>
-                  </Select>
-              </div>
-          </CardContent>
-          <CardFooter className="border-t px-6 py-4">
-              <Button>Save Localization Settings</Button>
-          </CardFooter>
-        </Card>
-
         <Card className="border-destructive">
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <div>
               <CardTitle className="text-lg">Delete Family Account</CardTitle>
               <CardDescription>
-                Permanently delete your account, all family administrators, and all champion data. This action is irreversible.
+                Permanently delete your account and all champion data. This action is irreversible.
               </CardDescription>
             </div>
             <AlertDialog>
@@ -347,7 +297,7 @@ export default function SettingsPage() {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete the entire family group, including all parents and champions. All progress, messages, and rewards will be lost forever.
+                    This will permanently delete the entire family group. All progress, messages, and rewards will be lost forever.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

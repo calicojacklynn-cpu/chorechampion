@@ -74,7 +74,6 @@ export default function LoginPage() {
         const docSnap = await getDoc(parentProfileDocRef);
 
         if (!docSnap.exists()) {
-            // Check if they are a champion
             const champRef = doc(firestore, 'champions', loggedInUser.uid);
             const champSnap = await getDoc(champRef);
             if (champSnap.exists()) {
@@ -107,8 +106,6 @@ export default function LoginPage() {
       const userCredential = await signInWithEmailAndPassword(auth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
       const loggedInUser = userCredential.user;
 
-      // CRITICAL: Verify Firestore profile exists immediately.
-      // This prevents "orphaned" codes from granted access.
       const champRef = doc(firestore, 'champions', loggedInUser.uid);
       const champSnap = await getDoc(champRef);
 
@@ -212,13 +209,11 @@ export default function LoginPage() {
         if (docSnap.exists()) {
           router.push('/dashboard');
         } else {
-          // Check for champion doc
           const champRef = doc(firestore, 'champions', user.uid);
           const champSnap = await getDoc(champRef);
           if (champSnap.exists()) {
             router.push(`/champion/${user.uid}`);
           } else {
-            // Signed in but no profile doc? Force sign out.
             await signOut(auth);
           }
         }

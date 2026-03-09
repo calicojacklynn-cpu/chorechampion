@@ -1,8 +1,9 @@
+
 "use client";
 
 import { useState, useCallback } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, updateProfile, signOut } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile, signOut, signInWithEmailAndPassword, deleteUser } from "firebase/auth";
 import { doc, setDoc, collection, query, where, deleteDoc } from 'firebase/firestore';
 import {
   Table,
@@ -160,6 +161,20 @@ export default function ChampionsPage() {
     try {
       const championDocRef = doc(firestore, 'champions', selectedChampion.id);
       await deleteDoc(championDocRef);
+
+      // Invalidate the code by deleting the champion's auth account
+      try {
+          const tempAppName = `temp-del-champ-${selectedChampion.id}`;
+          const tempApp = initializeApp(firebaseConfig, tempAppName);
+          const tempAuth = getAuth(tempApp);
+          const internalEmail = `${selectedChampion.username.toLowerCase()}@champions.app`;
+          const champCred = await signInWithEmailAndPassword(tempAuth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
+          await deleteUser(champCred.user);
+          await signOut(tempAuth);
+      } catch (e) {
+          console.warn("Auth cleanup warning:", e);
+      }
+
       toast({
         title: "Champion Deleted",
         description: `${selectedChampion.name} has been removed from your family.`,
