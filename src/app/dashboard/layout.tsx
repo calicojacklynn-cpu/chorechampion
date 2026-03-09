@@ -3,7 +3,7 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useUser, useFirestore, useAuth, useCollection, useMemoFirebase } from '@/firebase';
+import { useUser, useFirestore, useAuth, useCollection, useDoc, useMemoFirebase } from '@/firebase';
 import { doc, getDoc, collection, query, orderBy, limit } from 'firebase/firestore';
 import { SidebarProvider, Sidebar, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Nav } from "@/app/components/Nav";
@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
 import { useToast } from "@/hooks/use-toast";
 import { cn } from '@/lib/utils';
-
 
 export default function DashboardLayout({
   children,
@@ -36,6 +35,13 @@ export default function DashboardLayout({
     router.push('/');
   };
 
+  // Fetch parent profile for notification settings
+  const parentDocRef = useMemoFirebase(() => {
+    if (!firestore || !user || !isRoleVerified) return null;
+    return doc(firestore, 'users', user.uid);
+  }, [firestore, user, isRoleVerified]);
+  const { data: parentProfile } = useDoc(parentDocRef);
+
   // Real-time listener for "Push Notification" (Toast)
   const messagesQuery = useMemoFirebase(() => {
     if (!firestore || !user || !isRoleVerified) return null;
@@ -54,8 +60,10 @@ export default function DashboardLayout({
       const isSelf = msg.senderId === user?.uid;
       const isOnBroadcastPage = pathname === '/dashboard/broadcast';
       
-      // If new message from someone else and user is not on the chat page
-      if (!isSelf && !isOnBroadcastPage) {
+      // Check notification preference
+      const chatEnabled = parentProfile?.notificationPreferences?.chatAlerts !== false; // Default to true
+
+      if (!isSelf && !isOnBroadcastPage && chatEnabled) {
         const lastNotified = sessionStorage.getItem(`lastNotified_${msg.id}`);
         if (!lastNotified) {
           toast({
@@ -69,21 +77,15 @@ export default function DashboardLayout({
         }
       }
     }
-  }, [latestMessages, pathname, user?.uid, toast, router]);
+  }, [latestMessages, pathname, user?.uid, toast, router, parentProfile]);
 
   useEffect(() => {
-    // Wait until the initial authentication check is complete.
-    if (isUserLoading) {
-      return;
-    }
-
-    // If the user is not logged in at all, send them to the login page.
+    if (isUserLoading) return;
     if (!user) {
       router.push('/');
       return;
     }
 
-    // Use a one-time, definitive check to determine the user's role.
     const verifyUserRole = async () => {
       const parentProfileDocRef = doc(firestore, 'users', user.uid);
       const docSnap = await getDoc(parentProfileDocRef);
@@ -96,7 +98,6 @@ export default function DashboardLayout({
     };
 
     verifyUserRole();
-
   }, [isUserLoading, user, firestore, router]);
 
   if (isUserLoading || !isRoleVerified) {

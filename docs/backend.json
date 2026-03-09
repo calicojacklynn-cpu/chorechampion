@@ -23,6 +23,15 @@
         "lastName": {
           "type": "string",
           "description": "Last name of the parent."
+        },
+        "notificationPreferences": {
+          "type": "object",
+          "properties": {
+            "approvalAlerts": { "type": "boolean" },
+            "rewardMilestones": { "type": "boolean" },
+            "rewardClaimed": { "type": "boolean" },
+            "chatAlerts": { "type": "boolean" }
+          }
         }
       },
       "required": [
@@ -67,6 +76,15 @@
           "type": "string",
           "description": "URL for the champion's avatar image.",
           "format": "uri"
+        },
+        "notificationPreferences": {
+          "type": "object",
+          "properties": {
+            "newQuestAlerts": { "type": "boolean" },
+            "questApprovedAlerts": { "type": "boolean" },
+            "rewardMilestoneAlerts": { "type": "boolean" },
+            "chatAlerts": { "type": "boolean" }
+          }
         }
       },
       "required": [

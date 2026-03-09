@@ -11,12 +11,11 @@ import { SidebarProvider, Sidebar, SidebarInset, SidebarTrigger } from "@/compon
 import { ChampionNav } from "@/app/components/ChampionNav";
 import { useUser, useAuth, useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
 import { signOut } from 'firebase/auth';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { doc, collection, query, orderBy, limit } from 'firebase/firestore';
 import type { Champion } from '@/app/dashboard/champions/page';
 import { useToast } from "@/hooks/use-toast";
 import { cn } from '@/lib/utils';
-
 
 export default function ChampionLayout({
   children,
@@ -38,10 +37,9 @@ export default function ChampionLayout({
     return doc(firestore, 'champions', championId);
   }, [firestore, user, championId]);
 
-  // Fetch the real champion profile from Firestore
   const { data: realChampion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
 
-  // Real-time listener for "Push Notification" (Toast)
+  // Real-time listener for Messages
   const messagesQuery = useMemoFirebase(() => {
     if (!firestore || !realChampion?.parentId) return null;
     return query(
@@ -53,13 +51,44 @@ export default function ChampionLayout({
 
   const { data: latestMessages } = useCollection(messagesQuery);
 
+  // Real-time listener for New Chores
+  const choresQuery = useMemoFirebase(() => {
+    if (!firestore || !championId) return null;
+    return query(
+      collection(firestore, 'champions', championId, 'assignedChores'),
+      orderBy('id', 'desc'), // Use simple ordering since we don't have created date yet
+      limit(1)
+    );
+  }, [firestore, championId]);
+
+  const { data: latestChores } = useCollection(choresQuery);
+  const lastChoreIdRef = useRef<string | null>(null);
+
+  // Handle New Quest Notifications
+  useEffect(() => {
+    if (latestChores && latestChores.length > 0) {
+      const chore = latestChores[0];
+      const newQuestEnabled = realChampion?.notificationPreferences?.newQuestAlerts !== false;
+
+      if (lastChoreIdRef.current && lastChoreIdRef.current !== chore.id && newQuestEnabled) {
+        toast({
+          title: "New Quest Assigned!",
+          description: `"${chore.choreName}" has been added to your list.`,
+        });
+      }
+      lastChoreIdRef.current = chore.id;
+    }
+  }, [latestChores, realChampion, toast]);
+
+  // Handle Message Notifications
   useEffect(() => {
     if (latestMessages && latestMessages.length > 0) {
       const msg = latestMessages[0];
       const isSelf = msg.senderId === user?.uid;
       const isOnBroadcastPage = pathname === `/champion/${championId}/broadcast`;
+      const chatEnabled = realChampion?.notificationPreferences?.chatAlerts !== false;
       
-      if (!isSelf && !isOnBroadcastPage) {
+      if (!isSelf && !isOnBroadcastPage && chatEnabled) {
         const lastNotified = sessionStorage.getItem(`lastNotified_${msg.id}`);
         if (!lastNotified) {
           toast({
@@ -73,7 +102,7 @@ export default function ChampionLayout({
         }
       }
     }
-  }, [latestMessages, pathname, user?.uid, toast, router, championId]);
+  }, [latestMessages, pathname, user?.uid, toast, router, championId, realChampion]);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -91,8 +120,6 @@ export default function ChampionLayout({
     router.push('/');
   };
 
-  // For development purposes, if a champion profile doesn't exist in the database,
-  // we create a default one here to allow for UI editing.
   const champion = realChampion || (user ? {
     id: user.uid,
     parentId: 'default-parent-id',
@@ -103,7 +130,6 @@ export default function ChampionLayout({
     points: 125,
   } as Champion : null);
 
-  // Show a loader while auth state is resolving or the champion data is being fetched
   if (isUserLoading || (championId && !realChampion && isChampionLoading)) {
     return (
       <div className="flex h-screen items-center justify-center">
