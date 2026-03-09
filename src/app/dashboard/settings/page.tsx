@@ -17,13 +17,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -117,6 +110,7 @@ export default function SettingsPage() {
       const batch = writeBatch(firestore);
       const familyId = profile.familyId;
 
+      // 1. Delete Champions and their Auth accounts
       const championsQuery = query(collection(firestore, 'champions'), where('parentId', '==', user.uid));
       const championsSnap = await getDocs(championsQuery);
       
@@ -133,7 +127,7 @@ export default function SettingsPage() {
               await deleteUser(champCred.user);
               await signOut(tempAuth);
           } catch (e) {
-              console.warn("Auth cleanup warning:", e);
+              console.warn("Auth cleanup warning for champion:", e);
           }
 
           batch.delete(champDoc.ref);
@@ -145,6 +139,7 @@ export default function SettingsPage() {
           redeemedRewardsSnap.forEach(d => batch.delete(d.ref));
       }
 
+      // 2. Delete Parent Library Data
       const messagesSnap = await getDocs(collection(firestore, 'users', user.uid, 'messages'));
       messagesSnap.forEach(d => batch.delete(d.ref));
 
@@ -154,6 +149,7 @@ export default function SettingsPage() {
       const rewardsSnap = await getDocs(collection(firestore, 'users', user.uid, 'rewards'));
       rewardsSnap.forEach(d => batch.delete(d.ref));
 
+      // 3. Delete Parent Profiles
       if (familyId) {
           const parentsQuery = query(collection(firestore, 'users'), where('familyId', '==', familyId));
           const parentsSnap = await getDocs(parentsQuery);
@@ -163,7 +159,13 @@ export default function SettingsPage() {
       }
 
       await batch.commit();
+
+      // 4. Finally, delete the Auth Account
       await deleteUser(user);
+
+      // 5. Cleanup Browser Storage
+      localStorage.clear();
+      sessionStorage.clear();
 
       toast({
         title: "Account Deleted",
