@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth, useUser, useFirestore } from '@/firebase';
 import { signInWithEmailAndPassword, signOut, signInAnonymously, sendPasswordResetEmail } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
@@ -132,6 +132,19 @@ export default function LoginPage() {
 
     setIsSendingReset(true);
     try {
+      // Check if account exists in Firestore first
+      const q = query(collection(firestore, 'users'), where('email', '==', resetEmail));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        toast({
+          variant: "destructive",
+          title: "Account Not Found",
+          description: "There is no family account connected to this email address.",
+        });
+        return;
+      }
+
       await sendPasswordResetEmail(auth, resetEmail);
       toast({
         title: "Reset Link Sent!",
