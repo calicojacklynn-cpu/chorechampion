@@ -3,6 +3,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword, signOut, deleteUser } from "firebase/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,10 +35,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useUser, useFirestore, useAuth, useDoc, useMemoFirebase, updateDocumentNonBlocking } from "@/firebase";
-import { doc, deleteDoc, writeBatch, collection, query, where, getDocs } from "firebase/firestore";
-import { deleteUser } from "firebase/auth";
+import { doc, writeBatch, collection, query, where, getDocs } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { firebaseConfig } from "@/firebase/config";
+import type { Champion } from "../champions/page";
+
+const CHAMPION_INTERNAL_PASSWORD = "CHAMPION_INTERNAL_ACCESS";
 
 export default function SettingsPage() {
   const { user } = useUser();
@@ -99,8 +104,6 @@ export default function SettingsPage() {
     const lastSignInMillis = lastSignIn ? new Date(lastSignIn).getTime() : 0;
     const fiveMinutesAgo = Date.now() - (5 * 60 * 1000);
     
-    // Anonymous users don't usually hit the fresh login requirement as hard, 
-    // but standard accounts do.
     if (lastSignInMillis < fiveMinutesAgo && !user.isAnonymous) {
         toast({
             variant: "destructive",
@@ -121,10 +124,28 @@ export default function SettingsPage() {
       const championsSnap = await getDocs(championsQuery);
       
       for (const champDoc of championsSnap.docs) {
-          // Delete champion profile
+          const champData = champDoc.data() as Champion;
+          
+          // CRITICAL: Delete the champion's Auth account so their code becomes inert
+          try {
+              const tempAppName = `temp-del-auth-${champDoc.id}`;
+              const tempApp = initializeApp(firebaseConfig, tempAppName);
+              const tempAuth = getAuth(tempApp);
+              const internalEmail = `${champData.username.toLowerCase()}@champions.app`;
+              
+              // Sign in as champion temporarily to delete their own account
+              const champCred = await signInWithEmailAndPassword(tempAuth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
+              await deleteUser(champCred.user);
+              await signOut(tempAuth);
+          } catch (e) {
+              // We log but continue to ensure Firestore cleanup happens regardless of Auth state
+              console.warn("Failed to delete champion auth account during cleanup:", e);
+          }
+
+          // Delete champion profile from Firestore
           batch.delete(champDoc.ref);
           
-          // Delete subcollections (assignedChores, redeemedRewards)
+          // Delete subcollections
           const assignedChoresSnap = await getDocs(collection(firestore, 'champions', champDoc.id, 'assignedChores'));
           assignedChoresSnap.forEach(d => batch.delete(d.ref));
           
@@ -154,7 +175,7 @@ export default function SettingsPage() {
       // Commit all Firestore deletions
       await batch.commit();
 
-      // 4. Finally, delete the Auth Account
+      // 4. Finally, delete the Primary Auth Account
       await deleteUser(user);
 
       toast({

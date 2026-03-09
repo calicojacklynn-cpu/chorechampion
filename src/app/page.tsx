@@ -80,7 +80,8 @@ export default function LoginPage() {
             if (champSnap.exists()) {
                 router.push(`/champion/${loggedInUser.uid}`);
             } else {
-                toast({ variant: "destructive", title: "Profile Not Found", description: "Could not find a profile for this account." });
+                await signOut(auth);
+                toast({ variant: "destructive", title: "Profile Not Found", description: "Could not find a profile for this account. It may have been deleted." });
             }
         } else {
             router.push('/dashboard');
@@ -104,12 +105,24 @@ export default function LoginPage() {
 
       const internalEmail = `${values.code.toLowerCase()}@champions.app`;
       const userCredential = await signInWithEmailAndPassword(auth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
-      router.push(`/champion/${userCredential.user.uid}`);
+      const loggedInUser = userCredential.user;
+
+      // CRITICAL: Verify Firestore profile exists immediately.
+      // This prevents "orphaned" codes from granted access.
+      const champRef = doc(firestore, 'champions', loggedInUser.uid);
+      const champSnap = await getDoc(champRef);
+
+      if (!champSnap.exists()) {
+          await signOut(auth);
+          throw new Error("Invalid code or account deleted.");
+      }
+
+      router.push(`/champion/${loggedInUser.uid}`);
     } catch (error: any) {
       toast({ 
           variant: "destructive", 
           title: "Login Failed", 
-          description: "Invalid code. Please check with your parent."
+          description: error.message || "Invalid code. Please check with your parent."
       });
     }
   };
@@ -154,7 +167,8 @@ export default function LoginPage() {
           id: uid,
           email: 'instant-parent@test.local',
           firstName: 'Instant',
-          lastName: 'Parent'
+          lastName: 'Parent',
+          familyId: uid
         });
       }
       
@@ -203,12 +217,15 @@ export default function LoginPage() {
           const champSnap = await getDoc(champRef);
           if (champSnap.exists()) {
             router.push(`/champion/${user.uid}`);
+          } else {
+            // Signed in but no profile doc? Force sign out.
+            await signOut(auth);
           }
         }
       }
       checkRole();
     }
-  }, [isUserLoading, user, router, firestore]);
+  }, [isUserLoading, user, router, firestore, auth]);
 
   if (isUserLoading) {
     return (
