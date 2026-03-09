@@ -1,18 +1,20 @@
+
 'use client';
 
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, usePathname } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { LogOut, Star, Loader2 } from 'lucide-react';
 import { Toaster } from "@/components/ui/toaster";
 import { SidebarProvider, Sidebar, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { ChampionNav } from "@/app/components/ChampionNav";
-import { useUser, useAuth, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
+import { useUser, useAuth, useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { useEffect } from 'react';
-import { doc } from 'firebase/firestore';
+import { doc, collection, query, orderBy, limit } from 'firebase/firestore';
 import type { Champion } from '@/app/dashboard/champions/page';
+import { useToast } from "@/hooks/use-toast";
 import { cn } from '@/lib/utils';
 
 
@@ -23,9 +25,11 @@ export default function ChampionLayout({
 }) {
   const params = useParams();
   const router = useRouter();
+  const pathname = usePathname();
   const auth = useAuth();
   const firestore = useFirestore();
   const { user, isUserLoading } = useUser();
+  const { toast } = useToast();
 
   const championId = typeof params.id === 'string' ? params.id : '';
   
@@ -36,6 +40,40 @@ export default function ChampionLayout({
 
   // Fetch the real champion profile from Firestore
   const { data: realChampion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
+
+  // Real-time listener for "Push Notification" (Toast)
+  const messagesQuery = useMemoFirebase(() => {
+    if (!firestore || !realChampion?.parentId) return null;
+    return query(
+      collection(firestore, 'users', realChampion.parentId, 'messages'),
+      orderBy('timestamp', 'desc'),
+      limit(1)
+    );
+  }, [firestore, realChampion?.parentId]);
+
+  const { data: latestMessages } = useCollection(messagesQuery);
+
+  useEffect(() => {
+    if (latestMessages && latestMessages.length > 0) {
+      const msg = latestMessages[0];
+      const isSelf = msg.senderId === user?.uid;
+      const isOnBroadcastPage = pathname === `/champion/${championId}/broadcast`;
+      
+      if (!isSelf && !isOnBroadcastPage) {
+        const lastNotified = sessionStorage.getItem(`lastNotified_${msg.id}`);
+        if (!lastNotified) {
+          toast({
+            title: `New Family Message`,
+            description: msg.text.length > 50 ? msg.text.substring(0, 50) + '...' : msg.text,
+            action: (
+              <Button size="sm" onClick={() => router.push(`/champion/${championId}/broadcast`)}>View</Button>
+            )
+          });
+          sessionStorage.setItem(`lastNotified_${msg.id}`, 'true');
+        }
+      }
+    }
+  }, [latestMessages, pathname, user?.uid, toast, router, championId]);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -74,7 +112,6 @@ export default function ChampionLayout({
     );
   }
   
-  // This is a safeguard redirect for logged-in users who aren't on their own page.
   if (!isUserLoading && user && user.uid !== championId) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -85,7 +122,6 @@ export default function ChampionLayout({
     );
   }
 
-  // After loading, if there's no user or champion, access should be denied.
   if (!user || !champion) {
     return (
       <div className="flex h-screen items-center justify-center p-4">

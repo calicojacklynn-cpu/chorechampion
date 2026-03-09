@@ -47,7 +47,11 @@ export default function BroadcastPage() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+    // Mark as read
+    if (user?.uid) {
+      localStorage.setItem(`lastRead_broadcast_${user.uid}`, Date.now().toString());
+    }
+  }, [messages, user?.uid]);
 
   const handleSendMessage = () => {
     if (!newMessage.trim() || !user || !firestore) {

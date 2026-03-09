@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -27,11 +28,19 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { ChoreChampionLogo } from "./ChoreChampionLogo";
+import { useFirestore, useUser, useDoc, useCollection, useMemoFirebase } from "@/firebase";
+import { doc, collection, query, orderBy, limit } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import type { Champion } from "@/app/dashboard/champions/page";
 
 export function ChampionNav() {
   const pathname = usePathname();
   const params = useParams();
   const { setOpenMobile } = useSidebar();
+  const { user } = useUser();
+  const firestore = useFirestore();
+  const [hasUnread, setHasUnread] = useState(false);
+
   const championId = typeof params.id === 'string' ? params.id : '';
   
   const dashboardHref = `/champion/${championId}`;
@@ -42,6 +51,40 @@ export function ChampionNav() {
       { href: `${settingsBaseHref}`, label: "Account" },
       { href: `${settingsBaseHref}/notifications`, label: "Notifications" },
   ];
+
+  // Need parentId to find messages
+  const championDocRef = useMemoFirebase(() => {
+    if (!firestore || !championId) return null;
+    return doc(firestore, 'champions', championId);
+  }, [firestore, championId]);
+  const { data: champion } = useDoc<Champion>(championDocRef);
+
+  // Check for unread messages
+  const messagesQuery = useMemoFirebase(() => {
+    if (!firestore || !champion?.parentId) return null;
+    return query(
+      collection(firestore, 'users', champion.parentId, 'messages'),
+      orderBy('timestamp', 'desc'),
+      limit(1)
+    );
+  }, [firestore, champion?.parentId]);
+
+  const { data: latestMessages } = useCollection(messagesQuery);
+
+  useEffect(() => {
+    if (latestMessages && latestMessages.length > 0) {
+      const latestMsg = latestMessages[0];
+      const lastRead = localStorage.getItem(`lastRead_broadcast_${user?.uid}`);
+      
+      if (!lastRead || new Date(latestMsg.timestamp).getTime() > parseInt(lastRead)) {
+        if (pathname !== broadcastHref && latestMsg.senderId !== user?.uid) {
+          setHasUnread(true);
+        }
+      } else {
+        setHasUnread(false);
+      }
+    }
+  }, [latestMessages, pathname, broadcastHref, user?.uid]);
 
   const handleLinkClick = () => {
     setOpenMobile(false);
@@ -77,9 +120,12 @@ export function ChampionNav() {
               tooltip={{ children: "Broadcasts" }}
               asChild
             >
-              <Link href={broadcastHref} onClick={handleLinkClick}>
+              <Link href={broadcastHref} onClick={handleLinkClick} className="relative">
                 <Megaphone />
                 <span>Broadcasts</span>
+                {hasUnread && (
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 flex h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                )}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -1,10 +1,10 @@
 
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useUser, useFirestore, useAuth } from '@/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { useUser, useFirestore, useAuth, useCollection, useMemoFirebase } from '@/firebase';
+import { doc, getDoc, collection, query, orderBy, limit } from 'firebase/firestore';
 import { SidebarProvider, Sidebar, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Nav } from "@/app/components/Nav";
 import { UserNav } from "@/app/components/UserNav";
@@ -12,6 +12,7 @@ import { ScheduleProvider } from "@/app/context/ScheduleContext";
 import { Loader2, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
+import { useToast } from "@/hooks/use-toast";
 import { cn } from '@/lib/utils';
 
 
@@ -22,8 +23,10 @@ export default function DashboardLayout({
 }) {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
+  const pathname = usePathname();
   const firestore = useFirestore();
   const auth = useAuth();
+  const { toast } = useToast();
   const [isRoleVerified, setIsRoleVerified] = useState(false);
   
   const handleLogout = async () => {
@@ -32,6 +35,41 @@ export default function DashboardLayout({
     }
     router.push('/');
   };
+
+  // Real-time listener for "Push Notification" (Toast)
+  const messagesQuery = useMemoFirebase(() => {
+    if (!firestore || !user || !isRoleVerified) return null;
+    return query(
+      collection(firestore, 'users', user.uid, 'messages'),
+      orderBy('timestamp', 'desc'),
+      limit(1)
+    );
+  }, [firestore, user, isRoleVerified]);
+
+  const { data: latestMessages } = useCollection(messagesQuery);
+
+  useEffect(() => {
+    if (latestMessages && latestMessages.length > 0) {
+      const msg = latestMessages[0];
+      const isSelf = msg.senderId === user?.uid;
+      const isOnBroadcastPage = pathname === '/dashboard/broadcast';
+      
+      // If new message from someone else and user is not on the chat page
+      if (!isSelf && !isOnBroadcastPage) {
+        const lastNotified = sessionStorage.getItem(`lastNotified_${msg.id}`);
+        if (!lastNotified) {
+          toast({
+            title: `New Message from ${msg.senderName}`,
+            description: msg.text.length > 50 ? msg.text.substring(0, 50) + '...' : msg.text,
+            action: (
+              <Button size="sm" onClick={() => router.push('/dashboard/broadcast')}>View</Button>
+            )
+          });
+          sessionStorage.setItem(`lastNotified_${msg.id}`, 'true');
+        }
+      }
+    }
+  }, [latestMessages, pathname, user?.uid, toast, router]);
 
   useEffect(() => {
     // Wait until the initial authentication check is complete.
@@ -46,17 +84,13 @@ export default function DashboardLayout({
     }
 
     // Use a one-time, definitive check to determine the user's role.
-    // This avoids the race condition caused by real-time listeners.
     const verifyUserRole = async () => {
       const parentProfileDocRef = doc(firestore, 'users', user.uid);
       const docSnap = await getDoc(parentProfileDocRef);
 
       if (!docSnap.exists()) {
-        // If no parent profile exists, this user is not a parent.
-        // Redirect them to their champion-specific page.
         router.push(`/champion/${user.uid}`);
       } else {
-        // A parent profile exists. Grant access to the dashboard.
         setIsRoleVerified(true);
       }
     };
@@ -65,7 +99,6 @@ export default function DashboardLayout({
 
   }, [isUserLoading, user, firestore, router]);
 
-  // Show a loader until authentication is confirmed AND the user's role has been verified.
   if (isUserLoading || !isRoleVerified) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -74,7 +107,6 @@ export default function DashboardLayout({
     );
   }
 
-  // If all checks pass, render the parent dashboard layout.
   return (
     <ScheduleProvider>
       <SidebarProvider>

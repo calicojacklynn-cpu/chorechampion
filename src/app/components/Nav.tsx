@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -29,6 +30,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { ChoreChampionLogo } from "./ChoreChampionLogo";
+import { useFirestore, useUser, useCollection, useMemoFirebase } from "@/firebase";
+import { collection, query, orderBy, limit } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -53,6 +57,37 @@ const navItems = [
 export function Nav() {
   const pathname = usePathname();
   const { setOpenMobile } = useSidebar();
+  const { user } = useUser();
+  const firestore = useFirestore();
+  const [hasUnread, setHasUnread] = useState(false);
+
+  // Check for unread messages
+  const messagesQuery = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return query(
+      collection(firestore, 'users', user.uid, 'messages'),
+      orderBy('timestamp', 'desc'),
+      limit(1)
+    );
+  }, [firestore, user]);
+
+  const { data: latestMessages } = useCollection(messagesQuery);
+
+  useEffect(() => {
+    if (latestMessages && latestMessages.length > 0) {
+      const latestMsg = latestMessages[0];
+      const lastRead = localStorage.getItem(`lastRead_broadcast_${user?.uid}`);
+      
+      if (!lastRead || new Date(latestMsg.timestamp).getTime() > parseInt(lastRead)) {
+        // Only show badge if the user is NOT on the broadcast page
+        if (pathname !== '/dashboard/broadcast' && latestMsg.senderId !== user?.uid) {
+          setHasUnread(true);
+        }
+      } else {
+        setHasUnread(false);
+      }
+    }
+  }, [latestMessages, pathname, user?.uid]);
 
   const handleLinkClick = () => {
     setOpenMobile(false);
@@ -70,8 +105,9 @@ export function Nav() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
-          {navItems.map((item) =>
-            item.children ? (
+          {navItems.map((item) => {
+            const isBroadcast = item.href === "/dashboard/broadcast";
+            return item.children ? (
               <Collapsible
                 key={item.href}
                 asChild
@@ -116,14 +152,17 @@ export function Nav() {
                   tooltip={{ children: item.label }}
                   asChild
                 >
-                  <Link href={item.href} onClick={handleLinkClick}>
+                  <Link href={item.href} onClick={handleLinkClick} className="relative">
                     <item.icon />
                     <span>{item.label}</span>
+                    {isBroadcast && hasUnread && (
+                      <span className="absolute right-2 top-1/2 -translate-y-1/2 flex h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                    )}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-            )
-          )}
+            );
+          })}
         </SidebarMenu>
       </SidebarContent>
     </>
