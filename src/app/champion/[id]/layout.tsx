@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -41,25 +40,25 @@ export default function ChampionLayout({
 
   // Real-time listener for Messages
   const messagesQuery = useMemoFirebase(() => {
-    if (!firestore || !realChampion?.parentId) return null;
+    if (!firestore || !user || !realChampion?.parentId) return null;
     return query(
       collection(firestore, 'users', realChampion.parentId, 'messages'),
       orderBy('timestamp', 'desc'),
       limit(1)
     );
-  }, [firestore, realChampion?.parentId]);
+  }, [firestore, user, realChampion?.parentId]);
 
   const { data: latestMessages } = useCollection(messagesQuery);
 
   // Real-time listener for New Chores
   const choresQuery = useMemoFirebase(() => {
-    if (!firestore || !championId) return null;
+    if (!firestore || !user || !championId) return null;
     return query(
       collection(firestore, 'champions', championId, 'assignedChores'),
       orderBy('id', 'desc'), // Use simple ordering since we don't have created date yet
       limit(1)
     );
-  }, [firestore, championId]);
+  }, [firestore, user, championId]);
 
   const { data: latestChores } = useCollection(choresQuery);
   const lastChoreIdRef = useRef<string | null>(null);

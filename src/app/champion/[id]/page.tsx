@@ -42,22 +42,22 @@ export default function ChampionDashboardPage() {
     const championId = typeof params.id === 'string' ? params.id : '';
 
     const championDocRef = useMemoFirebase(() => {
-      if (!firestore || !championId) return null;
+      if (!firestore || !user || !championId) return null;
       return doc(firestore, 'champions', championId);
-    }, [firestore, championId]);
+    }, [firestore, user, championId]);
     const { data: champion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
 
     const choresQuery = useMemoFirebase(() => {
-      if (!firestore || !championId) return null;
+      if (!firestore || !user || !championId) return null;
       return collection(firestore, 'champions', championId, 'assignedChores');
-    }, [firestore, championId]);
+    }, [firestore, user, championId]);
     const { data: assignedChores, isLoading: areChoresLoading } = useCollection<AssignedChore>(choresQuery);
     
     const rewardsQuery = useMemoFirebase(() => {
         const parentId = champion?.parentId;
-        if (!parentId || !firestore) return null;
+        if (!parentId || !firestore || !user) return null;
         return collection(firestore, 'users', parentId, 'rewards');
-    }, [firestore, champion?.parentId]);
+    }, [firestore, user, champion?.parentId]);
     const { data: rewards, isLoading: areRewardsLoading } = useCollection<Reward>(rewardsQuery);
     
     const handleClaimReward = (reward: Reward) => {
