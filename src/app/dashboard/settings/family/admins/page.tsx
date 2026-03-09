@@ -1,6 +1,6 @@
+
 'use client';
 
-import Image from "next/image";
 import { useState, useCallback } from "react";
 import Link from "next/link";
 import {
@@ -19,11 +19,9 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { PlusCircle, Edit, Trash2, ArrowLeft } from "lucide-react";
+import { PlusCircle, Edit, Trash2, ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AddAdminDialog, type NewAdminData } from "./AddAdminDialog";
 import { useToast } from "@/hooks/use-toast";
-import { EditAdminDialog } from "./EditAdminDialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,74 +32,79 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useUser } from "@/firebase";
+import { useUser, useFirestore, useCollection, useMemoFirebase, useDoc, deleteDocumentNonBlocking } from "@/firebase";
+import { doc, query, collection, where } from "firebase/firestore";
 
 export type Admin = {
   id: string;
-  name: string;
+  familyId: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  phoneNumber?: string;
   avatarUrl?: string;
 };
-
-// Start with empty list for users
-const initialAdmins: Admin[] = [];
 
 export default function AdminsPage() {
   const { toast } = useToast();
   const { user } = useUser();
-  const [admins, setAdmins] = useState<Admin[]>(initialAdmins);
-  
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const firestore = useFirestore();
 
+  // Fetch current parent's profile to get familyId
+  const parentDocRef = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return doc(firestore, 'users', user.uid);
+  }, [firestore, user]);
+  const { data: currentParent, isLoading: isProfileLoading } = useDoc<Admin>(parentDocRef);
+
+  // Fetch all admins in the same family
+  const adminsQuery = useMemoFirebase(() => {
+    if (!firestore || !currentParent?.familyId) return null;
+    return query(collection(firestore, 'users'), where('familyId', '==', currentParent.familyId));
+  }, [firestore, currentParent?.familyId]);
+
+  const { data: admins, isLoading: isAdminsLoading } = useCollection<Admin>(adminsQuery);
+  
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
 
-  const handleAddAdmin = useCallback((newAdminData: NewAdminData) => {
-    const newAdmin: Admin = {
-      ...newAdminData,
-      id: `admin-${Date.now()}`,
-      avatarUrl: "", 
-    };
-    setAdmins((prev) => [newAdmin, ...prev]);
-    toast({
-      title: "Admin Added!",
-      description: `${newAdmin.name} has been added to your list of admins.`,
-    });
-    setIsAddDialogOpen(false);
-  }, [toast]);
-
-  const handleUpdateAdmin = useCallback((updatedAdmin: Admin) => {
-    setAdmins((prev) =>
-      prev.map((c) => (c.id === updatedAdmin.id ? updatedAdmin : c))
-    );
-    toast({
-      title: "Admin Updated!",
-      description: `${updatedAdmin.name}'s details have been updated.`,
-    });
-    setIsEditDialogOpen(false);
-  }, [toast]);
-
   const handleConfirmDelete = useCallback(() => {
-    if (!selectedAdmin) return;
-    setAdmins((prev) => prev.filter((c) => c.id !== selectedAdmin.id));
+    if (!selectedAdmin || !firestore) return;
+    
+    // Prevent self-deletion from this view for safety
+    if (selectedAdmin.id === user?.uid) {
+        toast({
+            variant: "destructive",
+            title: "Action Restricted",
+            description: "You cannot remove yourself from the admin list here. Use Account Settings to delete your account."
+        });
+        setIsDeleteDialogOpen(false);
+        return;
+    }
+
+    const docRef = doc(firestore, 'users', selectedAdmin.id);
+    deleteDocumentNonBlocking(docRef);
+    
     toast({
-      title: "Admin Deleted",
-      description: `${selectedAdmin.name} has been removed.`,
+      title: "Admin Removed",
+      description: `${selectedAdmin.firstName} has been removed from the family admins.`,
       variant: 'destructive'
     });
     setIsDeleteDialogOpen(false);
-  }, [selectedAdmin, toast]);
-
-  const openEditDialog = useCallback((admin: Admin) => {
-    setSelectedAdmin(admin);
-    setIsEditDialogOpen(true);
-  }, []);
+  }, [selectedAdmin, firestore, user?.uid, toast]);
 
   const openDeleteDialog = useCallback((admin: Admin) => {
     setSelectedAdmin(admin);
     setIsDeleteDialogOpen(true);
   }, []);
+
+  if (isProfileLoading || isAdminsLoading) {
+      return (
+          <div className="flex h-screen w-full items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin" />
+          </div>
+      );
+  }
 
   return (
     <div className="space-y-6">
@@ -116,19 +119,9 @@ export default function AdminsPage() {
           <div className="grid gap-2">
             <CardTitle>Admins</CardTitle>
             <CardDescription>
-              Manage parent or guardian accounts with admin privileges.
+              Parent or guardian accounts with full access to manage chores and rewards. These are automatically linked during family setup.
             </CardDescription>
           </div>
-          <Button
-            size="sm"
-            className="ml-auto gap-1"
-            onClick={() => setIsAddDialogOpen(true)}
-          >
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Admin
-            </span>
-          </Button>
         </CardHeader>
         <CardContent>
           <Table>
@@ -139,46 +132,49 @@ export default function AdminsPage() {
                 </TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead className="hidden md:table-cell">Phone</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {admins.length > 0 ? (
+              {admins && admins.length > 0 ? (
                 admins.map((admin) => {
+                    const fullName = `${admin.firstName} ${admin.lastName}`;
+                    const isSelf = admin.id === user?.uid;
                     return (
                     <TableRow key={admin.id}>
                       <TableCell className="hidden sm:table-cell">
                         <Avatar className="h-12 w-12 border-2 border-black">
                           <AvatarImage
                             src={admin.avatarUrl}
-                            alt={admin.name}
+                            alt={fullName}
                             className="object-cover"
                           />
                           <AvatarFallback className="bg-primary text-primary-foreground">
-                            {admin.name.charAt(0)}
+                            {admin.firstName.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                       </TableCell>
                       <TableCell className="font-medium">
-                        {admin.name}
+                        {fullName} {isSelf && <span className="text-xs text-muted-foreground ml-1">(You)</span>}
                       </TableCell>
                       <TableCell>{admin.email}</TableCell>
+                      <TableCell className="hidden md:table-cell">{admin.phoneNumber || '—'}</TableCell>
                       <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                           <Button variant="default" size="icon-sm" onClick={() => openEditDialog(admin)}>
-                             <Edit className="h-3.5 w-3.5" />
-                           </Button>
-                           <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(admin)}>
-                              <Trash2 className="h-3.5 w-3.5" />
-                           </Button>
-                        </div>
+                        {!isSelf && (
+                            <div className="flex items-center justify-end gap-2">
+                                <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(admin)} title="Remove Admin">
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                </Button>
+                            </div>
+                        )}
                       </TableCell>
                     </TableRow>
                   )})
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
-                    No other admins added yet. Start by inviting a co-parent or guardian.
+                  <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                    No admins found.
                   </TableCell>
                 </TableRow>
               )}
@@ -186,21 +182,6 @@ export default function AdminsPage() {
           </Table>
         </CardContent>
       </Card>
-      
-      <AddAdminDialog 
-        isOpen={isAddDialogOpen}
-        onOpenChange={setIsAddDialogOpen}
-        onAdd={handleAddAdmin}
-      />
-
-      {selectedAdmin && (
-        <EditAdminDialog
-          admin={selectedAdmin}
-          isOpen={isEditDialogOpen}
-          onOpenChange={setIsEditDialogOpen}
-          onSave={handleUpdateAdmin}
-        />
-      )}
       
       <AlertDialog
         open={isDeleteDialogOpen}
@@ -211,8 +192,7 @@ export default function AdminsPage() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete{" "}
-                  {selectedAdmin.name}.
+                  This will remove {selectedAdmin.firstName} {selectedAdmin.lastName} from the family admins list. They will no longer have access to this family dashboard.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -221,7 +201,7 @@ export default function AdminsPage() {
                   className="bg-destructive hover:bg-destructive/90"
                   onClick={handleConfirmDelete}
                 >
-                  Delete
+                  Remove Admin
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

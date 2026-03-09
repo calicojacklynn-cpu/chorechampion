@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,7 +32,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useUser, useFirestore, useAuth } from "@/firebase";
+import { useUser, useFirestore, useAuth, useDoc, useMemoFirebase, updateDocumentNonBlocking } from "@/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 import { deleteUser } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
@@ -43,20 +44,62 @@ export default function SettingsPage() {
   const auth = useAuth();
   const router = useRouter();
   const { toast } = useToast();
+  
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isSavingProfile, setIsSavingSavingProfile] = useState(false);
+
+  // Fetch real parent profile for fields like phone number
+  const userRef = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return doc(firestore, 'users', user.uid);
+  }, [firestore, user]);
+  const { data: profile, isLoading: isProfileLoading } = useDoc(userRef);
+
+  const [formData, setFormData] = useState({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: ''
+  });
+
+  useEffect(() => {
+      if (profile) {
+          setFormData({
+              firstName: profile.firstName || '',
+              lastName: profile.lastName || '',
+              email: profile.email || user?.email || '',
+              phoneNumber: profile.phoneNumber || ''
+          });
+      }
+  }, [profile, user?.email]);
+
+  const handleSaveProfile = () => {
+      if (!user || !firestore) return;
+      setIsSavingSavingProfile(true);
+      
+      const docRef = doc(firestore, 'users', user.uid);
+      updateDocumentNonBlocking(docRef, {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          phoneNumber: formData.phoneNumber
+      });
+
+      toast({
+          title: "Profile Updated",
+          description: "Your personal details have been saved."
+      });
+      setIsSavingSavingProfile(false);
+  };
 
   const handleDeleteAccount = async () => {
     if (!user || !firestore) return;
     setIsDeleting(true);
     try {
       // 1. Delete Firestore Profile
-      // Note: Subcollections like chores/rewards should be handled by a cloud function 
-      // or recursive delete in a production app. For MVP, we delete the profile.
       const userRef = doc(firestore, 'users', user.uid);
       await deleteDoc(userRef);
 
       // 2. Delete Auth Account
-      // Firebase requires a recent login for this.
       await deleteUser(user);
 
       toast({
@@ -103,17 +146,52 @@ export default function SettingsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" defaultValue={user?.displayName || "Parent"} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" defaultValue={user?.email || "parent@example.com"} />
-            </div>
+            {isProfileLoading ? (
+                <div className="flex justify-center p-4">
+                    <Loader2 className="h-6 w-6 animate-spin" />
+                </div>
+            ) : (
+                <>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="firstName">First Name</Label>
+                            <Input 
+                                id="firstName" 
+                                value={formData.firstName} 
+                                onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="lastName">Last Name</Label>
+                            <Input 
+                                id="lastName" 
+                                value={formData.lastName} 
+                                onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                            />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input id="email" type="email" value={formData.email} disabled />
+                        <p className="text-[10px] text-muted-foreground">Email is used for your secure login and cannot be changed here.</p>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="phoneNumber">Phone Number</Label>
+                        <Input 
+                            id="phoneNumber" 
+                            type="tel" 
+                            value={formData.phoneNumber} 
+                            onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
+                        />
+                    </div>
+                </>
+            )}
           </CardContent>
           <CardFooter className="border-t px-6 py-4">
-            <Button>Save Profile</Button>
+            <Button onClick={handleSaveProfile} disabled={isSavingProfile || isProfileLoading}>
+                {isSavingProfile && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Save Profile
+            </Button>
           </CardFooter>
         </Card>
 

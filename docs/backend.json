@@ -11,10 +11,18 @@
           "type": "string",
           "description": "Unique identifier for the ParentProfile entity."
         },
+        "familyId": {
+          "type": "string",
+          "description": "Shared identifier for grouping parents within the same family."
+        },
         "email": {
           "type": "string",
           "description": "Email address of the parent.",
           "format": "email"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "Phone number of the parent."
         },
         "firstName": {
           "type": "string",
@@ -36,6 +44,7 @@
       },
       "required": [
         "id",
+        "familyId",
         "email",
         "firstName",
         "lastName"

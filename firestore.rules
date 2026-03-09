@@ -20,6 +20,13 @@ service cloud.firestore {
       return isOwner(userId) && isExistingDocument();
     }
 
+    // Check if parent profiles belong to the same family
+    function isSameFamily(userId) {
+      let currentUser = get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+      let targetUser = get(/databases/$(database)/documents/users/$(userId)).data;
+      return isSignedIn() && currentUser.familyId == targetUser.familyId;
+    }
+
     // Check if the signed-in user is a champion belonging to the parent
     function isFamilyChampion(parentId) {
       return isSignedIn() && 
@@ -29,8 +36,8 @@ service cloud.firestore {
 
     // --- User (Parent) Profile Rules ---
     match /users/{userId} {
-      allow get: if isOwner(userId);
-      allow list: if false;
+      allow get: if isSignedIn() && (request.auth.uid == userId || isSameFamily(userId));
+      allow list: if isSignedIn(); // Rely on 'familyId' where filter
       allow create: if isSignedIn() && request.auth.uid == userId;
       allow update: if isExistingOwner(userId);
       allow delete: if isExistingOwner(userId);

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -28,6 +29,7 @@ const parentSchema = z.object({
   firstName: z.string().min(2, 'First name is required.'),
   lastName: z.string().min(2, 'Last name is required.'),
   email: z.string().email('Valid email required.'),
+  phoneNumber: z.string().min(10, 'Phone number must be at least 10 digits.'),
 });
 
 const championSchema = z.object({
@@ -53,7 +55,7 @@ export default function RegisterPage() {
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      parents: [{ firstName: '', lastName: '', email: '' }],
+      parents: [{ firstName: '', lastName: '', email: '', phoneNumber: '' }],
       champions: [{ name: '' }],
       password: '',
     },
@@ -86,7 +88,9 @@ export default function RegisterPage() {
 
       await setDoc(doc(firestore, 'users', primaryParentUid), {
         id: primaryParentUid,
+        familyId: primaryParentUid, // Family ID is rooted at the primary parent
         email: primaryParent.email,
+        phoneNumber: primaryParent.phoneNumber,
         firstName: primaryParent.firstName,
         lastName: primaryParent.lastName,
       });
@@ -103,7 +107,9 @@ export default function RegisterPage() {
         await updateProfile(secCred.user, { displayName: `${secondary.firstName} ${secondary.lastName}` });
         await setDoc(doc(firestore, 'users', secCred.user.uid), {
           id: secCred.user.uid,
+          familyId: primaryParentUid, // Both parents share the same familyId
           email: secondary.email,
+          phoneNumber: secondary.phoneNumber,
           firstName: secondary.firstName,
           lastName: secondary.lastName,
         });
@@ -184,6 +190,11 @@ export default function RegisterPage() {
               ))}
             </div>
 
+            <div className="bg-secondary/10 p-4 rounded-lg border border-secondary text-sm">
+                <p className="font-semibold text-foreground">Parents Automatically Added</p>
+                <p className="text-muted-foreground">Both parent profiles have been linked as family administrators.</p>
+            </div>
+
             <Button className="w-full" asChild size="lg">
               <Link href="/dashboard">Go to Parent Dashboard</Link>
             </Button>
@@ -215,7 +226,7 @@ export default function RegisterPage() {
                   <Users className="h-5 w-5" />
                   Parents
                 </CardTitle>
-                <CardDescription>Up to two parent or guardian accounts.</CardDescription>
+                <CardDescription>Up to two parent or guardian accounts. These accounts will be your family admins.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {parentFields.map((field, index) => (
@@ -256,17 +267,30 @@ export default function RegisterPage() {
                         )}
                       />
                     </div>
-                    <FormField
-                      control={form.control}
-                      name={`parents.${index}.email`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <Label>Email</Label>
-                          <FormControl><Input type="email" placeholder="jane@example.com" {...field} /></FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormField
+                        control={form.control}
+                        name={`parents.${index}.email`}
+                        render={({ field }) => (
+                            <FormItem>
+                            <Label>Email</Label>
+                            <FormControl><Input type="email" placeholder="jane@example.com" {...field} /></FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                        <FormField
+                        control={form.control}
+                        name={`parents.${index}.phoneNumber`}
+                        render={({ field }) => (
+                            <FormItem>
+                            <Label>Phone Number</Label>
+                            <FormControl><Input type="tel" placeholder="(555) 000-0000" {...field} /></FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                    </div>
                   </div>
                 ))}
                 {parentFields.length < 2 && (
@@ -274,7 +298,7 @@ export default function RegisterPage() {
                     type="button"
                     variant="outline"
                     className="w-full border-dashed"
-                    onClick={() => addParent({ firstName: '', lastName: '', email: '' })}
+                    onClick={() => addParent({ firstName: '', lastName: '', email: '', phoneNumber: '' })}
                   >
                     <UserPlus className="h-4 w-4 mr-2" />
                     Add Second Parent
