@@ -75,11 +75,32 @@ export default function LoginPage() {
         if (!docSnap.exists()) {
             const champRef = doc(firestore, 'champions', loggedInUser.uid);
             const champSnap = await getDoc(champRef);
+            
             if (champSnap.exists()) {
                 router.push(`/champion/${loggedInUser.uid}`);
             } else {
-                await signOut(auth);
-                toast({ variant: "destructive", title: "Profile Not Found", description: "Could not find a profile for this account. It may have been deleted." });
+                // AUTO-REPAIR: If Auth exists but Firestore profile is missing (Ghost Account)
+                // We recreate a basic profile instead of kicking them out.
+                await setDoc(parentProfileDocRef, {
+                  id: loggedInUser.uid,
+                  familyId: loggedInUser.uid,
+                  email: loggedInUser.email,
+                  firstName: 'Champion',
+                  lastName: 'Parent',
+                  phoneNumber: '',
+                  notificationPreferences: {
+                    approvalAlerts: true,
+                    rewardMilestones: true,
+                    rewardClaimed: true,
+                    chatAlerts: true
+                  }
+                });
+                
+                toast({
+                  title: "Account Restored",
+                  description: "We found your account and restored your basic profile. Welcome back!",
+                });
+                router.push('/dashboard');
             }
         } else {
             router.push('/dashboard');
@@ -131,24 +152,26 @@ export default function LoginPage() {
 
     setIsSendingReset(true);
     try {
-      // Check if account exists in Firestore first
+      // Check Firestore
       const q = query(collection(firestore, 'users'), where('email', '==', resetEmail));
       const querySnapshot = await getDocs(q);
 
+      // Even if not in Firestore, we attempt sending the email to fix ghost accounts
+      // Our auto-repair logic on login will take it from there once they reset.
+      await sendPasswordResetEmail(auth, resetEmail);
+      
       if (querySnapshot.empty) {
         toast({
-          variant: "destructive",
-          title: "Account Not Found",
-          description: "There is no family account connected to this email address.",
+          title: "Check your email",
+          description: "We couldn't find a standard profile, but if you've registered before, a reset link was sent. Check your spam folder!",
         });
-        return;
+      } else {
+        toast({
+          title: "Reset Link Sent!",
+          description: "Check your email for instructions to reset your password.",
+        });
       }
-
-      await sendPasswordResetEmail(auth, resetEmail);
-      toast({
-        title: "Reset Link Sent!",
-        description: "Check your email for instructions to reset your password.",
-      });
+      
       setIsResetDialogOpen(false);
       setResetEmail('');
     } catch (error: any) {
@@ -226,7 +249,14 @@ export default function LoginPage() {
           if (champSnap.exists()) {
             router.push(`/champion/${user.uid}`);
           } else {
-            await signOut(auth);
+            // Handle ghost account in useEffect redirect
+            if (!user.isAnonymous) {
+               // We don't sign out automatically here to allow the repair logic in handleParentLogin
+               // But if they just hit the page already logged in, we let the dashboard layout handle it
+               router.push('/dashboard');
+            } else {
+               await signOut(auth);
+            }
           }
         }
       }

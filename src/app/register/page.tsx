@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -40,6 +39,14 @@ const registerSchema = z.object({
   parents: z.array(parentSchema).min(1).max(2),
   champions: z.array(championSchema).min(1).max(3),
   password: z.string().min(6, 'Password must be at least 6 characters.'),
+}).refine((data) => {
+  if (data.parents.length > 1) {
+    return data.parents[0].email.toLowerCase() !== data.parents[1].email.toLowerCase();
+  }
+  return true;
+}, {
+  message: "Parent emails must be unique.",
+  path: ["parents.1.email"],
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
@@ -79,23 +86,42 @@ export default function RegisterPage() {
     try {
       // 1. Create Primary Parent
       const primaryParent = values.parents[0];
-      const userCredential = await createUserWithEmailAndPassword(auth, primaryParent.email, values.password);
-      const primaryParentUid = userCredential.user.uid;
-
-      await updateProfile(userCredential.user, {
-        displayName: `${primaryParent.firstName} ${primaryParent.lastName}`
-      });
+      let primaryParentUid = '';
+      
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, primaryParent.email, values.password);
+        primaryParentUid = userCredential.user.uid;
+        await updateProfile(userCredential.user, {
+          displayName: `${primaryParent.firstName} ${primaryParent.lastName}`
+        });
+      } catch (authError: any) {
+        if (authError.code === 'auth/email-already-in-use') {
+          toast({
+            variant: "destructive",
+            title: "Email already taken",
+            description: "An account already exists with this email. Try logging in or resetting your password instead.",
+          });
+          return;
+        }
+        throw authError;
+      }
 
       await setDoc(doc(firestore, 'users', primaryParentUid), {
         id: primaryParentUid,
-        familyId: primaryParentUid, // Family ID is rooted at the primary parent
+        familyId: primaryParentUid,
         email: primaryParent.email,
         phoneNumber: primaryParent.phoneNumber,
         firstName: primaryParent.firstName,
         lastName: primaryParent.lastName,
+        notificationPreferences: {
+          approvalAlerts: true,
+          rewardMilestones: true,
+          rewardClaimed: true,
+          chatAlerts: true
+        }
       });
 
-      // 2. Handle Secondary Parent and Champions using temp app instances
+      // 2. Handle Secondary Parent and Champions
       const createdChampions: { name: string; code: string }[] = [];
 
       // Secondary Parent
@@ -107,11 +133,17 @@ export default function RegisterPage() {
         await updateProfile(secCred.user, { displayName: `${secondary.firstName} ${secondary.lastName}` });
         await setDoc(doc(firestore, 'users', secCred.user.uid), {
           id: secCred.user.uid,
-          familyId: primaryParentUid, // Both parents share the same familyId
+          familyId: primaryParentUid,
           email: secondary.email,
           phoneNumber: secondary.phoneNumber,
           firstName: secondary.firstName,
           lastName: secondary.lastName,
+          notificationPreferences: {
+            approvalAlerts: true,
+            rewardMilestones: true,
+            rewardClaimed: true,
+            chatAlerts: true
+          }
         });
         await signOut(tempAuth);
       }
@@ -135,6 +167,12 @@ export default function RegisterPage() {
           username: code,
           email: internalEmail,
           points: 0,
+          notificationPreferences: {
+            newQuestAlerts: true,
+            questApprovedAlerts: true,
+            rewardMilestoneAlerts: false,
+            chatAlerts: true,
+          }
         });
 
         createdChampions.push({ name: champ.name, code });
@@ -219,7 +257,6 @@ export default function RegisterPage() {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {/* Parents Section */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -307,7 +344,6 @@ export default function RegisterPage() {
               </CardContent>
             </Card>
 
-            {/* Champions Section */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -358,7 +394,6 @@ export default function RegisterPage() {
               </CardContent>
             </Card>
 
-            {/* Security Section */}
             <Card>
               <CardHeader>
                 <CardTitle>Family Security</CardTitle>
