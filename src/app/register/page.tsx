@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -19,7 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { QuestKindLogo } from '@/app/components/ChoreChampionLogo';
-import { Form, FormControl, FormField, FormItem, FormMessage, FormDescription } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormMessage, FormDescription, FormLabel } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, ArrowLeft, CheckCircle2, Copy, Plus, Trash2, Users, UserPlus } from 'lucide-react';
 
@@ -414,7 +413,6 @@ export default function RegisterPage() {
                   )}
                 />
               </CardContent>
-            </Card>
 
             <div className="flex flex-col gap-4">
               <Button type="submit" className="w-full" size="lg" disabled={form.formState.isSubmitting}>
