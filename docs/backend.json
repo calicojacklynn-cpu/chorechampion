@@ -243,6 +243,22 @@
         "redemptionDate",
         "status"
       ]
+    },
+    "FamilyMessage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "FamilyMessage",
+      "type": "object",
+      "description": "Represents a message sent within the family chat.",
+      "properties": {
+        "id": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "senderAvatarUrl": { "type": "string" },
+        "senderRole": { "type": "string", "enum": ["parent", "champion"] },
+        "text": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "senderId", "senderName", "senderRole", "text", "timestamp"]
     }
   },
   "auth": {
@@ -281,6 +297,16 @@
             "$ref": "#/backend/entities/Reward"
           },
           "description": "Parent-specific custom reward library."
+        }
+      },
+      {
+        "path": "/users/{userId}/messages/{messageId}",
+        "definition": {
+          "entityName": "FamilyMessage",
+          "schema": {
+            "$ref": "#/backend/entities/FamilyMessage"
+          },
+          "description": "Shared family communication hub."
         }
       },
       {

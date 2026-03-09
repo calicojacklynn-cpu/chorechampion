@@ -1,8 +1,8 @@
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
-import { Megaphone, Send } from 'lucide-react';
+import { Megaphone, Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -11,26 +11,35 @@ import {
 } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { useUser } from '@/firebase';
+import { useUser, useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
+import { collection, query, orderBy, limit } from 'firebase/firestore';
 
 type Message = {
     id: string;
     senderId: string;
     senderName: string;
-    avatarId?: string;
-    avatarUrl?: string;
+    senderAvatarUrl?: string;
+    senderRole: 'parent' | 'champion';
     text: string;
     timestamp: string;
 }
 
-const initialMessages: Message[] = [];
-
 export default function BroadcastPage() {
   const { user } = useUser();
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const firestore = useFirestore();
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  const messagesQuery = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return query(
+        collection(firestore, 'users', user.uid, 'messages'),
+        orderBy('timestamp', 'asc'),
+        limit(50)
+    );
+  }, [firestore, user]);
+
+  const { data: messages, isLoading } = useCollection<Message>(messagesQuery);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -41,20 +50,20 @@ export default function BroadcastPage() {
   }, [messages]);
 
   const handleSendMessage = () => {
-    if (!newMessage.trim()) {
+    if (!newMessage.trim() || !user || !firestore) {
       return;
     }
 
-    const messageToSend: Message = {
-      id: `msg-${Date.now()}`,
-      senderId: user?.uid || 'parent',
-      senderName: user?.displayName || 'Parent',
-      avatarUrl: user?.photoURL || '',
+    const colRef = collection(firestore, 'users', user.uid, 'messages');
+    addDocumentNonBlocking(colRef, {
+      senderId: user.uid,
+      senderName: user.displayName || 'Parent',
+      senderAvatarUrl: user.photoURL || '',
+      senderRole: 'parent',
       text: newMessage,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }),
-    };
+      timestamp: new Date().toISOString(),
+    });
 
-    setMessages([...messages, messageToSend]);
     setNewMessage('');
   };
 
@@ -67,48 +76,48 @@ export default function BroadcastPage() {
             Family Chat
           </h1>
           <p className="text-muted-foreground">
-            The community chat center for your family.
+            Connect with your champions in real-time.
           </p>
         </div>
       </div>
-      <Card className="flex-1 flex flex-col">
+      <Card className="flex-1 flex flex-col overflow-hidden">
         <CardContent className="flex-1 p-6 space-y-6 overflow-y-auto">
-          {messages.length > 0 ? (
+          {isLoading ? (
+            <div className="h-full flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : messages && messages.length > 0 ? (
             messages.map((message) => {
-              const avatarPlaceholder = message.avatarId ? PlaceHolderImages.find(p => p.id === message.avatarId) : null;
-              const imageUrl = message.avatarUrl || avatarPlaceholder?.imageUrl;
-              const imageHint = avatarPlaceholder?.imageHint;
-              const altText = avatarPlaceholder?.description || message.senderName;
-              const isParent = message.senderId === user?.uid || message.senderId === 'parent';
+              const isSelf = message.senderId === user?.uid;
 
               return (
                 <div
                   key={message.id}
-                  className={`flex items-start gap-4 ${isParent ? '' : 'justify-end'}`}
+                  className={`flex items-start gap-4 ${isSelf ? '' : 'justify-end'}`}
                 >
-                  {isParent && (
+                  {isSelf && (
                     <Avatar className="h-10 w-10 border-2 border-black">
-                      <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
+                      <AvatarImage src={message.senderAvatarUrl} alt={message.senderName} />
                       <AvatarFallback className="bg-primary text-primary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
                     </Avatar>
                   )}
                   <div
                     className={`max-w-md rounded-xl px-4 py-3 border border-black ${
-                      isParent
+                      isSelf
                         ? 'bg-primary text-primary-foreground rounded-tl-none'
-                        : 'bg-primary text-primary-foreground rounded-tr-none'
+                        : 'bg-card text-card-foreground rounded-tr-none'
                     }`}
                   >
                     <p className={'font-bold text-sm mb-1'}>{message.senderName}</p>
                     <p>{message.text}</p>
-                     <p className={`text-xs mt-2 opacity-70 ${isParent ? 'text-left' : 'text-right'}`}>
-                      {message.timestamp}
+                     <p className={`text-[10px] mt-2 opacity-70 ${isSelf ? 'text-left' : 'text-right'}`}>
+                      {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
-                   {!isParent && (
+                   {!isSelf && (
                     <Avatar className="h-10 w-10 border-2 border-black">
-                      <AvatarImage src={imageUrl} data-ai-hint={imageHint} alt={altText} />
-                      <AvatarFallback className="bg-primary text-primary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
+                      <AvatarImage src={message.senderAvatarUrl} alt={message.senderName} />
+                      <AvatarFallback className="bg-secondary text-secondary-foreground">{message.senderName.charAt(0)}</AvatarFallback>
                     </Avatar>
                   )}
                 </div>

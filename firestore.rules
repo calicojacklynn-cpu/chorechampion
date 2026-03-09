@@ -20,17 +20,23 @@ service cloud.firestore {
       return isOwner(userId) && isExistingDocument();
     }
 
+    // Check if the signed-in user is a champion belonging to the parent
+    function isFamilyChampion(parentId) {
+      return isSignedIn() && 
+             exists(/databases/$(database)/documents/champions/$(request.auth.uid)) && 
+             get(/databases/$(database)/documents/champions/$(request.auth.uid)).data.parentId == parentId;
+    }
+
     // --- User (Parent) Profile Rules ---
     match /users/{userId} {
       allow get: if isOwner(userId);
       allow list: if false;
-      // Allow creation if signed in and creating their own profile (handles registration and backdoor)
       allow create: if isSignedIn() && request.auth.uid == userId;
       allow update: if isExistingOwner(userId);
       allow delete: if isExistingOwner(userId);
 
       match /rewards/{rewardId} {
-        allow get, list: if isOwner(userId) || (isSignedIn() && exists(/databases/$(database)/documents/champions/$(request.auth.uid)) && get(/databases/$(database)/documents/champions/$(request.auth.uid)).data.parentId == userId);
+        allow get, list: if isOwner(userId) || isFamilyChampion(userId);
         allow write: if isOwner(userId);
       }
 
@@ -38,13 +44,18 @@ service cloud.firestore {
         allow get, list: if isOwner(userId);
         allow write: if isOwner(userId);
       }
+
+      match /messages/{messageId} {
+        allow read, list: if isOwner(userId) || isFamilyChampion(userId);
+        allow create: if isOwner(userId) || isFamilyChampion(userId);
+        allow delete: if isOwner(userId);
+      }
     }
 
     // --- Champion Profile Rules ---
     match /champions/{championId} {
       allow get: if isSignedIn() && (request.auth.uid == championId || (isExistingDocument() && request.auth.uid == resource.data.parentId));
       allow list: if isSignedIn(); 
-      // Allows a parent to create a champion OR a champion to create their own (for backdoor)
       allow create: if isSignedIn() && (request.auth.uid == request.resource.data.parentId || request.auth.uid == championId);
       allow update: if isSignedIn() && (request.auth.uid == championId || (isExistingDocument() && request.auth.uid == resource.data.parentId));
       allow delete: if isSignedIn() && (isExistingDocument() && request.auth.uid == resource.data.parentId);
