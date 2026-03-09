@@ -33,7 +33,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useUser, useFirestore, useAuth, useDoc, useMemoFirebase, updateDocumentNonBlocking } from "@/firebase";
-import { doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc, writeBatch, collection, query, where, getDocs } from "firebase/firestore";
 import { deleteUser } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
@@ -48,7 +48,7 @@ export default function SettingsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSavingProfile, setIsSavingSavingProfile] = useState(false);
 
-  // Fetch real parent profile for fields like phone number
+  // Fetch real parent profile for fields like phone number and familyId
   const userRef = useMemoFirebase(() => {
     if (!firestore || !user) return null;
     return doc(firestore, 'users', user.uid);
@@ -92,19 +92,57 @@ export default function SettingsPage() {
   };
 
   const handleDeleteAccount = async () => {
-    if (!user || !firestore) return;
+    if (!user || !firestore || !profile) return;
     setIsDeleting(true);
+    
     try {
-      // 1. Delete Firestore Profile
-      const userRef = doc(firestore, 'users', user.uid);
-      await deleteDoc(userRef);
+      const batch = writeBatch(firestore);
+      const familyId = profile.familyId;
 
-      // 2. Delete Auth Account
+      // 1. Find and delete all champions for this parent
+      const championsQuery = query(collection(firestore, 'champions'), where('parentId', '==', user.uid));
+      const championsSnap = await getDocs(championsQuery);
+      
+      for (const champDoc of championsSnap.docs) {
+          // Delete champion profile
+          batch.delete(champDoc.ref);
+          
+          // Delete subcollections (assignedChores, redeemedRewards)
+          const assignedChoresSnap = await getDocs(collection(firestore, 'champions', champDoc.id, 'assignedChores'));
+          assignedChoresSnap.forEach(d => batch.delete(d.ref));
+          
+          const redeemedRewardsSnap = await getDocs(collection(firestore, 'champions', champDoc.id, 'redeemedRewards'));
+          redeemedRewardsSnap.forEach(d => batch.delete(d.ref));
+      }
+
+      // 2. Delete shared messages, custom chores, and rewards for this parent
+      const messagesSnap = await getDocs(collection(firestore, 'users', user.uid, 'messages'));
+      messagesSnap.forEach(d => batch.delete(d.ref));
+
+      const choresSnap = await getDocs(collection(firestore, 'users', user.uid, 'chores'));
+      choresSnap.forEach(d => batch.delete(d.ref));
+
+      const rewardsSnap = await getDocs(collection(firestore, 'users', user.uid, 'rewards'));
+      rewardsSnap.forEach(d => batch.delete(d.ref));
+
+      // 3. Find and delete all parents in the family
+      if (familyId) {
+          const parentsQuery = query(collection(firestore, 'users'), where('familyId', '==', familyId));
+          const parentsSnap = await getDocs(parentsQuery);
+          parentsSnap.forEach(d => batch.delete(d.ref));
+      } else {
+          batch.delete(doc(firestore, 'users', user.uid));
+      }
+
+      // Commit all Firestore deletions
+      await batch.commit();
+
+      // 4. Finally, delete the Auth Account
       await deleteUser(user);
 
       toast({
         title: "Account Deleted",
-        description: "Your account and profile have been successfully removed.",
+        description: "Your family group and all associated data have been permanently removed.",
       });
 
       router.push('/');
@@ -257,9 +295,9 @@ export default function SettingsPage() {
         <Card className="border-destructive">
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <div>
-              <CardTitle className="text-lg">Delete Account</CardTitle>
+              <CardTitle className="text-lg">Delete Family Account</CardTitle>
               <CardDescription>
-                Permanently delete your account and all data. This action is irreversible.
+                Permanently delete your account, all family administrators, and all champion data. This action is irreversible.
               </CardDescription>
             </div>
             <AlertDialog>
@@ -273,8 +311,7 @@ export default function SettingsPage() {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete your
-                    parent profile and your authentication account. All your family data will be lost.
+                    This action cannot be undone. This will permanently delete the entire family group, including all parents and champions. All progress, messages, and rewards will be lost forever.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -283,7 +320,7 @@ export default function SettingsPage() {
                     onClick={handleDeleteAccount}
                     className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
                   >
-                    Yes, Delete My Account
+                    Yes, Delete Everything
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
