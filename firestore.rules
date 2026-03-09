@@ -37,7 +37,7 @@ service cloud.firestore {
     // --- User (Parent) Profile Rules ---
     match /users/{userId} {
       allow get: if isSignedIn() && (request.auth.uid == userId || isSameFamily(userId));
-      allow list: if isSignedIn(); // Rely on 'familyId' where filter
+      allow list: if true; // Allowed for unauthenticated email check in forgot password flow
       allow create: if isSignedIn() && request.auth.uid == userId;
       allow update: if isExistingOwner(userId);
       allow delete: if isExistingOwner(userId);
