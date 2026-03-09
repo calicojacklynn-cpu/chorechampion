@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -299,7 +298,7 @@ export default function LoginPage() {
                               <Button 
                                 variant="link" 
                                 size="sm" 
-                                className="px-0 font-normal" 
+                                className="px-0 font-normal text-black" 
                                 onClick={() => setIsResetDialogOpen(true)}
                                 type="button"
                               >
