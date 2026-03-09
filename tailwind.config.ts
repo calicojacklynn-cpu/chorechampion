@@ -14,8 +14,8 @@ export default {
         'gradient-theme': 'linear-gradient(to bottom right, var(--gradient-from), var(--gradient-mid), var(--gradient-to))',
       },
       fontFamily: {
-        body: ['PT Sans', 'sans-serif'],
-        headline: ['PT Sans', 'sans-serif'],
+        body: ['Calibri', 'Candara', 'Segoe', 'Segoe UI', 'Optima', 'Arial', 'sans-serif'],
+        headline: ['Calibri', 'Candara', 'Segoe', 'Segoe UI', 'Optima', 'Arial', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
