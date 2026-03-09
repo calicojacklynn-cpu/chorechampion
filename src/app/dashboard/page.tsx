@@ -54,21 +54,24 @@ export default function DashboardPage() {
         try {
             const allCompleted: FeedItem[] = [];
             for (const champion of champions) {
+                // Simplified query to avoid requiring composite indexes for MVP
+                // We fetch the 10 most recent chores regardless of status and filter in JS
                 const q = query(
                     collection(firestore, 'champions', champion.id, 'assignedChores'),
-                    where('completed', '==', true),
                     orderBy('dueDate', 'desc'),
-                    limit(5)
+                    limit(10)
                 );
                 const snap = await getDocs(q);
                 snap.forEach(doc => {
                     const data = doc.data();
-                    allCompleted.push({
-                        id: doc.id,
-                        championName: champion.name,
-                        choreName: data.choreName,
-                        date: data.dueDate
-                    });
+                    if (data.completed) {
+                        allCompleted.push({
+                            id: doc.id,
+                            championName: champion.name,
+                            choreName: data.choreName,
+                            date: data.dueDate
+                        });
+                    }
                 });
             }
             setFeed(allCompleted.sort((a, b) => b.date.localeCompare(a.date)).slice(0, 10));

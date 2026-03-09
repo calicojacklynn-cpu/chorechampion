@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -173,7 +172,7 @@ export default function RegisterPage() {
                 <div key={i} className="bg-muted p-4 rounded-xl flex items-center justify-between">
                   <div className="text-left">
                     <p className="text-xs font-semibold text-muted-foreground uppercase">{res.name}'s Code</p>
-                    <p className="text-2xl font-mono font-bold text-primary">{res.code}</p>
+                    <p className="text-2xl font-mono font-bold text-black">{res.code}</p>
                   </div>
                   <Button variant="ghost" size="icon" onClick={() => {
                     navigator.clipboard.writeText(res.code);
@@ -253,7 +252,7 @@ export default function RegisterPage() {
                             <Label>Last Name</Label>
                             <FormControl><Input placeholder="Doe" {...field} /></FormControl>
                             <FormMessage />
-                          </FormItem>
+                          </TableHead>
                         )}
                       />
                     </div>
@@ -355,7 +354,6 @@ export default function RegisterPage() {
                   )}
                 />
               </CardContent>
-            </Card>
 
             <div className="flex flex-col gap-4">
               <Button type="submit" className="w-full" size="lg" disabled={form.formState.isSubmitting}>

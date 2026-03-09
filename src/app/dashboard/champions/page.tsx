@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useCallback } from "react";
@@ -248,7 +247,7 @@ export default function ChampionsPage() {
                         {champion.name}
                       </TableCell>
                       <TableCell>
-                        <code className="bg-muted px-2 py-1 rounded font-bold text-primary">{champion.username}</code>
+                        <code className="bg-muted px-2 py-1 rounded font-bold text-black">{champion.username}</code>
                       </TableCell>
                       <TableCell className="hidden md:table-cell text-right font-bold">
                         {champion.points}
@@ -333,7 +332,7 @@ export default function ChampionsPage() {
             </DialogDescription>
           </DialogHeader>
           <div className="bg-muted p-6 rounded-xl space-y-4 my-4">
-              <span className="text-4xl font-mono font-bold tracking-widest text-primary">{lastGeneratedCode}</span>
+              <span className="text-4xl font-mono font-bold tracking-widest text-black">{lastGeneratedCode}</span>
               <Button variant="outline" className="w-full" onClick={() => {
                   navigator.clipboard.writeText(lastGeneratedCode);
                   toast({ title: "Code copied!" });
