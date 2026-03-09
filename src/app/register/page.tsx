@@ -252,7 +252,7 @@ export default function RegisterPage() {
                             <Label>Last Name</Label>
                             <FormControl><Input placeholder="Doe" {...field} /></FormControl>
                             <FormMessage />
-                          </TableHead>
+                          </FormItem>
                         )}
                       />
                     </div>
@@ -354,6 +354,7 @@ export default function RegisterPage() {
                   )}
                 />
               </CardContent>
+            </Card>
 
             <div className="flex flex-col gap-4">
               <Button type="submit" className="w-full" size="lg" disabled={form.formState.isSubmitting}>
