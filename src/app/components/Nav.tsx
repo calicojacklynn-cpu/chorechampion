@@ -29,14 +29,14 @@ import {
   SidebarMenuSubButton,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { ChoreChampionLogo } from "./ChoreChampionLogo";
+import { QuestKindLogo } from "./ChoreChampionLogo";
 import { useFirestore, useUser, useCollection, useMemoFirebase } from "@/firebase";
 import { collection, query, orderBy, limit } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/dashboard/chores", icon: ListTodo, label: "Chores" },
+  { href: "/dashboard/chores", icon: ListTodo, label: "Quests" },
   { href: "/dashboard/rewards", icon: Gift, label: "Rewards" },
   { href: "/dashboard/calendar", icon: Calendar, label: "Calendar" },
   { href: "/dashboard/broadcast", icon: Megaphone, label: "Broadcasts" },
@@ -97,9 +97,9 @@ export function Nav() {
     <>
       <SidebarHeader className="group-data-[collapsible=icon]:justify-center">
         <Link href="/dashboard" className="flex items-center gap-2" onClick={handleLinkClick}>
-          <ChoreChampionLogo className="h-8 w-8" />
+          <QuestKindLogo className="h-8 w-8" />
           <span className="font-bold font-headline text-lg group-data-[collapsible=icon]:hidden text-sidebar-foreground">
-            Chore Champion
+            QuestKind
           </span>
         </Link>
       </SidebarHeader>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useCallback } from "react";
@@ -101,8 +102,8 @@ export default function ChoresPage() {
     if (chores?.some(chore => chore.name.toLowerCase() === preset.name.toLowerCase())) {
         toast({
             variant: "default",
-            title: "Chore already exists",
-            description: `"${preset.name}" is already in your chore library.`,
+            title: "Quest already exists",
+            description: `"${preset.name}" is already in your quest library.`,
         });
         return;
     }
@@ -112,9 +113,9 @@ export default function ChoresPage() {
   const handleAssignChore = useCallback((newAssignments: ChoreAssignment[], championIds: string[]) => {
     if (!firestore || !choreToAssign) return;
 
-    // Persist to each champion's Firestore collection
+    // Persist to each adventurer's Firestore collection
     championIds.forEach(champId => {
-        const assignmentForChamp = newAssignments.find(a => true); // AI logic might need more mapping if multiple champs are unique per assignment
+        const assignmentForChamp = newAssignments.find(a => true);
         if (assignmentForChamp) {
             const colRef = collection(firestore, 'champions', champId, 'assignedChores');
             addDocumentNonBlocking(colRef, {
@@ -139,8 +140,8 @@ export default function ChoresPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight font-headline">Chore Management</h1>
-            <p className="text-muted-foreground">Organize and assign chores for your champions.</p>
+            <h1 className="text-3xl font-bold tracking-tight font-headline">Quest Management</h1>
+            <p className="text-muted-foreground">Organize and assign quests for your family adventurers.</p>
           </div>
           <AddChoreDialog onAdd={handleAddChore} />
         </div>
@@ -149,14 +150,14 @@ export default function ChoresPage() {
           <div className="lg:col-span-2">
               <Card>
                   <CardHeader>
-                      <CardTitle>Your Chore Library</CardTitle>
-                      <CardDescription>A list of all available chores. Add new ones or pick from the presets.</CardDescription>
+                      <CardTitle>Your Quest Library</CardTitle>
+                      <CardDescription>A list of all available quests. Add new ones or pick from presets.</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <Table>
                           <TableHeader>
                               <TableRow>
-                                  <TableHead>Chore</TableHead>
+                                  <TableHead>Quest</TableHead>
                                   <TableHead className="text-center">Points</TableHead>
                                   <TableHead className="text-right">Actions</TableHead>
                               </TableRow>
@@ -177,13 +178,13 @@ export default function ChoresPage() {
                                           </TableCell>
                                           <TableCell className="text-right align-top">
                                               <div className="flex flex-col items-end gap-1">
-                                                  <Button variant="default" size="icon-sm" onClick={() => { setChoreToAssign(chore); setIsAssignDialogOpen(true); }} title="AI Schedule Chore">
+                                                  <Button variant="default" size="icon-sm" onClick={() => { setChoreToAssign(chore); setIsAssignDialogOpen(true); }} title="AI Schedule Quest">
                                                       <Wand2 className="h-4 w-4" />
                                                   </Button>
-                                                  <Button variant="default" size="icon-sm" onClick={() => { setChoreToEdit(chore); setIsEditDialogOpen(true); }} title="Edit Chore">
+                                                  <Button variant="default" size="icon-sm" onClick={() => { setChoreToEdit(chore); setIsEditDialogOpen(true); }} title="Edit Quest">
                                                       <Edit className="h-4 w-4" />
                                                   </Button>
-                                                  <Button variant="destructive" size="icon-sm" onClick={() => { setChoreToDelete(chore); setIsDeleteDialogOpen(true); }} title="Delete Chore">
+                                                  <Button variant="destructive" size="icon-sm" onClick={() => { setChoreToDelete(chore); setIsDeleteDialogOpen(true); }} title="Delete Quest">
                                                       <Trash2 className="h-4 w-4" />
                                                   </Button>
                                               </div>
@@ -193,7 +194,7 @@ export default function ChoresPage() {
                               ) : (
                                   <TableRow>
                                       <TableCell colSpan={3} className="h-24 text-center text-muted-foreground">
-                                          No custom chores yet.
+                                          No custom quests yet.
                                       </TableCell>
                                   </TableRow>
                               )}
@@ -207,7 +208,7 @@ export default function ChoresPage() {
               <Card>
                   <CardHeader>
                       <CardTitle>Quick Add Presets</CardTitle>
-                      <CardDescription>Add common chores to your library.</CardDescription>
+                      <CardDescription>Add common quests to your library.</CardDescription>
                   </CardHeader>
                   <CardContent className="flex flex-wrap gap-2">
                       {presetChores.map((preset) => (
@@ -237,7 +238,7 @@ export default function ChoresPage() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>Permanently delete "{choreToDelete?.name}".</AlertDialogDescription>
+            <AlertDialogDescription>Permanently delete the quest "{choreToDelete?.name}".</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>

@@ -23,9 +23,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PlusCircle, Edit, Trash2, Copy, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AddChampionDialog, type NewChampionData } from "./AddChampionDialog";
+import { AddAdventurerDialog, type NewAdventurerData } from "./AddChampionDialog";
 import { useToast } from "@/hooks/use-toast";
-import { EditChampionDialog } from "./EditChampionDialog";
+import { EditAdventurerDialog } from "./EditChampionDialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -48,28 +48,34 @@ import { firebaseConfig } from "@/firebase/config";
 
 const CHAMPION_INTERNAL_PASSWORD = "CHAMPION_INTERNAL_ACCESS";
 
-export type Champion = {
-  id: string; // Champion's UID
+export type Adventurer = {
+  id: string; // Adventurer's UID
   parentId: string; // Parent's UID
   name: string;
   username: string; // This is the login code
   email: string;
   avatarUrl?: string;
   points: number;
+  notificationPreferences?: {
+    newQuestAlerts: boolean;
+    questApprovedAlerts: boolean;
+    rewardMilestoneAlerts: boolean;
+    chatAlerts: boolean;
+  };
 };
 
-export default function ChampionsPage() {
+export default function AdventurersPage() {
   const { toast } = useToast();
   const { user: parentUser } = useUser();
   const firestore = useFirestore();
 
-  // Fetch champions from Firestore
-  const championsQuery = useMemoFirebase(() => {
+  // Fetch adventurers from Firestore
+  const adventurersQuery = useMemoFirebase(() => {
     if (!parentUser) return null;
     return query(collection(firestore, 'champions'), where('parentId', '==', parentUser.uid));
   }, [firestore, parentUser]);
 
-  const { data: champions, isLoading: isLoadingChampions } = useCollection<Champion>(championsQuery);
+  const { data: adventurers, isLoading: isLoadingAdventurers } = useCollection<Adventurer>(adventurersQuery);
 
   const [isAdding, setIsAdding] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -78,15 +84,15 @@ export default function ChampionsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
   const [lastGeneratedCode, setLastGeneratedCode] = useState('');
-  const [selectedChampion, setSelectedChampion] = useState<Champion | null>(null);
+  const [selectedAdventurer, setSelectedAdventurer] = useState<Adventurer | null>(null);
 
   const generateCode = () => {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
   };
 
-  const handleAddChampion = useCallback(async (newChampionData: NewChampionData) => {
+  const handleAddAdventurer = useCallback(async (newAdventurerData: NewAdventurerData) => {
     if (!parentUser) {
-        toast({ variant: "destructive", title: "Authentication Error", description: "You must be logged in to add a champion."});
+        toast({ variant: "destructive", title: "Authentication Error", description: "You must be logged in to add an adventurer."});
         return;
     }
     setIsAdding(true);
@@ -94,7 +100,7 @@ export default function ChampionsPage() {
     const code = generateCode();
     const internalEmail = `${code.toLowerCase()}@champions.app`;
 
-    const tempAppName = `temp-app-for-champion-creation-${Date.now()}`;
+    const tempAppName = `temp-app-for-adventurer-creation-${Date.now()}`;
     const tempApp = initializeApp(firebaseConfig, tempAppName);
     const tempAuth = getAuth(tempApp);
 
@@ -102,33 +108,39 @@ export default function ChampionsPage() {
       const userCredential = await createUserWithEmailAndPassword(tempAuth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
       const newUserId = userCredential.user.uid;
       
-      await updateProfile(userCredential.user, { displayName: newChampionData.name });
+      await updateProfile(userCredential.user, { displayName: newAdventurerData.name });
       
-      const newChampion: Champion = {
+      const newAdventurer: Adventurer = {
         id: newUserId,
         parentId: parentUser.uid,
-        name: newChampionData.name,
+        name: newAdventurerData.name,
         username: code,
         email: internalEmail,
         avatarUrl: "",
         points: 0,
+        notificationPreferences: {
+          newQuestAlerts: true,
+          questApprovedAlerts: true,
+          rewardMilestoneAlerts: false,
+          chatAlerts: true
+        }
       };
 
-      const championDocRef = doc(firestore, 'champions', newUserId);
-      await setDoc(championDocRef, newChampion);
+      const adventurerDocRef = doc(firestore, 'champions', newUserId);
+      await setDoc(adventurerDocRef, newAdventurer);
 
       setLastGeneratedCode(code);
       setIsAddDialogOpen(false);
       setIsSuccessDialogOpen(true);
       
       toast({
-        title: "Champion Added!",
-        description: `${newChampion.name} is now ready to log in.`,
+        title: "Adventurer Ready!",
+        description: `${newAdventurer.name} is now ready to begin their journey.`,
       });
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Failed to Add Champion",
+        title: "Failed to Add Adventurer",
         description: error.message,
       });
     } finally {
@@ -137,13 +149,13 @@ export default function ChampionsPage() {
     }
   }, [parentUser, firestore, toast]);
 
-  const handleUpdateChampion = useCallback(async (updatedChampion: Champion) => {
+  const handleUpdateAdventurer = useCallback(async (updatedAdventurer: Adventurer) => {
     try {
-        const championDocRef = doc(firestore, 'champions', updatedChampion.id);
-        await setDoc(championDocRef, updatedChampion, { merge: true });
+        const adventurerDocRef = doc(firestore, 'champions', updatedAdventurer.id);
+        await setDoc(adventurerDocRef, updatedAdventurer, { merge: true });
         toast({
-          title: "Champion Updated!",
-          description: `${updatedChampion.name}'s details have been updated.`,
+          title: "Adventurer Updated!",
+          description: `${updatedAdventurer.name}'s profile has been updated.`,
         });
         setIsEditDialogOpen(false);
     } catch(error: any) {
@@ -156,18 +168,18 @@ export default function ChampionsPage() {
   }, [firestore, toast]);
 
   const handleConfirmDelete = useCallback(async () => {
-    if (!selectedChampion || !firestore) return;
+    if (!selectedAdventurer || !firestore) return;
     setIsDeleting(true);
     try {
-      const championDocRef = doc(firestore, 'champions', selectedChampion.id);
-      await deleteDoc(championDocRef);
+      const adventurerDocRef = doc(firestore, 'champions', selectedAdventurer.id);
+      await deleteDoc(adventurerDocRef);
 
-      // Invalidate the code by deleting the champion's auth account
+      // Invalidate the code by deleting the adventurer's auth account
       try {
-          const tempAppName = `temp-del-champ-${selectedChampion.id}`;
+          const tempAppName = `temp-del-adv-${selectedAdventurer.id}`;
           const tempApp = initializeApp(firebaseConfig, tempAppName);
           const tempAuth = getAuth(tempApp);
-          const internalEmail = `${selectedChampion.username.toLowerCase()}@champions.app`;
+          const internalEmail = `${selectedAdventurer.username.toLowerCase()}@champions.app`;
           const champCred = await signInWithEmailAndPassword(tempAuth, internalEmail, CHAMPION_INTERNAL_PASSWORD);
           await deleteUser(champCred.user);
           await signOut(tempAuth);
@@ -176,30 +188,30 @@ export default function ChampionsPage() {
       }
 
       toast({
-        title: "Champion Deleted",
-        description: `${selectedChampion.name} has been removed from your family.`,
+        title: "Adventurer Retired",
+        description: `${selectedAdventurer.name} has been removed from the family roster.`,
         variant: 'destructive'
       });
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Deletion Failed",
+        title: "Retirement Failed",
         description: error.message,
       });
     } finally {
       setIsDeleting(false);
       setIsDeleteDialogOpen(false);
-      setSelectedChampion(null);
+      setSelectedAdventurer(null);
     }
-  }, [selectedChampion, firestore, toast]);
+  }, [selectedAdventurer, firestore, toast]);
 
-  const openEditDialog = useCallback((champion: Champion) => {
-    setSelectedChampion(champion);
+  const openEditDialog = useCallback((adventurer: Adventurer) => {
+    setSelectedAdventurer(adventurer);
     setIsEditDialogOpen(true);
   }, []);
 
-  const openDeleteDialog = useCallback((champion: Champion) => {
-    setSelectedChampion(champion);
+  const openDeleteDialog = useCallback((adventurer: Adventurer) => {
+    setSelectedAdventurer(adventurer);
     setIsDeleteDialogOpen(true);
   }, []);
 
@@ -208,9 +220,9 @@ export default function ChampionsPage() {
       <Card>
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
-            <CardTitle>Champions</CardTitle>
+            <CardTitle>Adventurers</CardTitle>
             <CardDescription>
-              Manage your champions. They log in using their unique codes. No password required.
+              Manage your adventurers. They log in using their unique codes.
             </CardDescription>
           </div>
           <Button
@@ -220,7 +232,7 @@ export default function ChampionsPage() {
           >
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Champion
+              Add Adventurer
             </span>
           </Button>
         </CardHeader>
@@ -238,41 +250,41 @@ export default function ChampionsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {isLoadingChampions ? (
+              {isLoadingAdventurers ? (
                  <TableRow>
                     <TableCell colSpan={5} className="h-24 text-center">
-                        Loading champions...
+                        Finding adventurers...
                     </TableCell>
                 </TableRow>
-              ) : champions && champions.length > 0 ? (
-                champions.map((champion) => (
-                    <TableRow key={champion.id}>
+              ) : adventurers && adventurers.length > 0 ? (
+                adventurers.map((adventurer) => (
+                    <TableRow key={adventurer.id}>
                       <TableCell className="hidden sm:table-cell">
                         <Avatar className="h-12 w-12 border-2 border-black">
                            <AvatarImage
-                              src={champion.avatarUrl}
-                              alt={champion.name}
+                              src={adventurer.avatarUrl}
+                              alt={adventurer.name}
                             />
                           <AvatarFallback className="bg-primary text-primary-foreground">
-                            {champion.name.charAt(0)}
+                            {adventurer.name.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                       </TableCell>
                       <TableCell className="font-medium">
-                        {champion.name}
+                        {adventurer.name}
                       </TableCell>
                       <TableCell>
-                        <code className="bg-muted px-2 py-1 rounded font-bold text-black">{champion.username}</code>
+                        <code className="bg-muted px-2 py-1 rounded font-bold text-black">{adventurer.username}</code>
                       </TableCell>
                       <TableCell className="hidden md:table-cell text-right font-bold">
-                        {champion.points}
+                        {adventurer.points}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
-                           <Button variant="default" size="icon-sm" onClick={() => openEditDialog(champion)} title="Edit Profile">
+                           <Button variant="default" size="icon-sm" onClick={() => openEditDialog(adventurer)} title="Edit Profile">
                              <Edit className="h-3.5 w-3.5" />
                            </Button>
-                           <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(champion)} title="Delete Champion">
+                           <Button variant="destructive" size="icon-sm" onClick={() => openDeleteDialog(adventurer)} title="Remove Adventurer">
                               <Trash2 className="h-3.5 w-3.5" />
                            </Button>
                         </div>
@@ -282,7 +294,7 @@ export default function ChampionsPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
-                    No champions added yet. Start by adding a champion.
+                    No adventurers added yet. Start by adding one to the roster!
                   </TableCell>
                 </TableRow>
               )}
@@ -291,19 +303,19 @@ export default function ChampionsPage() {
         </CardContent>
       </Card>
       
-      <AddChampionDialog 
+      <AddAdventurerDialog 
         isOpen={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
-        onAdd={handleAddChampion}
+        onAdd={handleAddAdventurer}
         isAdding={isAdding}
       />
 
-      {selectedChampion && (
-        <EditChampionDialog
-          champion={selectedChampion}
+      {selectedAdventurer && (
+        <EditAdventurerDialog
+          adventurer={selectedAdventurer}
           isOpen={isEditDialogOpen}
           onOpenChange={setIsEditDialogOpen}
-          onSave={handleUpdateChampion}
+          onSave={handleUpdateAdventurer}
         />
       )}
       
@@ -311,13 +323,13 @@ export default function ChampionsPage() {
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
       >
-        {selectedChampion && (
+        {selectedAdventurer && (
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently remove{" "}
-                  {selectedChampion.name} and all their progress data.
+                  This action cannot be undone. This will permanently retire{" "}
+                  {selectedAdventurer.name} and delete all their progress.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -328,7 +340,7 @@ export default function ChampionsPage() {
                   disabled={isDeleting}
                 >
                   {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Delete
+                  Retire
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -341,9 +353,9 @@ export default function ChampionsPage() {
             <div className="flex justify-center mb-4">
                 <CheckCircle2 className="h-12 w-12 text-primary" />
             </div>
-            <DialogTitle className="text-2xl font-headline">Champion Ready!</DialogTitle>
+            <DialogTitle className="text-2xl font-headline">Adventurer Ready!</DialogTitle>
             <DialogDescription>
-              Share this code with your champion so they can log in.
+              Share this code with your adventurer so they can begin their quests.
             </DialogDescription>
           </DialogHeader>
           <div className="bg-muted p-6 rounded-xl space-y-4 my-4">
@@ -357,7 +369,7 @@ export default function ChampionsPage() {
               </Button>
           </div>
           <Button onClick={() => setIsSuccessDialogOpen(false)} className="w-full">
-              Got it
+              Adventure Awaits!
           </Button>
         </DialogContent>
       </Dialog>

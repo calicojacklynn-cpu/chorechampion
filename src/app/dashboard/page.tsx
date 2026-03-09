@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
@@ -19,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { ListTodo, Star, Loader2, CheckCircle2 } from "lucide-react";
 import { useState, useEffect } from 'react';
-import type { Champion } from './champions/page';
+import type { Adventurer } from './champions/page';
 
 type FeedItem = {
     id: string;
@@ -34,17 +35,17 @@ export default function DashboardPage() {
   const [feed, setFeed] = useState<FeedItem[]>([]);
   const [isFeedLoading, setIsFeedLoading] = useState(true);
 
-  // Fetch champions
-  const championsQuery = useMemoFirebase(() => {
+  // Fetch adventurers
+  const adventurersQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
     return query(collection(firestore, 'champions'), where('parentId', '==', user.uid));
   }, [firestore, user?.uid]);
   
-  const { data: champions, isLoading: isChampionsLoading } = useCollection<Champion>(championsQuery);
+  const { data: adventurers, isLoading: isAdventurersLoading } = useCollection<Adventurer>(adventurersQuery);
 
-  // Fetch recent completed chores from all champions
+  // Fetch recent completed quests from all adventurers
   useEffect(() => {
-    if (!champions || champions.length === 0 || !firestore) {
+    if (!adventurers || adventurers.length === 0 || !firestore) {
         setIsFeedLoading(false);
         return;
     }
@@ -53,11 +54,9 @@ export default function DashboardPage() {
         setIsFeedLoading(true);
         try {
             const allCompleted: FeedItem[] = [];
-            for (const champion of champions) {
-                // Simplified query to avoid requiring composite indexes for MVP
-                // We fetch the 10 most recent chores regardless of status and filter in JS
+            for (const adventurer of adventurers) {
                 const q = query(
-                    collection(firestore, 'champions', champion.id, 'assignedChores'),
+                    collection(firestore, 'champions', adventurer.id, 'assignedChores'),
                     orderBy('dueDate', 'desc'),
                     limit(10)
                 );
@@ -67,7 +66,7 @@ export default function DashboardPage() {
                     if (data.completed) {
                         allCompleted.push({
                             id: doc.id,
-                            championName: champion.name,
+                            championName: adventurer.name,
                             choreName: data.choreName,
                             date: data.dueDate
                         });
@@ -83,9 +82,9 @@ export default function DashboardPage() {
     };
 
     fetchFeed();
-  }, [champions, firestore]);
+  }, [adventurers, firestore]);
 
-  if (isChampionsLoading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
+  if (isAdventurersLoading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
 
   return (
     <div className="space-y-6">
@@ -94,7 +93,7 @@ export default function DashboardPage() {
           Good Morning, {user?.displayName || 'Parent'}!
         </h1>
         <p className="text-muted-foreground">
-          Here's a quick look at your family's progress.
+          Here's a quick look at your family's quest progress.
         </p>
       </div>
 
@@ -103,32 +102,32 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Star className="h-5 w-5 text-accent fill-accent stroke-black" />
-              Champion Standings
+              Adventurer Standings
             </CardTitle>
             <CardDescription>
-              Current points for each champion.
+              Current points for each adventurer.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Champion</TableHead>
+                  <TableHead>Adventurer</TableHead>
                   <TableHead className="text-right">Points</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {champions && champions.length > 0 ? (
-                    champions.map(champion => (
-                        <TableRow key={champion.id}>
-                            <TableCell className="font-medium">{champion.name}</TableCell>
-                            <TableCell className="text-right font-bold">{champion.points}</TableCell>
+                {adventurers && adventurers.length > 0 ? (
+                    adventurers.map(adventurer => (
+                        <TableRow key={adventurer.id}>
+                            <TableCell className="font-medium">{adventurer.name}</TableCell>
+                            <TableCell className="text-right font-bold">{adventurer.points}</TableCell>
                         </TableRow>
                     ))
                 ) : (
                     <TableRow>
                         <TableCell colSpan={2} className="h-24 text-center text-muted-foreground">
-                            No champions found.
+                            No adventurers found.
                         </TableCell>
                     </TableRow>
                 )}
@@ -144,7 +143,7 @@ export default function DashboardPage() {
               Activity Feed
             </CardTitle>
             <CardDescription>
-              Recent updates from your champions.
+              Recent updates from your adventurers.
             </CardDescription>
           </CardHeader>
           <CardContent>

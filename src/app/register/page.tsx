@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -17,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ChoreChampionLogo } from '@/app/components/ChoreChampionLogo';
+import { QuestKindLogo } from '@/app/components/ChoreChampionLogo';
 import { Form, FormControl, FormField, FormItem, FormMessage, FormDescription } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, ArrowLeft, CheckCircle2, Copy, Plus, Trash2, Users, UserPlus } from 'lucide-react';
@@ -32,7 +33,7 @@ const parentSchema = z.object({
 });
 
 const championSchema = z.object({
-  name: z.string().min(2, 'Champion name is required.'),
+  name: z.string().min(2, 'Adventurer name is required.'),
 });
 
 const registerSchema = z.object({
@@ -184,7 +185,7 @@ export default function RegisterPage() {
 
       toast({
         title: "Family Registered!",
-        description: "Welcome to Chore Champion!",
+        description: "Welcome to QuestKind!",
       });
 
     } catch (error: any) {
@@ -208,7 +209,7 @@ export default function RegisterPage() {
             </div>
             <div className="space-y-2">
               <h2 className="text-3xl font-bold font-headline">Family Ready!</h2>
-              <p className="text-muted-foreground">Your champion login codes are below:</p>
+              <p className="text-muted-foreground">Your adventurer login codes are below:</p>
             </div>
 
             <div className="space-y-3">
@@ -246,12 +247,12 @@ export default function RegisterPage() {
     <div className="w-full min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gradient-theme">
       <div className="mx-auto w-full max-w-2xl space-y-8">
         <div className="flex flex-col items-center">
-          <ChoreChampionLogo className="h-16 w-16" />
+          <QuestKindLogo className="h-16 w-16" />
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-foreground font-headline">
             Create Family Account
           </h2>
           <p className="mt-2 text-center text-sm text-muted-foreground">
-            Register your family and start your champion journey.
+            Register your family and start your journey with QuestKind.
           </p>
         </div>
 
@@ -286,7 +287,7 @@ export default function RegisterPage() {
                         name={`parents.${index}.firstName`}
                         render={({ field }) => (
                           <FormItem>
-                            <Label>First Name</Label>
+                            <FormLabel>First Name</FormLabel>
                             <FormControl><Input placeholder="Jane" {...field} /></FormControl>
                             <FormMessage />
                           </FormItem>
@@ -297,7 +298,7 @@ export default function RegisterPage() {
                         name={`parents.${index}.lastName`}
                         render={({ field }) => (
                           <FormItem>
-                            <Label>Last Name</Label>
+                            <FormLabel>Last Name</FormLabel>
                             <FormControl><Input placeholder="Doe" {...field} /></FormControl>
                             <FormMessage />
                           </FormItem>
@@ -310,7 +311,7 @@ export default function RegisterPage() {
                         name={`parents.${index}.email`}
                         render={({ field }) => (
                             <FormItem>
-                            <Label>Email</Label>
+                            <FormLabel>Email</FormLabel>
                             <FormControl><Input type="email" placeholder="jane@example.com" {...field} /></FormControl>
                             <FormMessage />
                             </FormItem>
@@ -321,7 +322,7 @@ export default function RegisterPage() {
                         name={`parents.${index}.phoneNumber`}
                         render={({ field }) => (
                             <FormItem>
-                            <Label>Phone Number</Label>
+                            <FormLabel>Phone Number</FormLabel>
                             <FormControl><Input type="tel" placeholder="(555) 000-0000" {...field} /></FormControl>
                             <FormMessage />
                             </FormItem>
@@ -348,7 +349,7 @@ export default function RegisterPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Users className="h-5 w-5" />
-                  Champions
+                  Adventurers
                 </CardTitle>
                 <CardDescription>Add between 1 and 3 children to your family.</CardDescription>
               </CardHeader>
@@ -366,13 +367,13 @@ export default function RegisterPage() {
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     )}
-                    <h4 className="font-medium text-sm text-muted-foreground uppercase">Champion {index + 1}</h4>
+                    <h4 className="font-medium text-sm text-muted-foreground uppercase">Adventurer {index + 1}</h4>
                     <FormField
                       control={form.control}
                       name={`champions.${index}.name`}
                       render={({ field }) => (
                         <FormItem>
-                          <Label>Name</Label>
+                          <FormLabel>Name</FormLabel>
                           <FormControl><Input placeholder="Alex" {...field} /></FormControl>
                           <FormMessage />
                         </FormItem>
@@ -388,7 +389,7 @@ export default function RegisterPage() {
                     onClick={() => addChampion({ name: '' })}
                   >
                     <Plus className="h-4 w-4 mr-2" />
-                    Add Another Champion
+                    Add Another Adventurer
                   </Button>
                 )}
               </CardContent>
@@ -405,7 +406,7 @@ export default function RegisterPage() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <Label>Shared Parent Password</Label>
+                      <FormLabel>Shared Parent Password</FormLabel>
                       <FormControl><Input type="password" placeholder="••••••••" {...field} /></FormControl>
                       <FormDescription>This password will be used for all parent logins.</FormDescription>
                       <FormMessage />

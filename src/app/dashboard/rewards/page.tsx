@@ -29,10 +29,9 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { EditRewardDialog } from "./EditRewardDialog";
 import { ClaimedRewardsDialog } from "./ClaimedRewardsDialog";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useUser, useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking, updateDocumentNonBlocking, deleteDocumentNonBlocking } from "@/firebase";
 import { collection, doc, query, where } from "firebase/firestore";
-import type { Champion } from "@/app/dashboard/champions/page";
+import type { Adventurer } from "@/app/dashboard/champions/page";
 
 export type Reward = {
   id: string;
@@ -48,12 +47,12 @@ export default function RewardsPage() {
   const { user } = useUser();
   const firestore = useFirestore();
 
-  // Fetch champions to show standing
-  const championsQuery = useMemoFirebase(() => {
+  // Fetch adventurers to show standing
+  const adventurersQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
     return query(collection(firestore, 'champions'), where('parentId', '==', user.uid));
   }, [firestore, user]);
-  const { data: champions } = useCollection<Champion>(championsQuery);
+  const { data: adventurers } = useCollection<Adventurer>(adventurersQuery);
 
   // Fetch rewards
   const rewardsQuery = useMemoFirebase(() => {
@@ -64,7 +63,7 @@ export default function RewardsPage() {
   
   const [rewardToEdit, setRewardToEdit] = useState<Reward | null>(null);
   const [rewardToDelete, setRewardToDelete] = useState<Reward | null>(null);
-  const [championForHistory, setChampionForHistory] = useState<Champion | null>(null);
+  const [adventurerForHistory, setAdventurerForHistory] = useState<Adventurer | null>(null);
   
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -103,46 +102,45 @@ export default function RewardsPage() {
               Rewards & Recognition
           </h1>
           <p className="text-muted-foreground">
-            Motivate your champions by rewarding their hard work with points.
+            Motivate your adventurers by rewarding their hard work with points.
           </p>
         </div>
 
         <section>
-          <h2 className="text-2xl font-semibold tracking-tight font-headline mb-4">Champion Standings</h2>
+          <h2 className="text-2xl font-semibold tracking-tight font-headline mb-4">Adventurer Standings</h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {champions && champions.length > 0 ? (
-              champions.map((champion) => {
-                // Determine progress to a placeholder next reward target
-                const nextReward = rewards?.find(r => r.points > champion.points)?.points || 500;
-                const progress = Math.min(100, (champion.points / nextReward) * 100);
+            {adventurers && adventurers.length > 0 ? (
+              adventurers.map((adventurer) => {
+                const nextReward = rewards?.find(r => r.points > adventurer.points)?.points || 500;
+                const progress = Math.min(100, (adventurer.points / nextReward) * 100);
                 return (
-                  <Card key={champion.id} className="flex flex-col">
+                  <Card key={adventurer.id} className="flex flex-col">
                     <CardHeader className="flex flex-row items-center gap-4">
                       <Avatar className="h-16 w-16 border-2 border-black bg-primary">
-                        <AvatarImage src={champion.avatarUrl} alt={champion.name} className="object-cover" />
-                        <AvatarFallback className="text-xl bg-primary text-primary-foreground">{champion.name.charAt(0)}</AvatarFallback>
+                        <AvatarImage src={adventurer.avatarUrl} alt={adventurer.name} className="object-cover" />
+                        <AvatarFallback className="text-xl bg-primary text-primary-foreground">{adventurer.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div>
-                        <CardTitle>{champion.name}</CardTitle>
+                        <CardTitle>{adventurer.name}</CardTitle>
                         <CardDescription className="flex items-center gap-1">
                           <Star className="w-4 h-4 text-accent fill-accent stroke-black" />
-                          <span className="font-bold text-lg text-foreground">{champion.points}</span> Points
+                          <span className="font-bold text-lg text-foreground">{adventurer.points}</span> Points
                         </CardDescription>
                       </div>
                     </CardHeader>
                     <CardContent className="flex-grow">
                       <div className="text-sm text-muted-foreground mb-2">Progress:</div>
                       <Progress value={progress} className="h-2" />
-                      <p className="text-xs text-right mt-1 text-muted-foreground">{champion.points} pts</p>
+                      <p className="text-xs text-right mt-1 text-muted-foreground">{adventurer.points} pts</p>
                     </CardContent>
                     <div className="p-6 pt-0">
-                      <Button variant="outline" className="w-full" onClick={() => { setChampionForHistory(champion); setIsClaimedDialogOpen(true); }}>View Redemptions</Button>
+                      <Button variant="outline" className="w-full" onClick={() => { setAdventurerForHistory(adventurer); setIsClaimedDialogOpen(true); }}>View Redemptions</Button>
                     </div>
                   </Card>
                 );
               })
             ) : (
-              <Card className="md:col-span-2 lg:col-span-3"><CardContent className="flex items-center justify-center h-32 text-muted-foreground">Add champions to track progress.</CardContent></Card>
+              <Card className="md:col-span-2 lg:col-span-3"><CardContent className="flex items-center justify-center h-32 text-muted-foreground">Add adventurers to track progress.</CardContent></Card>
             )}
           </div>
         </section>
@@ -203,7 +201,7 @@ export default function RewardsPage() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>Delete "{rewardToDelete?.name}".</AlertDialogDescription>
+            <AlertDialogDescription>Delete the reward "{rewardToDelete?.name}".</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setRewardToDelete(null)}>Cancel</AlertDialogCancel>
@@ -212,9 +210,9 @@ export default function RewardsPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {championForHistory && (
+      {adventurerForHistory && (
         <ClaimedRewardsDialog
-            champion={championForHistory}
+            champion={adventurerForHistory}
             isOpen={isClaimedDialogOpen}
             onOpenChange={setIsClaimedDialogOpen}
         />

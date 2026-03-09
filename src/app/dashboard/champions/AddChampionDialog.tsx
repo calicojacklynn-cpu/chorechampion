@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect } from "react";
@@ -29,17 +30,17 @@ const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
 });
 
-// The shape of the data for a new champion
-export type NewChampionData = z.infer<typeof formSchema>;
+// The shape of the data for a new adventurer
+export type NewAdventurerData = z.infer<typeof formSchema>;
 
-type AddChampionDialogProps = {
-  onAdd: (champion: NewChampionData) => void;
+type AddAdventurerDialogProps = {
+  onAdd: (adventurer: NewAdventurerData) => void;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   isAdding: boolean;
 };
 
-export function AddChampionDialog({ onAdd, isOpen, onOpenChange, isAdding }: AddChampionDialogProps) {
+export function AddAdventurerDialog({ onAdd, isOpen, onOpenChange, isAdding }: AddAdventurerDialogProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -62,9 +63,9 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange, isAdding }: Add
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Champion</DialogTitle>
+          <DialogTitle>Add New Adventurer</DialogTitle>
           <DialogDescription>
-            Create a profile for a new champion. A unique login code will be generated automatically. No password required!
+            Create a profile for a new adventurer. A unique login code will be generated automatically.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -77,7 +78,7 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange, isAdding }: Add
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Champion Name</FormLabel>
+                  <FormLabel>Adventurer Name</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g. Alex" {...field} disabled={isAdding}/>
                   </FormControl>
@@ -92,7 +93,7 @@ export function AddChampionDialog({ onAdd, isOpen, onOpenChange, isAdding }: Add
               </Button>
               <Button type="submit" disabled={isAdding}>
                 {isAdding && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Create Champion
+                Create Adventurer
               </Button>
             </DialogFooter>
           </form>

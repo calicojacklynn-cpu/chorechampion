@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -34,11 +35,11 @@ import { collection, query, where } from 'firebase/firestore';
 import type { Chore } from './page';
 import type { ChoreAssignment } from '@/ai';
 import { aiScheduleChore, type AiScheduleChoreInput } from '@/ai';
-import type { Champion } from '../champions/page';
+import type { Adventurer } from '../champions/page';
 
 const FormSchema = z.object({
   championIds: z.array(z.string()).refine((value) => value.length > 0, {
-    message: 'You have to select at least one champion.',
+    message: 'You have to select at least one adventurer.',
   }),
   constraints: z.string().optional(),
 });
@@ -62,12 +63,12 @@ export function AssignChoreDialog({
   const { schedule, events } = useSchedule();
   const [isAiRunning, setIsAiRunning] = useState(false);
 
-  const championsQuery = useMemoFirebase(() => {
+  const adventurersQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
     return query(collection(firestore, 'champions'), where('parentId', '==', user.uid));
   }, [firestore, user]);
 
-  const { data: champions, isLoading: isLoadingChampions } = useCollection<Champion>(championsQuery);
+  const { data: adventurers, isLoading: isLoadingAdventurers } = useCollection<Adventurer>(adventurersQuery);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -85,17 +86,17 @@ export function AssignChoreDialog({
   }, [isOpen, form]);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    if (!chore || !champions) return;
+    if (!chore || !adventurers) return;
 
     setIsAiRunning(true);
     try {
-      const selectedChampions = champions.filter(c => data.championIds.includes(c.id));
+      const selectedAdventurers = adventurers.filter(c => data.championIds.includes(c.id));
       const clientEvents = events || [];
       const aiEvents = clientEvents.map(({ id, ...rest }) => rest);
 
       const input: AiScheduleChoreInput = {
         choreName: chore.name,
-        championNames: selectedChampions.map(c => c.name),
+        championNames: selectedAdventurers.map(c => c.name),
         existingSchedule: schedule,
         calendarEvents: aiEvents,
         constraints: data.constraints,
@@ -112,7 +113,7 @@ export function AssignChoreDialog({
         });
         onOpenChange(false);
       } else {
-        throw new Error("The AI couldn't find a suitable time. Try adjusting constraints or adding champions.");
+        throw new Error("The AI couldn't find a suitable time. Try adjusting constraints.");
       }
     } catch (error: any) {
       toast({
@@ -133,7 +134,7 @@ export function AssignChoreDialog({
         <DialogHeader>
           <DialogTitle>AI Schedule: {chore.name}</DialogTitle>
           <DialogDescription>
-            Let AI find the best time to schedule this chore for your champions.
+            Let AI find the best time to schedule this quest for your adventurers.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -143,18 +144,18 @@ export function AssignChoreDialog({
               name="championIds"
               render={() => (
                 <FormItem>
-                  <FormLabel className="text-base">Champions</FormLabel>
+                  <FormLabel className="text-base">Adventurers</FormLabel>
                   <FormDescription>
-                    Select the champion(s) to assign this chore to.
+                    Select the adventurer(s) to assign this quest to.
                   </FormDescription>
                   <div className="space-y-2 pt-2">
-                    {isLoadingChampions ? (
+                    {isLoadingAdventurers ? (
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        Loading champions...
+                        Finding adventurers...
                       </div>
-                    ) : champions && champions.length > 0 ? (
-                      champions.map((item) => (
+                    ) : adventurers && adventurers.length > 0 ? (
+                      adventurers.map((item) => (
                         <FormField
                           key={item.id}
                           control={form.control}
@@ -185,7 +186,7 @@ export function AssignChoreDialog({
                         />
                       ))
                     ) : (
-                      <p className="text-sm text-muted-foreground">No champions found. Add them in Settings.</p>
+                      <p className="text-sm text-muted-foreground">No adventurers found. Add them in Family Settings.</p>
                     )}
                   </div>
                   <FormMessage />
@@ -200,7 +201,7 @@ export function AssignChoreDialog({
                   <FormLabel>Constraints (Optional)</FormLabel>
                   <FormControl>
                     <SpeechToTextInput
-                      placeholder="e.g., 'after 4pm', 'on a weekday', 'not on Tuesday'"
+                      placeholder="e.g., 'after 4pm', 'on a weekday'"
                       disabled={isAiRunning}
                       value={field.value || ''}
                       onChange={field.onChange}
@@ -214,7 +215,7 @@ export function AssignChoreDialog({
               )}
             />
             <DialogFooter>
-              <Button type="submit" disabled={isAiRunning || !champions?.length} className="w-full">
+              <Button type="submit" disabled={isAiRunning || !adventurers?.length} className="w-full">
                 {isAiRunning ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -223,7 +224,7 @@ export function AssignChoreDialog({
                 ) : (
                   <>
                     <Wand2 className="mr-2 h-4 w-4" />
-                    AI Schedule Chore
+                    AI Schedule Quest
                   </>
                 )}
               </Button>

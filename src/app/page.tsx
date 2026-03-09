@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -15,7 +16,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ChoreChampionLogo } from '@/app/components/ChoreChampionLogo';
+import { QuestKindLogo } from '@/app/components/ChoreChampionLogo';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Info, Sparkles } from 'lucide-react';
@@ -36,7 +37,7 @@ const loginSchema = z.object({
 });
 
 const championLoginSchema = z.object({
-  code: z.string().min(4, 'Please enter your champion code.'),
+  code: z.string().min(4, 'Please enter your adventurer code.'),
 });
 
 export default function LoginPage() {
@@ -85,7 +86,7 @@ export default function LoginPage() {
                   id: loggedInUser.uid,
                   familyId: loggedInUser.uid,
                   email: loggedInUser.email,
-                  firstName: 'Champion',
+                  firstName: 'Quest',
                   lastName: 'Parent',
                   phoneNumber: '',
                   notificationPreferences: {
@@ -225,7 +226,7 @@ export default function LoginPage() {
           parentId: 'backdoor-parent-id',
           name: 'Alex',
           username: 'ALEX12',
-          email: 'instant-champion@test.local',
+          email: 'instant-adventurer@test.local',
           points: 125
         });
       }
@@ -285,20 +286,20 @@ export default function LoginPage() {
         <div className="mx-auto w-full max-w-md space-y-8">
           <div>
             <div className="flex justify-center">
-              <ChoreChampionLogo className="h-20 w-20" />
+              <QuestKindLogo className="h-20 w-20" />
             </div>
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-foreground font-headline">
-              Welcome to Chore Champion
+              Welcome to QuestKind
             </h2>
             <p className="mt-2 text-center text-sm text-muted-foreground">
-              Let's get those chores done!
+              Let's start the adventure!
             </p>
           </div>
 
           <Tabs defaultValue="parent" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="parent">Parent</TabsTrigger>
-              <TabsTrigger value="child">Champion</TabsTrigger>
+              <TabsTrigger value="child">Adventurer</TabsTrigger>
             </TabsList>
             <TabsContent value="parent">
               <Card className="mt-6 border-transparent bg-transparent shadow-none">
@@ -354,7 +355,7 @@ export default function LoginPage() {
                       <span className="w-full border-t" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-background px-2 text-muted-foreground">New to Chore Champion?</span>
+                      <span className="bg-background px-2 text-muted-foreground">New to QuestKind?</span>
                     </div>
                   </div>
 
@@ -374,7 +375,7 @@ export default function LoginPage() {
                           name="code"
                           render={({ field }) => (
                             <FormItem>
-                              <Label>Champion Code</Label>
+                              <Label>Adventurer Code</Label>
                               <FormControl>
                                 <Input placeholder="ABC-123" className="uppercase" {...field} />
                               </FormControl>
@@ -384,12 +385,12 @@ export default function LoginPage() {
                         />
                         <Button type="submit" className="w-full !mt-6" disabled={championForm.formState.isSubmitting}>
                           {championForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                          Champion Log In
+                          Adventurer Log In
                         </Button>
                       </form>
                     </Form>
                     <p className="mt-4 text-center text-xs text-muted-foreground">
-                      Champions: Enter your unique code provided by your parent.
+                      Adventurers: Enter your unique code provided by your parent.
                     </p>
                 </CardContent>
               </Card>
@@ -406,7 +407,7 @@ export default function LoginPage() {
                 Instant Parent Access
               </Button>
               <Button variant="outline" size="sm" onClick={handleChampionInstantAccess}>
-                Instant Champion Access
+                Instant Adventurer Access
               </Button>
             </div>
             <p className="text-[10px] text-muted-foreground text-center italic">

@@ -7,8 +7,8 @@ import { FirebaseClientProvider } from '@/firebase';
 import { ThemeProvider } from '@/app/context/ThemeContext';
 
 export const metadata: Metadata = {
-  title: 'Chore Champion',
-  description: "Manage your family's chores with ease.",
+  title: 'QuestKind',
+  description: "Manage your family's quests with ease.",
 };
 
 export default function RootLayout({

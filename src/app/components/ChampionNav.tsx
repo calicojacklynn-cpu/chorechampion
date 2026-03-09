@@ -27,11 +27,11 @@ import {
   SidebarMenuSubButton,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { ChoreChampionLogo } from "./ChoreChampionLogo";
+import { QuestKindLogo } from "./ChoreChampionLogo";
 import { useFirestore, useUser, useDoc, useCollection, useMemoFirebase } from "@/firebase";
 import { doc, collection, query, orderBy, limit } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import type { Champion } from "@/app/dashboard/champions/page";
+import type { Adventurer } from "@/app/dashboard/champions/page";
 
 export function ChampionNav() {
   const pathname = usePathname();
@@ -57,7 +57,7 @@ export function ChampionNav() {
     if (!firestore || !championId) return null;
     return doc(firestore, 'champions', championId);
   }, [firestore, championId]);
-  const { data: champion } = useDoc<Champion>(championDocRef);
+  const { data: champion } = useDoc<Adventurer>(championDocRef);
 
   // Check for unread messages
   const messagesQuery = useMemoFirebase(() => {
@@ -94,9 +94,9 @@ export function ChampionNav() {
     <>
       <SidebarHeader className="group-data-[collapsible=icon]:justify-center">
         <Link href={dashboardHref} className="flex items-center gap-2" onClick={handleLinkClick}>
-          <ChoreChampionLogo className="h-8 w-8" />
+          <QuestKindLogo className="h-8 w-8" />
           <span className="font-bold font-headline text-lg group-data-[collapsible=icon]:hidden text-sidebar-foreground">
-            Chore Champion
+            QuestKind
           </span>
         </Link>
       </SidebarHeader>

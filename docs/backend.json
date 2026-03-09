@@ -5,7 +5,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "ParentProfile",
       "type": "object",
-      "description": "Represents a parent user profile within the Chore Champion application.",
+      "description": "Represents a parent user profile within the QuestKind application.",
       "properties": {
         "id": {
           "type": "string",
@@ -50,40 +50,40 @@
         "lastName"
       ]
     },
-    "ChampionProfile": {
+    "AdventurerProfile": {
       "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "ChampionProfile",
+      "title": "AdventurerProfile",
       "type": "object",
-      "description": "Represents a child (champion) profile within the Chore Champion application.",
+      "description": "Represents a child (adventurer) profile within the QuestKind application.",
       "properties": {
         "id": {
           "type": "string",
-          "description": "Unique identifier for the ChampionProfile entity."
+          "description": "Unique identifier for the AdventurerProfile entity."
         },
         "parentId": {
           "type": "string",
-          "description": "Reference to ParentProfile. (Relationship: ParentProfile 1:N ChampionProfile)"
+          "description": "Reference to ParentProfile. (Relationship: ParentProfile 1:N AdventurerProfile)"
         },
         "name": {
           "type": "string",
-          "description": "First name of the champion."
+          "description": "First name of the adventurer."
         },
         "username": {
           "type": "string",
-          "description": "The champion's username."
+          "description": "The adventurer's username (login code)."
         },
         "email": {
           "type": "string",
-          "description": "The champion's email address.",
+          "description": "The adventurer's internal email address.",
           "format": "email"
         },
         "points": {
           "type": "number",
-          "description": "Total reward points earned by the champion."
+          "description": "Total reward points earned by the adventurer."
         },
         "avatarUrl": {
           "type": "string",
-          "description": "URL for the champion's avatar image.",
+          "description": "URL for the adventurer's avatar image.",
           "format": "uri"
         },
         "notificationPreferences": {
@@ -109,7 +109,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Chore",
       "type": "object",
-      "description": "Represents a chore that can be assigned to a champion.",
+      "description": "Represents a quest (chore) that can be assigned to an adventurer.",
       "properties": {
         "id": {
           "type": "string",
@@ -117,19 +117,19 @@
         },
         "name": {
           "type": "string",
-          "description": "Name of the chore."
+          "description": "Name of the quest."
         },
         "description": {
           "type": "string",
-          "description": "Detailed description of the chore."
+          "description": "Detailed description of the quest."
         },
         "pointsValue": {
           "type": "number",
-          "description": "Number of reward points awarded for completing the chore."
+          "description": "Number of reward points awarded for completing the quest."
         },
         "preset": {
           "type": "boolean",
-          "description": "Indicates whether the chore is a preset or custom chore."
+          "description": "Indicates whether the quest is a preset or custom quest."
         }
       },
       "required": [
@@ -144,7 +144,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "AssignedChore",
       "type": "object",
-      "description": "Represents a chore assigned to a specific champion on a specific date.",
+      "description": "Represents a quest assigned to a specific adventurer on a specific date.",
       "properties": {
         "id": {
           "type": "string",
@@ -152,15 +152,15 @@
         },
         "championId": {
           "type": "string",
-          "description": "Reference to ChampionProfile. (Relationship: ChampionProfile 1:N AssignedChore)"
+          "description": "Reference to AdventurerProfile."
         },
         "choreId": {
           "type": "string",
-          "description": "Reference to Chore. (Relationship: Chore 1:N AssignedChore)"
+          "description": "Reference to Chore."
         },
         "choreName": {
           "type": "string",
-          "description": "Snapshot of the chore name at time of assignment."
+          "description": "Snapshot of the quest name at time of assignment."
         },
         "pointsValue": {
           "type": "number",
@@ -168,12 +168,12 @@
         },
         "dueDate": {
           "type": "string",
-          "description": "The date the chore is due.",
+          "description": "The date the quest is due.",
           "format": "date-time"
         },
         "completed": {
           "type": "boolean",
-          "description": "Indicates whether the chore has been completed."
+          "description": "Indicates whether the quest has been completed."
         },
         "approved": {
           "type": "boolean",
@@ -192,7 +192,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Reward",
       "type": "object",
-      "description": "Represents a reward that can be redeemed by a champion.",
+      "description": "Represents a reward that can be redeemed by an adventurer.",
       "properties": {
         "id": {
           "type": "string",
@@ -200,7 +200,7 @@
         },
         "parentId": {
           "type": "string",
-          "description": "Reference to ParentProfile. (Relationship: ParentProfile 1:N Reward)"
+          "description": "Reference to ParentProfile."
         },
         "name": {
           "type": "string",
@@ -230,7 +230,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "RedeemedReward",
       "type": "object",
-      "description": "Represents a reward that has been redeemed by a champion.",
+      "description": "Represents a reward that has been redeemed by an adventurer.",
       "properties": {
         "id": {
           "type": "string",
@@ -238,11 +238,11 @@
         },
         "championId": {
           "type": "string",
-          "description": "Reference to ChampionProfile. (Relationship: ChampionProfile 1:N RedeemedReward)"
+          "description": "Reference to AdventurerProfile."
         },
         "rewardId": {
           "type": "string",
-          "description": "Reference to Reward. (Relationship: Reward 1:N RedeemedReward)"
+          "description": "Reference to Reward."
         },
         "rewardName": {
           "type": "string",
@@ -313,7 +313,7 @@
           "schema": {
             "$ref": "#/backend/entities/Chore"
           },
-          "description": "Parent-specific custom chore library."
+          "description": "Parent-specific custom quest library."
         }
       },
       {
@@ -339,11 +339,11 @@
       {
         "path": "/champions/{championId}",
         "definition": {
-          "entityName": "ChampionProfile",
+          "entityName": "AdventurerProfile",
           "schema": {
-            "$ref": "#/backend/entities/ChampionProfile"
+            "$ref": "#/backend/entities/AdventurerProfile"
           },
-          "description": "Champion profiles."
+          "description": "Adventurer profiles."
         }
       },
       {
@@ -353,7 +353,7 @@
           "schema": {
             "$ref": "#/backend/entities/AssignedChore"
           },
-          "description": "Chores assigned to a champion."
+          "description": "Quests assigned to an adventurer."
         }
       },
       {
@@ -363,7 +363,7 @@
           "schema": {
             "$ref": "#/backend/entities/RedeemedReward"
           },
-          "description": "Rewards redeemed by a champion."
+          "description": "Rewards redeemed by an adventurer."
         }
       },
       {
@@ -373,7 +373,7 @@
           "schema": {
             "$ref": "#/backend/entities/Chore"
           },
-          "description": "Global preset chores."
+          "description": "Global preset quests."
         }
       }
     ]

@@ -19,34 +19,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 
 export default function LocalizationSettingsPage() {
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight font-headline">Localization Settings</h1>
-        <p className="text-muted-foreground">The Culture Setting. Sync the app with your life.</p>
+        <p className="text-muted-foreground">Sync QuestKind with your family's culture and region.</p>
       </div>
       <Card>
           <CardHeader>
               <CardTitle>Language & Region</CardTitle>
-              <CardDescription>The Culture Setting. Sync the app with your life.</CardDescription>
+              <CardDescription>Customize the terminology and timing for your family.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
               <div className="space-y-2">
                   <Label htmlFor="localized-terminology">Localized Terminology</Label>
-                  <p className="text-sm text-muted-foreground">Rename "Chores" to something more engaging.</p>
+                  <p className="text-sm text-muted-foreground">Rename "Quests" to something that fits your family's vibe.</p>
                   <Input id="localized-terminology" defaultValue="Daily Quests" />
               </div>
                 <div className="space-y-2">
-                  <Label htmlFor="currency-standardization">Currency Standardization</Label>
-                  <p className="text-sm text-muted-foreground">Choose the visual representation of rewards.</p>
-                  <Input id="currency-standardization" defaultValue="Champion Coins" />
+                  <Label htmlFor="currency-standardization">Point Terminology</Label>
+                  <p className="text-sm text-muted-foreground">Choose the name for reward points (e.g., Adventure Coins).</p>
+                  <Input id="currency-standardization" defaultValue="Adventure Points" />
               </div>
               <div className="space-y-2">
                   <Label htmlFor="time-zone">Time Zone Sync</Label>
-                  <p className="text-sm text-muted-foreground">Synchronizes the "Daily Reset" of chores.</p>
+                  <p className="text-sm text-muted-foreground">Synchronizes the "Daily Reset" of quests.</p>
                     <Select defaultValue="cst">
                       <SelectTrigger className="w-full md:w-1/2">
                           <SelectValue placeholder="Select timezone" />

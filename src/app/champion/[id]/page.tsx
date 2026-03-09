@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useParams } from 'next/navigation';
@@ -24,7 +25,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Star, CheckCircle2, Loader2, Gift } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
-import type { Champion } from '@/app/dashboard/champions/page';
+import type { Adventurer } from '@/app/dashboard/champions/page';
 import type { Reward } from '@/app/dashboard/rewards/page';
 
 type AssignedChore = {
@@ -34,35 +35,35 @@ type AssignedChore = {
     completed: boolean;
 };
 
-export default function ChampionDashboardPage() {
+export default function AdventurerDashboardPage() {
     const { toast } = useToast();
     const firestore = useFirestore();
     const { user } = useUser();
     const params = useParams();
-    const championId = typeof params.id === 'string' ? params.id : '';
+    const adventurerId = typeof params.id === 'string' ? params.id : '';
 
-    const championDocRef = useMemoFirebase(() => {
-      if (!firestore || !user || !championId) return null;
-      return doc(firestore, 'champions', championId);
-    }, [firestore, user, championId]);
-    const { data: champion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
+    const adventurerDocRef = useMemoFirebase(() => {
+      if (!firestore || !user || !adventurerId) return null;
+      return doc(firestore, 'champions', adventurerId);
+    }, [firestore, user, adventurerId]);
+    const { data: adventurer, isLoading: isAdventurerLoading } = useDoc<Adventurer>(adventurerDocRef);
 
     const choresQuery = useMemoFirebase(() => {
-      if (!firestore || !user || !championId) return null;
-      return collection(firestore, 'champions', championId, 'assignedChores');
-    }, [firestore, user, championId]);
+      if (!firestore || !user || !adventurerId) return null;
+      return collection(firestore, 'champions', adventurerId, 'assignedChores');
+    }, [firestore, user, adventurerId]);
     const { data: assignedChores, isLoading: areChoresLoading } = useCollection<AssignedChore>(choresQuery);
     
     const rewardsQuery = useMemoFirebase(() => {
-        const parentId = champion?.parentId;
+        const parentId = adventurer?.parentId;
         if (!parentId || !firestore || !user) return null;
         return collection(firestore, 'users', parentId, 'rewards');
-    }, [firestore, user, champion?.parentId]);
+    }, [firestore, user, adventurer?.parentId]);
     const { data: rewards, isLoading: areRewardsLoading } = useCollection<Reward>(rewardsQuery);
     
     const handleClaimReward = (reward: Reward) => {
-        if (champion && champion.points >= reward.points) {
-            const colRef = collection(firestore, 'champions', champion.id, 'redeemedRewards');
+        if (adventurer && adventurer.points >= reward.points) {
+            const colRef = collection(firestore, 'champions', adventurer.id, 'redeemedRewards');
             addDocumentNonBlocking(colRef, {
                 rewardId: reward.id,
                 rewardName: reward.name,
@@ -85,16 +86,16 @@ export default function ChampionDashboardPage() {
     };
     
     const handleMarkAsDone = (choreId: string) => {
-        if (!firestore || !championId) return;
-        const docRef = doc(firestore, 'champions', championId, 'assignedChores', choreId);
+        if (!firestore || !adventurerId) return;
+        const docRef = doc(firestore, 'champions', adventurerId, 'assignedChores', choreId);
         updateDocumentNonBlocking(docRef, { completed: true });
         toast({
             title: "Quest Submitted!",
-            description: "Nice work! Your parent has been notified.",
+            description: "Great job! Your parent has been notified.",
         });
     }
 
-    if (isChampionLoading || areChoresLoading || areRewardsLoading) {
+    if (isAdventurerLoading || areChoresLoading || areRewardsLoading) {
         return (
             <div className="flex h-full items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin" />
@@ -102,7 +103,7 @@ export default function ChampionDashboardPage() {
         );
     }
     
-    if (!champion) return <div className="p-8 text-center">Champion profile not found.</div>;
+    if (!adventurer) return <div className="p-8 text-center">Adventurer profile not found.</div>;
 
     const pendingChores = assignedChores?.filter(c => !c.completed) || [];
     const completedChores = assignedChores?.filter(c => c.completed) || [];
@@ -111,17 +112,17 @@ export default function ChampionDashboardPage() {
         <div className="space-y-8">
             <div>
                 <h1 className="text-3xl font-bold tracking-tight font-headline">
-                    Welcome back, {champion.name}!
+                    Welcome back, {adventurer.name}!
                 </h1>
                 <p className="text-muted-foreground">
-                    Here are your quests and rewards. Keep up the great work!
+                    Here are your current quests and rewards. Keep up the great work!
                 </p>
             </div>
 
             <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-2">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Today's Quests</CardTitle>
+                        <CardTitle>Active Quests</CardTitle>
                         <CardDescription>Complete these to earn points.</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -144,14 +145,14 @@ export default function ChampionDashboardPage() {
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-right">
-                                            <Button variant="outline" size="sm" onClick={() => handleMarkAsDone(chore.id)}>Mark as Done</Button>
+                                            <Button variant="outline" size="sm" onClick={() => handleMarkAsDone(chore.id)}>Submit Quest</Button>
                                         </TableCell>
                                     </TableRow>
                                     ))
                                 ) : (
                                     <TableRow>
                                         <TableCell colSpan={3} className="h-24 text-center text-muted-foreground">
-                                            No pending quests.
+                                            No active quests.
                                         </TableCell>
                                     </TableRow>
                                 )}
@@ -162,7 +163,7 @@ export default function ChampionDashboardPage() {
 
                  <Card>
                     <CardHeader>
-                        <CardTitle>Completed Quests</CardTitle>
+                        <CardTitle>Finished Quests</CardTitle>
                         <CardDescription>Waiting for parent approval.</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -187,7 +188,7 @@ export default function ChampionDashboardPage() {
                                 ) : (
                                     <TableRow>
                                         <TableCell colSpan={2} className="h-24 text-center text-muted-foreground">
-                                            No completed quests yet.
+                                            No quests submitted yet.
                                         </TableCell>
                                     </TableRow>
                                 )}
@@ -203,7 +204,7 @@ export default function ChampionDashboardPage() {
                 </div>
                  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {rewards && rewards.map((reward) => {
-                        const canAfford = champion.points >= reward.points;
+                        const canAfford = adventurer.points >= reward.points;
                         return (
                             <Card key={reward.id} className="overflow-hidden flex flex-col">
                                 <CardContent className="p-0">
@@ -227,7 +228,7 @@ export default function ChampionDashboardPage() {
                                 </div>
                                 <CardFooter className="p-4 pt-0">
                                     <Button className="w-full" disabled={!canAfford} onClick={() => handleClaimReward(reward)}>
-                                        {canAfford ? 'Claim Reward' : 'Not Enough Points'}
+                                        {canAfford ? 'Claim Reward' : 'Need More Points'}
                                     </Button>
                                 </CardFooter>
                             </Card>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -12,11 +13,11 @@ import { useUser, useAuth, useDoc, useFirestore, useMemoFirebase, useCollection 
 import { signOut } from 'firebase/auth';
 import { useEffect, useRef } from 'react';
 import { doc, collection, query, orderBy, limit } from 'firebase/firestore';
-import type { Champion } from '@/app/dashboard/champions/page';
+import type { Adventurer } from '@/app/dashboard/champions/page';
 import { useToast } from "@/hooks/use-toast";
 import { cn } from '@/lib/utils';
 
-export default function ChampionLayout({
+export default function AdventurerLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -29,63 +30,63 @@ export default function ChampionLayout({
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
 
-  const championId = typeof params.id === 'string' ? params.id : '';
+  const adventurerId = typeof params.id === 'string' ? params.id : '';
   
-  const championDocRef = useMemoFirebase(() => {
-    if (!firestore || !user || !championId) return null;
-    return doc(firestore, 'champions', championId);
-  }, [firestore, user, championId]);
+  const adventurerDocRef = useMemoFirebase(() => {
+    if (!firestore || !user || !adventurerId) return null;
+    return doc(firestore, 'champions', adventurerId);
+  }, [firestore, user, adventurerId]);
 
-  const { data: realChampion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
+  const { data: realAdventurer, isLoading: isAdventurerLoading } = useDoc<Adventurer>(adventurerDocRef);
 
   // Real-time listener for Messages
   const messagesQuery = useMemoFirebase(() => {
-    if (!firestore || !user || !realChampion?.parentId) return null;
+    if (!firestore || !user || !realAdventurer?.parentId) return null;
     return query(
-      collection(firestore, 'users', realChampion.parentId, 'messages'),
+      collection(firestore, 'users', realAdventurer.parentId, 'messages'),
       orderBy('timestamp', 'desc'),
       limit(1)
     );
-  }, [firestore, user, realChampion?.parentId]);
+  }, [firestore, user, realAdventurer?.parentId]);
 
   const { data: latestMessages } = useCollection(messagesQuery);
 
-  // Real-time listener for New Chores
-  const choresQuery = useMemoFirebase(() => {
-    if (!firestore || !user || !championId) return null;
+  // Real-time listener for New Quests
+  const questsQuery = useMemoFirebase(() => {
+    if (!firestore || !user || !adventurerId) return null;
     return query(
-      collection(firestore, 'champions', championId, 'assignedChores'),
-      orderBy('id', 'desc'), // Use simple ordering since we don't have created date yet
+      collection(firestore, 'champions', adventurerId, 'assignedChores'),
+      orderBy('id', 'desc'),
       limit(1)
     );
-  }, [firestore, user, championId]);
+  }, [firestore, user, adventurerId]);
 
-  const { data: latestChores } = useCollection(choresQuery);
-  const lastChoreIdRef = useRef<string | null>(null);
+  const { data: latestQuests } = useCollection(questsQuery);
+  const lastQuestIdRef = useRef<string | null>(null);
 
   // Handle New Quest Notifications
   useEffect(() => {
-    if (latestChores && latestChores.length > 0) {
-      const chore = latestChores[0];
-      const newQuestEnabled = realChampion?.notificationPreferences?.newQuestAlerts !== false;
+    if (latestQuests && latestQuests.length > 0) {
+      const quest = latestQuests[0];
+      const newQuestEnabled = realAdventurer?.notificationPreferences?.newQuestAlerts !== false;
 
-      if (lastChoreIdRef.current && lastChoreIdRef.current !== chore.id && newQuestEnabled) {
+      if (lastQuestIdRef.current && lastQuestIdRef.current !== quest.id && newQuestEnabled) {
         toast({
           title: "New Quest Assigned!",
-          description: `"${chore.choreName}" has been added to your list.`,
+          description: `"${quest.choreName}" has been added to your list.`,
         });
       }
-      lastChoreIdRef.current = chore.id;
+      lastQuestIdRef.current = quest.id;
     }
-  }, [latestChores, realChampion, toast]);
+  }, [latestQuests, realAdventurer, toast]);
 
   // Handle Message Notifications
   useEffect(() => {
     if (latestMessages && latestMessages.length > 0) {
       const msg = latestMessages[0];
       const isSelf = msg.senderId === user?.uid;
-      const isOnBroadcastPage = pathname === `/champion/${championId}/broadcast`;
-      const chatEnabled = realChampion?.notificationPreferences?.chatAlerts !== false;
+      const isOnBroadcastPage = pathname === `/champion/${adventurerId}/broadcast`;
+      const chatEnabled = realAdventurer?.notificationPreferences?.chatAlerts !== false;
       
       if (!isSelf && !isOnBroadcastPage && chatEnabled) {
         const lastNotified = sessionStorage.getItem(`lastNotified_${msg.id}`);
@@ -94,23 +95,23 @@ export default function ChampionLayout({
             title: `New Family Message`,
             description: msg.text.length > 50 ? msg.text.substring(0, 50) + '...' : msg.text,
             action: (
-              <Button size="sm" onClick={() => router.push(`/champion/${championId}/broadcast`)}>View</Button>
+              <Button size="sm" onClick={() => router.push(`/champion/${adventurerId}/broadcast`)}>View</Button>
             )
           });
           sessionStorage.setItem(`lastNotified_${msg.id}`, 'true');
         }
       }
     }
-  }, [latestMessages, pathname, user?.uid, toast, router, championId, realChampion]);
+  }, [latestMessages, pathname, user?.uid, toast, router, adventurerId, realAdventurer]);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
       router.push('/');
     }
-    if (!isUserLoading && user && user.uid !== championId) {
+    if (!isUserLoading && user && user.uid !== adventurerId) {
         router.push(`/champion/${user.uid}`);
     }
-  }, [isUserLoading, user, router, championId]);
+  }, [isUserLoading, user, router, adventurerId]);
 
   const handleLogout = async () => {
     if (auth) {
@@ -119,17 +120,17 @@ export default function ChampionLayout({
     router.push('/');
   };
 
-  const champion = realChampion || (user ? {
+  const adventurer = realAdventurer || (user ? {
     id: user.uid,
     parentId: 'default-parent-id',
-    name: 'Alex',
-    username: 'alex_the_great',
-    email: 'alex@example.com',
+    name: 'Adventurer',
+    username: 'adventurer_hero',
+    email: 'adventurer@example.com',
     avatarUrl: '',
-    points: 125,
-  } as Champion : null);
+    points: 0,
+  } as Adventurer : null);
 
-  if (isUserLoading || (championId && !realChampion && isChampionLoading)) {
+  if (isUserLoading || (adventurerId && !realAdventurer && isAdventurerLoading)) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -137,7 +138,7 @@ export default function ChampionLayout({
     );
   }
   
-  if (!isUserLoading && user && user.uid !== championId) {
+  if (!isUserLoading && user && user.uid !== adventurerId) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
@@ -147,7 +148,7 @@ export default function ChampionLayout({
     );
   }
 
-  if (!user || !champion) {
+  if (!user || !adventurer) {
     return (
       <div className="flex h-screen items-center justify-center p-4">
         <div className="text-center max-w-md p-6 border rounded-lg shadow-sm bg-card">
@@ -174,12 +175,12 @@ export default function ChampionLayout({
                 <SidebarTrigger className="md:hidden mr-auto" />
                 <div className="flex items-center gap-2 bg-primary text-primary-foreground rounded-full px-4 py-1 shadow-md">
                     <Star className="w-6 h-6 text-accent fill-accent stroke-primary-foreground" />
-                    <span className="font-bold text-xl text-primary-foreground">{champion.points}</span>
+                    <span className="font-bold text-xl text-primary-foreground">{adventurer.points}</span>
                     <span className="text-sm text-primary-foreground">Points</span>
                 </div>
                 <Avatar className="h-10 w-10 border-2 border-black">
-                    <AvatarImage src={champion.avatarUrl || undefined} alt={champion.name} />
-                    <AvatarFallback className="bg-secondary text-secondary-foreground">{champion.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={adventurer.avatarUrl || undefined} alt={adventurer.name} />
+                    <AvatarFallback className="bg-secondary text-secondary-foreground">{adventurer.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <Button variant="secondary" size="sm" onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4"/>

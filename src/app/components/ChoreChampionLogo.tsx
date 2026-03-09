@@ -2,7 +2,7 @@
 import type { SVGProps } from 'react';
 import { cn } from '@/lib/utils';
 
-export function ChoreChampionLogo(props: SVGProps<SVGSVGElement>) {
+export function QuestKindLogo(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 24 24"
