@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -29,7 +28,7 @@ import {
   SidebarMenuSubButton,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { QuestKindLogo } from "./ChoreChampionLogo";
+import { QuestKindLogo } from "./QuestKindLogo";
 import { useFirestore, useUser, useCollection, useMemoFirebase } from "@/firebase";
 import { collection, query, orderBy, limit } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -61,7 +60,6 @@ export function Nav() {
   const firestore = useFirestore();
   const [hasUnread, setHasUnread] = useState(false);
 
-  // Check for unread messages
   const messagesQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
     return query(
@@ -79,7 +77,6 @@ export function Nav() {
       const lastRead = localStorage.getItem(`lastRead_broadcast_${user?.uid}`);
       
       if (!lastRead || new Date(latestMsg.timestamp).getTime() > parseInt(lastRead)) {
-        // Only show badge if the user is NOT on the broadcast page
         if (pathname !== '/dashboard/broadcast' && latestMsg.senderId !== user?.uid) {
           setHasUnread(true);
         }

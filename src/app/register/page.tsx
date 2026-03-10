@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -18,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { QuestKindLogo } from '@/app/components/ChoreChampionLogo';
+import { QuestKindLogo } from '@/app/components/QuestKindLogo';
 import { Form, FormControl, FormField, FormItem, FormMessage, FormDescription, FormLabel } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, ArrowLeft, CheckCircle2, Copy, Plus, Trash2, Users, UserPlus } from 'lucide-react';
@@ -85,7 +84,6 @@ export default function RegisterPage() {
 
   const onSubmit = async (values: RegisterFormValues) => {
     try {
-      // 1. Create Primary Parent
       const primaryParent = values.parents[0];
       let primaryParentUid = '';
       
@@ -122,10 +120,8 @@ export default function RegisterPage() {
         }
       });
 
-      // 2. Handle Secondary Parent and Champions
       const createdChampions: { name: string; code: string }[] = [];
 
-      // Secondary Parent
       if (values.parents.length > 1) {
         const secondary = values.parents[1];
         const tempApp = initializeApp(firebaseConfig, `temp-parent-${Date.now()}`);
@@ -149,7 +145,6 @@ export default function RegisterPage() {
         await signOut(tempAuth);
       }
 
-      // Champions
       for (const champ of values.champions) {
         const code = generateCode();
         const internalEmail = `${code.toLowerCase()}@champions.app`;
@@ -311,7 +306,7 @@ export default function RegisterPage() {
                         name={`parents.${index}.email`}
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Email</FormLabel>
+                            <FormLabel>Email</Label>
                             <FormControl><Input type="email" placeholder="jane@example.com" {...field} /></FormControl>
                             <FormMessage />
                             </FormItem>

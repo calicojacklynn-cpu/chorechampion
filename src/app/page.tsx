@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -16,10 +15,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { QuestKindLogo } from '@/app/components/ChoreChampionLogo';
+import { QuestKindLogo } from '@/app/components/QuestKindLogo';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Info, Sparkles } from 'lucide-react';
+import { Loader2, Sparkles } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -80,8 +79,6 @@ export default function LoginPage() {
             if (champSnap.exists()) {
                 router.push(`/champion/${loggedInUser.uid}`);
             } else {
-                // AUTO-REPAIR: If Auth exists but Firestore profile is missing (Ghost Account)
-                // We recreate a basic profile instead of kicking them out.
                 await setDoc(parentProfileDocRef, {
                   id: loggedInUser.uid,
                   familyId: loggedInUser.uid,
@@ -153,25 +150,23 @@ export default function LoginPage() {
 
     setIsSendingReset(true);
     try {
-      // Check Firestore
       const q = query(collection(firestore, 'users'), where('email', '==', resetEmail));
       const querySnapshot = await getDocs(q);
 
-      // Even if not in Firestore, we attempt sending the email to fix ghost accounts
-      // Our auto-repair logic on login will take it from there once they reset.
-      await sendPasswordResetEmail(auth, resetEmail);
-      
       if (querySnapshot.empty) {
         toast({
-          title: "Check your email",
-          description: "We couldn't find a standard profile, but if you've registered before, a reset link was sent. Check your spam folder!",
+          variant: "destructive",
+          title: "Account Not Found",
+          description: "There is no QuestKind account connected to this email address.",
         });
-      } else {
-        toast({
-          title: "Reset Link Sent!",
-          description: "Check your email for instructions to reset your password.",
-        });
+        return;
       }
+
+      await sendPasswordResetEmail(auth, resetEmail);
+      toast({
+        title: "Reset Link Sent!",
+        description: "Check your email for instructions to reset your password.",
+      });
       
       setIsResetDialogOpen(false);
       setResetEmail('');
@@ -250,7 +245,6 @@ export default function LoginPage() {
           if (champSnap.exists()) {
             router.push(`/champion/${user.uid}`);
           } else {
-            // Handle ghost account in useEffect redirect
             if (!user.isAnonymous) {
                router.push('/dashboard');
             } else {
@@ -327,7 +321,7 @@ export default function LoginPage() {
                               <Button 
                                 variant="link" 
                                 size="sm" 
-                                className="px-0 font-normal" 
+                                className="px-0 font-normal text-primary hover:text-primary/80" 
                                 onClick={() => setIsResetDialogOpen(true)}
                                 type="button"
                               >

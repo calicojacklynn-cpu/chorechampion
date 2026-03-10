@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -27,7 +26,7 @@ import {
   SidebarMenuSubButton,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { QuestKindLogo } from "./ChoreChampionLogo";
+import { QuestKindLogo } from "./QuestKindLogo";
 import { useFirestore, useUser, useDoc, useCollection, useMemoFirebase } from "@/firebase";
 import { doc, collection, query, orderBy, limit } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -52,14 +51,12 @@ export function ChampionNav() {
       { href: `${settingsBaseHref}/notifications`, label: "Notifications" },
   ];
 
-  // Need parentId to find messages
   const championDocRef = useMemoFirebase(() => {
     if (!firestore || !championId) return null;
     return doc(firestore, 'champions', championId);
   }, [firestore, championId]);
   const { data: champion } = useDoc<Adventurer>(championDocRef);
 
-  // Check for unread messages
   const messagesQuery = useMemoFirebase(() => {
     if (!firestore || !champion?.parentId) return null;
     return query(
