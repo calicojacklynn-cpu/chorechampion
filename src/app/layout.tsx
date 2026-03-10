@@ -9,6 +9,11 @@ import { ThemeProvider } from '@/app/context/ThemeContext';
 export const metadata: Metadata = {
   title: 'QuestKind',
   description: "Manage your family's quests with ease.",
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/logo192.png',
+  }
 };
 
 export default function RootLayout({

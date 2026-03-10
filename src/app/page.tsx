@@ -252,8 +252,6 @@ export default function LoginPage() {
           } else {
             // Handle ghost account in useEffect redirect
             if (!user.isAnonymous) {
-               // We don't sign out automatically here to allow the repair logic in handleParentLogin
-               // But if they just hit the page already logged in, we let the dashboard layout handle it
                router.push('/dashboard');
             } else {
                await signOut(auth);
@@ -329,7 +327,7 @@ export default function LoginPage() {
                               <Button 
                                 variant="link" 
                                 size="sm" 
-                                className="px-0 font-normal text-black" 
+                                className="px-0 font-normal" 
                                 onClick={() => setIsResetDialogOpen(true)}
                                 type="button"
                               >
