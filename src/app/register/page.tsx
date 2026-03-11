@@ -306,7 +306,7 @@ export default function RegisterPage() {
                         name={`parents.${index}.email`}
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Email</Label>
+                            <FormLabel>Email</FormLabel>
                             <FormControl><Input type="email" placeholder="jane@example.com" {...field} /></FormControl>
                             <FormMessage />
                             </FormItem>
