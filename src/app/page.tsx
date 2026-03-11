@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth, useUser, useFirestore } from '@/firebase';
-import { signInWithEmailAndPassword, signOut, signInAnonymously, sendPasswordResetEmail } from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'firebase/auth';
 import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -18,7 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { QuestKindLogo } from '@/app/components/QuestKindLogo';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -181,57 +181,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleParentInstantAccess = async () => {
-    try {
-      if (auth.currentUser) await signOut(auth);
-      const userCredential = await signInAnonymously(auth);
-      const uid = userCredential.user.uid;
-      
-      const docRef = doc(firestore, 'users', uid);
-      const snap = await getDoc(docRef);
-      
-      if (!snap.exists()) {
-        await setDoc(docRef, {
-          id: uid,
-          email: 'instant-parent@test.local',
-          firstName: 'Instant',
-          lastName: 'Parent',
-          familyId: uid
-        });
-      }
-      
-      router.push('/dashboard');
-    } catch (error: any) {
-      toast({ variant: "destructive", title: "Instant Access Failed", description: error.message });
-    }
-  };
-
-  const handleChampionInstantAccess = async () => {
-    try {
-      if (auth.currentUser) await signOut(auth);
-      const userCredential = await signInAnonymously(auth);
-      const uid = userCredential.user.uid;
-      
-      const docRef = doc(firestore, 'champions', uid);
-      const snap = await getDoc(docRef);
-      
-      if (!snap.exists()) {
-        await setDoc(docRef, {
-          id: uid,
-          parentId: 'backdoor-parent-id',
-          name: 'Alex',
-          username: 'ALEX12',
-          email: 'instant-adventurer@test.local',
-          points: 125
-        });
-      }
-      
-      router.push(`/champion/${uid}`);
-    } catch (error: any) {
-      toast({ variant: "destructive", title: "Instant Access Failed", description: error.message });
-    }
-  };
-  
   useEffect(() => {
     if (!isUserLoading && user) {
       const checkRole = async () => {
@@ -388,24 +337,6 @@ export default function LoginPage() {
               </Card>
             </TabsContent>
           </Tabs>
-
-          <div className="mt-8 pt-6 border-t border-muted flex flex-col gap-4">
-            <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase tracking-wider">
-              <Sparkles className="h-3 w-3" />
-              <span>Development Shortcuts (Instant Access)</span>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <Button variant="outline" size="sm" onClick={handleParentInstantAccess}>
-                Instant Parent Access
-              </Button>
-              <Button variant="outline" size="sm" onClick={handleChampionInstantAccess}>
-                Instant Adventurer Access
-              </Button>
-            </div>
-            <p className="text-[10px] text-muted-foreground text-center italic">
-              Note: Instant access uses anonymous sessions. Profiles created here are temporary and browser-specific.
-            </p>
-          </div>
         </div>
 
         <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
