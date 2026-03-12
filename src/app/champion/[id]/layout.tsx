@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -89,16 +88,21 @@ export default function AdventurerLayout({
       const chatEnabled = realAdventurer?.notificationPreferences?.chatAlerts !== false;
       
       if (!isSelf && !isOnBroadcastPage && chatEnabled) {
-        const lastNotified = sessionStorage.getItem(`lastNotified_${msg.id}`);
-        if (!lastNotified) {
-          toast({
-            title: `New Family Message`,
-            description: msg.text.length > 50 ? msg.text.substring(0, 50) + '...' : msg.text,
-            action: (
-              <Button size="sm" onClick={() => router.push(`/champion/${adventurerId}/broadcast`)}>View</Button>
-            )
-          });
-          sessionStorage.setItem(`lastNotified_${msg.id}`, 'true');
+        const lastRead = localStorage.getItem(`lastRead_broadcast_${user?.uid}`);
+        const isUnseen = !lastRead || new Date(msg.timestamp).getTime() > parseInt(lastRead);
+
+        if (isUnseen) {
+          const lastNotified = sessionStorage.getItem(`lastNotified_${msg.id}`);
+          if (!lastNotified) {
+            toast({
+              title: `New Family Message`,
+              description: msg.text.length > 50 ? msg.text.substring(0, 50) + '...' : msg.text,
+              action: (
+                <Button size="sm" onClick={() => router.push(`/champion/${adventurerId}/broadcast`)}>View</Button>
+              )
+            });
+            sessionStorage.setItem(`lastNotified_${msg.id}`, 'true');
+          }
         }
       }
     }

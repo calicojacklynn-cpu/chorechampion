@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -10,42 +9,42 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useFirestore, useDoc, useCollection, useMemoFirebase, useUser, addDocumentNonBlocking } from '@/firebase';
 import { doc, collection, query, orderBy, limit } from 'firebase/firestore';
-import type { Champion } from '@/app/dashboard/champions/page';
+import type { Adventurer } from '@/app/dashboard/champions/page';
 
 type Message = {
   id: string;
   senderId: string;
   senderName: string;
   senderAvatarUrl?: string;
-  senderRole: 'parent' | 'champion';
+  senderRole: 'parent' | 'adventurer';
   text: string;
   timestamp: string;
 };
 
-export default function ChampionBroadcastPage() {
+export default function AdventurerBroadcastPage() {
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const firestore = useFirestore();
   const { user } = useUser();
   const params = useParams();
-  const championId = typeof params.id === 'string' ? params.id : '';
+  const adventurerId = typeof params.id === 'string' ? params.id : '';
 
-  const championDocRef = useMemoFirebase(() => {
-    if (!firestore || !championId) return null;
-    return doc(firestore, 'champions', championId);
-  }, [firestore, championId]);
+  const adventurerDocRef = useMemoFirebase(() => {
+    if (!firestore || !adventurerId) return null;
+    return doc(firestore, 'champions', adventurerId);
+  }, [firestore, adventurerId]);
 
-  const { data: champion, isLoading: isChampionLoading } = useDoc<Champion>(championDocRef);
+  const { data: adventurer, isLoading: isAdventurerLoading } = useDoc<Adventurer>(adventurerDocRef);
 
   const messagesQuery = useMemoFirebase(() => {
-    if (!firestore || !champion?.parentId) return null;
+    if (!firestore || !adventurer?.parentId) return null;
     return query(
-        collection(firestore, 'users', champion.parentId, 'messages'),
+        collection(firestore, 'users', adventurer.parentId, 'messages'),
         orderBy('timestamp', 'asc'),
         limit(50)
     );
-  }, [firestore, champion?.parentId]);
+  }, [firestore, adventurer?.parentId]);
 
   const { data: messages, isLoading: isMessagesLoading } = useCollection<Message>(messagesQuery);
 
@@ -62,16 +61,16 @@ export default function ChampionBroadcastPage() {
   }, [messages, user?.uid]);
 
   const handleSendMessage = () => {
-    if (!newMessage.trim() || !champion || !firestore) {
+    if (!newMessage.trim() || !adventurer || !firestore) {
       return;
     }
 
-    const colRef = collection(firestore, 'users', champion.parentId, 'messages');
+    const colRef = collection(firestore, 'users', adventurer.parentId, 'messages');
     addDocumentNonBlocking(colRef, {
-      senderId: champion.id,
-      senderName: champion.name,
-      senderAvatarUrl: champion.avatarUrl || '',
-      senderRole: 'champion',
+      senderId: adventurer.id,
+      senderName: adventurer.name,
+      senderAvatarUrl: adventurer.avatarUrl || '',
+      senderRole: 'adventurer',
       text: newMessage,
       timestamp: new Date().toISOString(),
     });
@@ -79,7 +78,7 @@ export default function ChampionBroadcastPage() {
     setNewMessage('');
   };
 
-  if (isChampionLoading) {
+  if (isAdventurerLoading) {
     return (
       <div className="flex h-[calc(100vh-10rem)] items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -108,7 +107,7 @@ export default function ChampionBroadcastPage() {
             </div>
           ) : messages && messages.length > 0 ? (
             messages.map((message) => {
-              const isSelf = champion && message.senderId === champion.id;
+              const isSelf = adventurer && message.senderId === adventurer.id;
 
               return (
                 <div
@@ -135,7 +134,13 @@ export default function ChampionBroadcastPage() {
                         isSelf ? 'text-right' : 'text-left'
                       }`}
                     >
-                      {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(message.timestamp).toLocaleString([], { 
+                        weekday: 'short', 
+                        month: 'short', 
+                        day: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })}
                     </p>
                   </div>
                   {isSelf && (

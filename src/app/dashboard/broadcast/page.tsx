@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -19,7 +18,7 @@ type Message = {
     senderId: string;
     senderName: string;
     senderAvatarUrl?: string;
-    senderRole: 'parent' | 'champion';
+    senderRole: 'parent' | 'adventurer';
     text: string;
     timestamp: string;
 }
@@ -80,7 +79,7 @@ export default function BroadcastPage() {
             Family Chat
           </h1>
           <p className="text-muted-foreground">
-            Connect with your champions in real-time.
+            Connect with your adventurers in real-time.
           </p>
         </div>
       </div>
@@ -115,7 +114,13 @@ export default function BroadcastPage() {
                     <p className={'font-bold text-sm mb-1'}>{message.senderName}</p>
                     <p>{message.text}</p>
                      <p className={`text-[10px] mt-2 opacity-70 ${isSelf ? 'text-left' : 'text-right'}`}>
-                      {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(message.timestamp).toLocaleString([], { 
+                        weekday: 'short', 
+                        month: 'short', 
+                        day: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })}
                     </p>
                   </div>
                    {!isSelf && (
@@ -134,7 +139,7 @@ export default function BroadcastPage() {
               </div>
               <div>
                 <p className="font-semibold">No messages yet</p>
-                <p className="text-sm text-muted-foreground">Broadcast a message to your family champions!</p>
+                <p className="text-sm text-muted-foreground">Broadcast a message to your family adventurers!</p>
               </div>
             </div>
           )}

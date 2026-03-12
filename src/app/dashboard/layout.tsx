@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
@@ -64,16 +63,21 @@ export default function DashboardLayout({
       const chatEnabled = parentProfile?.notificationPreferences?.chatAlerts !== false; // Default to true
 
       if (!isSelf && !isOnBroadcastPage && chatEnabled) {
-        const lastNotified = sessionStorage.getItem(`lastNotified_${msg.id}`);
-        if (!lastNotified) {
-          toast({
-            title: `New Message from ${msg.senderName}`,
-            description: msg.text.length > 50 ? msg.text.substring(0, 50) + '...' : msg.text,
-            action: (
-              <Button size="sm" onClick={() => router.push('/dashboard/broadcast')}>View</Button>
-            )
-          });
-          sessionStorage.setItem(`lastNotified_${msg.id}`, 'true');
+        const lastRead = localStorage.getItem(`lastRead_broadcast_${user?.uid}`);
+        const isUnseen = !lastRead || new Date(msg.timestamp).getTime() > parseInt(lastRead);
+        
+        if (isUnseen) {
+          const lastNotified = sessionStorage.getItem(`lastNotified_${msg.id}`);
+          if (!lastNotified) {
+            toast({
+              title: `New Message from ${msg.senderName}`,
+              description: msg.text.length > 50 ? msg.text.substring(0, 50) + '...' : msg.text,
+              action: (
+                <Button size="sm" onClick={() => router.push('/dashboard/broadcast')}>View</Button>
+              )
+            });
+            sessionStorage.setItem(`lastNotified_${msg.id}`, 'true');
+          }
         }
       }
     }
