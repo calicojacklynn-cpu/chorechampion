@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    unoptimized: true, // Required for static exports and common in mobile wrappers
     remotePatterns: [
       {
         protocol: 'https',
